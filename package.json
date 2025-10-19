@@ -1,0 +1,26 @@
+{
+  "name": "msc-crafter",
+  "version": "1.0.0",
+  "description": "A bespoke application to view and edit Matrix Specification Changes (MSC)",
+  "main": "lib/index.js",
+  "repository": "https://github.com/Half-Shot/msc-crafter",
+  "author": "Half-Shot",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.2",
+    "preact": "^10.27.2",
+    "styled-components": "^6.1.19",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.10",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@mantine/hooks": "^8.3.5",
+    "@octokit/graphql": "^9.0.2",
+    "@types/markdown-it": "^14.1.2",
+    "highlight.js": "^11.11.1",
+    "markdown-it": "^14.1.0",
+    "markdown-it-highlightjs": "^4.2.0"
+  }
+}
