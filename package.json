@@ -6,6 +6,11 @@
   "repository": "https://github.com/Half-Shot/msc-crafter",
   "author": "Half-Shot",
   "license": "MIT",
+  "scripts": {
+    "dev": "vite dev",
+    "start": "yarn dev",
+    "build": "vite build"
+  },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",
     "preact": "^10.27.2",
@@ -18,8 +23,10 @@
     "@mantine/hooks": "^8.3.5",
     "@octokit/graphql": "^9.0.2",
     "@types/markdown-it": "^14.1.2",
+    "@types/markdown-it-footnote": "^3.0.4",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
+    "markdown-it-footnote": "^4.0.0",
     "markdown-it-highlightjs": "^4.2.0"
   },
   "packageManager": "yarn@4.10.3"
