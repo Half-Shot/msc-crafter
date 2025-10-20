@@ -1,7 +1,9 @@
-import { MSCState, type MSC } from "../model/MSC";
+import { MSCState, type ClosedMSC, type MSC } from "../model/MSC";
 import { graphql as GraphQL } from "@octokit/graphql";
 import resolveMSCQuery from "../github/queries/resolveMSC.gql?raw";
-import type { ResolveMSCResponse } from "./queries/resolveMSC";
+import viewerInfoQuery from "../github/queries/viewerInfo.gql?raw";
+import type { ResolveMSCResponse, ResolveMSCResponseComment } from "./queries/resolveMSC";
+import type { ViewerInfoResponse } from "./queries/viewerInfo";
 
 function determineMSCState(pullRequest: ResolveMSCResponse["repository"]["pullRequest"]): MSCState {
     if (pullRequest.state === "CLOSED") {
@@ -43,19 +45,21 @@ async function loadProposal(pullRequest: ResolveMSCResponse["repository"]["pullR
 }
 
 export async function resolveMSC(graphql: typeof GraphQL, mscNumber: number): Promise<MSC> {
-    const {viewer, repository} = await graphql<ResolveMSCResponse>(resolveMSCQuery, { num: mscNumber });
+    const {repository} = await graphql<ResolveMSCResponse>(resolveMSCQuery, { num: mscNumber });
     const proposalText = await loadProposal(repository.pullRequest);
 
     // Mentioned MSCs
     const mentionedProposals = new Set(proposalText?.match(/MSC\s?\d+/gi)?.map(s => parseInt(s.slice(3))) ?? []);
     repository.pullRequest.body?.match(/MSC\s?\d+/gi)?.map(s => parseInt(s.slice(3))).forEach(s => mentionedProposals.add(s));
     mentionedProposals.delete(mscNumber);
-    return {
+    const state = determineMSCState(repository.pullRequest);
+
+    const msc = {
         prNumber: mscNumber,
         created: new Date(repository.pullRequest.createdAt),
         updated: new Date(repository.pullRequest.lastEditedAt),
         title: repository.pullRequest.title,
-        state: determineMSCState(repository.pullRequest),
+        state,
         url: repository.pullRequest.url,
         reactions: {},
         prBody: {
@@ -78,5 +82,42 @@ export async function resolveMSC(graphql: typeof GraphQL, mscNumber: number): Pr
         },
         relatedEndpoints: [],
         mentionedMSCs: [...mentionedProposals],
-    } satisfies MSC;
+    } as MSC;
+
+
+    // Get closing comment
+    if (state === MSCState.Closed) {
+        // No GQL api for this, which sucks.
+        const closedAtDate = new Date(repository.pullRequest.closedAt);
+        let closestComment: ResolveMSCResponseComment|undefined;
+        let currentTimeDiff = Number.MAX_SAFE_INTEGER;
+        for (const comment of repository.pullRequest.comments.nodes) {
+            const timeDiff = Math.abs(new Date(comment.createdAt).getTime() - closedAtDate.getTime());
+            if (timeDiff < currentTimeDiff) {
+                currentTimeDiff = timeDiff;
+                closestComment = comment;
+            }
+            console.log(currentTimeDiff, closestComment);
+        }
+        return {
+            ...msc,
+            state: MSCState.Closed,
+            closingComment: closestComment && {
+                author: {
+                    githubUsername: closestComment.author.login,
+                },
+                body: {
+                    markdown: closestComment.body,
+                },
+                created: new Date(closestComment.createdAt),
+            }
+        } as ClosedMSC;
+    }
+    return msc;
+}
+
+
+export async function viewerInfo(graphql: typeof GraphQL): Promise<ViewerInfoResponse["viewer"]> {
+    const {viewer} = await graphql<ViewerInfoResponse>(viewerInfoQuery);
+    return viewer;
 }

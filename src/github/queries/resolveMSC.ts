@@ -1,7 +1,16 @@
-export interface ResolveMSCResponse {
-  viewer: {
-    login: string,
+
+export interface ResolveMSCResponseComment {
+  "id": string,
+  "author": {
+    "avatarUrl": string,
+    "login": string
   },
+  "body": string,
+  "createdAt": string,
+  "minimizedReason": null
+}
+
+export interface ResolveMSCResponse {
   "repository": {
     "pullRequest": {
       "id": string,
@@ -9,6 +18,7 @@ export interface ResolveMSCResponse {
       "state": "OPEN"|"CLOSED"|"MERGED",
       "lastEditedAt": string,
       "createdAt": string,
+      closedAt: string,
       "isDraft": boolean,
       files: {
         nodes: {
@@ -47,17 +57,7 @@ export interface ResolveMSCResponse {
         "pageInfo": {
           "hasNextPage": boolean
         },
-        "nodes": 
-          {
-            "id": string,
-            "author": {
-              "avatarUrl": string,
-              "login": string
-            },
-            "body": string,
-            "createdAt": string,
-            "minimizedReason": null
-          }[],
+        "nodes": ResolveMSCResponseComment[],
       } 
       "url": string,
       "author": {

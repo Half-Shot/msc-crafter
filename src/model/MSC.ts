@@ -16,10 +16,9 @@ export interface Comment {
     },
     body: {
         markdown: string;
-        html: string;
     },
     created: Date;
-    updated: Date;
+    updated?: Date;
 }
 
 export interface ProposalState {
@@ -35,12 +34,12 @@ export interface SpecEndpoint {
 }
 
 
-export interface MSC {
+interface RootMSC {
     prNumber: number;
     created: Date;
     updated: Date;
+    state: MSCState,
     title: string;
-    state: MSCState;
     url: string;
     reactions: Record<string, number>;
     prBody: {
@@ -67,3 +66,14 @@ export interface MSC {
     };
     relatedEndpoints: SpecEndpoint[],
 }
+
+export interface OpenMSC extends RootMSC {
+    state: Exclude<MSCState.Closed, MSCState>,
+}
+
+export interface ClosedMSC extends RootMSC {
+    state: MSCState.Closed,
+    closingComment?: Comment,
+}
+
+export type MSC = OpenMSC|ClosedMSC;

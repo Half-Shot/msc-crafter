@@ -10,6 +10,7 @@ query lastIssues($num: Int!) {
       lastEditedAt,
       createdAt,
       isDraft,
+      closedAt,
       latestReviews(first: 20) {
         nodes {
           id

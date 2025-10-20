@@ -2,10 +2,19 @@ import { useHash } from "@mantine/hooks";
 import markdownIt from "markdown-it";
 import { useMemo } from "preact/hooks";
 import markdownItHJS from "markdown-it-highlightjs";
+import markdownItFootnote from "markdown-it-footnote";
+import json from 'highlight.js/lib/languages/json';
 import "highlight.js/styles/tokyo-night-dark.min.css";
 
 const parser = markdownIt("default", { })
-  .use(markdownItHJS)
+  .use(markdownItFootnote)
+  .use(markdownItHJS, {
+    register: {
+        json,
+        json5: json,
+        jsonl: json,
+    }
+  } satisfies Parameters<typeof markdownItHJS>[1])
 
 type ProposalHeading = {name: string, subheadings: ProposalHeading[], hash: string}
 
