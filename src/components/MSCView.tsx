@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { MSCState, type ClosedMSC, type MSC } from "../model/MSC";
+import { type ClosedMSC, type MSC } from "../model/MSC";
 import { StateBadge } from "./StateBadge";
 import { useMarkdown } from "../hooks/useMarkdown";
 import { useProposalText } from "../hooks/useProposalText";
@@ -8,10 +8,18 @@ import { FollowBlock } from "./FollowBlock";
 import { MemorisedDetails } from "./MemorisedDetails";
 import { useLocalMSCCache } from "../hooks/useLocalMSCCache";
 import { CommentView } from "./CommentView";
+import { VoteBlock } from "./VoteBlock";
 
 const Title = styled.h1`
     font-size: 24px;
 `
+const WidgetContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 2em;
+    margin-bottom: 2em;
+`
+
 
 const MSCBody = styled.section`
     font-size: 14px;
@@ -50,11 +58,21 @@ const Container = styled.div`
     max-width: 1280px;
     margin: auto;
 `
-const Column = styled.div`
-`
+const Column = styled.div``
 
 const ColumnContainer = styled.div`
     display: flex;
+    gap: 1em;
+`
+
+const KindBadge = styled.div`
+    border: 1px solid  rgba(38, 135, 150);
+    border-radius: 2em;
+    color: #222222e0;
+    background-color:  #59cce0cf;
+    padding: 0.25em 1em;
+    font-size: 1rem;
+    font-weight: 600;
 `
 
 
@@ -66,17 +84,19 @@ export function MSCView({msc}: {msc: MSC}) {
 
     // Experimental, requires local caching
     const mentioningMSCs = localMSCs.filter((m) => m.mentionedMSCs.includes(msc.prNumber));
+    const closingComment = (msc as ClosedMSC).closingComment;
 
     return <Container>
         <header>
             <Title>{msc.title} <StateBadge state={msc.state} /></Title>
-            <p>
-                Author:<a target="_blank" href={`https://github.com/${msc.author.githubUsername}`}>{msc.author.githubUsername}</a>
-            </p>
-            <p>
-                <a target="_blank" href={msc.url}>Link</a>
-            </p>
-            {(msc as ClosedMSC).closingComment && <CommentView comment={(msc as ClosedMSC).closingComment} kind="closed"/>}
+            <WidgetContainer>
+                <span>
+                    <a target="_blank" href={`https://github.com/${msc.author.githubUsername}`}>Written by {msc.author.githubUsername}</a>
+                </span>
+                <a target="_blank" href={msc.url}>Link to GitHub PR</a>
+                {msc.kind.map(k => <KindBadge>{k}</KindBadge>)}
+            </WidgetContainer>
+            {closingComment && <CommentView comment={closingComment} kind="closed"/>}
         </header>
         {prBody && <MemorisedDetails key={`msccrafter.pullrequestbodyopen.${msc.prNumber}`}>
             <summary>Pull request body</summary>
@@ -97,6 +117,7 @@ export function MSCView({msc}: {msc: MSC}) {
                         </li>)
                     }
                 </ol>
+                {msc.proposalState && <VoteBlock votes={msc.proposalState}/>}
                 {proposalText && <FollowBlock>
                 <h2>Table of contents</h2>
                     {

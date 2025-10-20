@@ -10,6 +10,9 @@ export enum MSCState {
     Unknown,
 }
 
+export type ProposedState = MSCState.ProposedClose|MSCState.ProposedFinalCommentPeriod;
+
+
 export interface Comment {
     author: {
         githubUsername: string;
@@ -33,12 +36,12 @@ export interface SpecEndpoint {
     body: string;
 }
 
-
 interface RootMSC {
     prNumber: number;
     created: Date;
     updated: Date;
     state: MSCState,
+    kind: string[],
     title: string;
     url: string;
     reactions: Record<string, number>;
@@ -59,11 +62,7 @@ interface RootMSC {
         comments: [Comment]&Comment[],
         resolved: boolean;
     }[];
-    proposalState: {
-        [MSCState.FinalCommentPeriod]: ProposalState[],
-        [MSCState.Merged]: ProposalState[],
-        [MSCState.Closed]: ProposalState[],
-    };
+    proposalState?: Record<string, boolean>;
     relatedEndpoints: SpecEndpoint[],
 }
 

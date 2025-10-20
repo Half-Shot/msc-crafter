@@ -47,7 +47,7 @@ query lastIssues($num: Int!) {
           path
         }
       }
-      comments(last: 50) {
+      comments(last: 100) {
         totalCount,
         pageInfo {
           hasNextPage

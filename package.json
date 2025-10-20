@@ -27,7 +27,8 @@
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
     "markdown-it-footnote": "^4.0.0",
-    "markdown-it-highlightjs": "^4.2.0"
+    "markdown-it-highlightjs": "^4.2.0",
+    "minisearch": "^7.2.0"
   },
   "packageManager": "yarn@4.10.3"
 }

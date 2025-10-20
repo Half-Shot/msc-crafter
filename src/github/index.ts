@@ -1,11 +1,13 @@
-import { MSCState, type ClosedMSC, type MSC } from "../model/MSC";
+import { MSCState, type ClosedMSC, type MSC, type ProposedState } from "../model/MSC";
 import { graphql as GraphQL } from "@octokit/graphql";
 import resolveMSCQuery from "../github/queries/resolveMSC.gql?raw";
 import viewerInfoQuery from "../github/queries/viewerInfo.gql?raw";
 import type { ResolveMSCResponse, ResolveMSCResponseComment } from "./queries/resolveMSC";
 import type { ViewerInfoResponse } from "./queries/viewerInfo";
 
-function determineMSCState(pullRequest: ResolveMSCResponse["repository"]["pullRequest"]): MSCState {
+type ResolvedPR = ResolveMSCResponse["repository"]["pullRequest"];
+
+function determineMSCState(pullRequest: ResolvedPR): MSCState {
     if (pullRequest.state === "CLOSED") {
         return MSCState.Closed;
     } else if (pullRequest.state === "MERGED") {
@@ -28,7 +30,7 @@ function determineMSCState(pullRequest: ResolveMSCResponse["repository"]["pullRe
     return MSCState.Open;
 }
 
-async function loadProposal(pullRequest: ResolveMSCResponse["repository"]["pullRequest"]): Promise<string|null> {
+async function loadProposal(pullRequest: ResolvedPR): Promise<string|null> {
     const filePath = pullRequest.files.nodes[0].path;
     if (!filePath.match(/^proposals\/.+\.md$/)) {
         return null;
@@ -44,6 +46,27 @@ async function loadProposal(pullRequest: ResolveMSCResponse["repository"]["pullR
     return await req.text();
 }
 
+function getTickBoxState(pullRequest: ResolvedPR, expectedState: ProposedState): MSC["proposalState"]|undefined {
+    // TODO: Paginate
+    const comment = pullRequest.comments.nodes.find(c => {
+        if (c.author.login !== "mscbot") {
+            return false;
+        }
+        // \n\n- [ ] @clokep\n- [x] @dbkr\n- [x] @uhoreg\n- [x] @turt2live\n- [x] @ara4n\n- [ ] @anoadragon453\n- [ ] @richvdh\n- [ ] @tulir\n- [x] @erikjohnston\n- [ ] @KitsuneRal\n\n\nConcerns:\n\n
+        switch (expectedState) {
+            case MSCState.ProposedClose:
+                return c.body.match(/Team member @(.+) has proposed to \*\*close\*\* this./)
+            case MSCState.ProposedFinalCommentPeriod:
+                return c.body.match(/Team member @(.+) has proposed to \*\*merge\*\* this./)
+        }
+    });
+    if (!comment) {
+        return undefined;
+    }
+    const results = comment?.body.matchAll(/- \[(x| )\] @(.+)/g);
+    return Object.fromEntries([...results].map(([, checkedStr, username]) => [username, checkedStr === "x"]));
+}
+
 export async function resolveMSC(graphql: typeof GraphQL, mscNumber: number): Promise<MSC> {
     const {repository} = await graphql<ResolveMSCResponse>(resolveMSCQuery, { num: mscNumber });
     const proposalText = await loadProposal(repository.pullRequest);
@@ -53,6 +76,7 @@ export async function resolveMSC(graphql: typeof GraphQL, mscNumber: number): Pr
     repository.pullRequest.body?.match(/MSC\s?\d+/gi)?.map(s => parseInt(s.slice(3))).forEach(s => mentionedProposals.add(s));
     mentionedProposals.delete(mscNumber);
     const state = determineMSCState(repository.pullRequest);
+    const kind = repository.pullRequest.labels.nodes.filter(l => l.name.startsWith('kind:')).map(l => l.name.slice('kind:'.length))
 
     const msc = {
         prNumber: mscNumber,
@@ -75,13 +99,10 @@ export async function resolveMSC(graphql: typeof GraphQL, mscNumber: number): Pr
         },
         comments: [],
         threads: [],
-        proposalState: {
-            [MSCState.FinalCommentPeriod]: [],
-            [MSCState.Merged]: [],
-            [MSCState.Closed]: []
-        },
         relatedEndpoints: [],
         mentionedMSCs: [...mentionedProposals],
+        proposalState: [MSCState.ProposedClose, MSCState.ProposedFinalCommentPeriod, MSCState.ProposedMerge].includes(state) && getTickBoxState(repository.pullRequest, state as ProposedState),
+        kind,
     } as MSC;
 
 
@@ -97,7 +118,6 @@ export async function resolveMSC(graphql: typeof GraphQL, mscNumber: number): Pr
                 currentTimeDiff = timeDiff;
                 closestComment = comment;
             }
-            console.log(currentTimeDiff, closestComment);
         }
         return {
             ...msc,

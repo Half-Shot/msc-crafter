@@ -13,11 +13,13 @@ const Container = styled.header`
     width: 100%;
     gap: 1em;
     flex: 3;
+    justify-content: space-between;
 `;
 
 
 const Left = styled.span`
     flex: 1;
+    max-width: fit-content;
 `
 const Right = styled.span`
     font-size: 0.5em;
@@ -36,6 +38,8 @@ export function TopBar() {
     return <Container>
         <Left>
             <AppName>MSC Crafter</AppName>
+        </Left>
+        <Left>
             <MSCSearch/>
         </Left>
         <Right>
