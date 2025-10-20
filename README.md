@@ -4,7 +4,7 @@ A webapp that renders [Matrix Spec Changes](https://spec.matrix.org/proposals/) 
 and a much snappier interface than GitHub. The intention is this will serve as a useful way to view and edit MSCs without
 having to use GitHub's clunky UI. All data is sourced from GitHub with a 5 minute cache on the client.
 
-![basic rendering of MSC4201](image-1.png)
+![basic rendering of MSC4201](image.png)
 
 
 ### Features
