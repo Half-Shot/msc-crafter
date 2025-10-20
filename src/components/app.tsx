@@ -1,4 +1,4 @@
-import { useMemo } from 'preact/hooks'
+import { useEffect, useMemo } from 'preact/hooks'
 import './app.css'
 import { useDocumentTitle, useHash } from '@mantine/hooks';
 import { useMSC } from '../hooks/useLocalMSCStore';
@@ -6,10 +6,19 @@ import { MSCView } from './MSCView';
 import { TopBar } from './Topbar';
 import { GitHubAuthProvider } from '../hooks/GitHubAuth';
 import styled from 'styled-components';
+import { useRecentMSCs } from '../hooks/useRecentMSCs';
 
 function AppWithMSC({mscNumber}: {mscNumber: number}) {
   const msc = useMSC(mscNumber, false);
+  const [,addRecentCount] = useRecentMSCs();
   useDocumentTitle(msc && 'error' in msc === false ?  `MSC Crafter - ${msc.title} ` : `MSC Crafter - Loading ${mscNumber}`);
+
+  useEffect(() => {
+    if (msc && 'error' in msc === false) {
+      addRecentCount({title: msc.title, hash: `#msc/${msc.prNumber}`});
+    }
+  }, [msc]);
+
   if (!msc) {
     return <b>Loading MSC {mscNumber}</b>;
   }
@@ -40,6 +49,7 @@ export function App() {
     }
     return null;
   }, [hash]);
+  const [recentMSCs] = useRecentMSCs();
 
   let content;
 
@@ -48,6 +58,12 @@ export function App() {
   } else {
     content = <WelcomeContent>
       <p>Search for an MSC to get started!</p>
+      <div>
+        <h2>Recently viewed MSCs</h2>
+        <ul>
+          {recentMSCs.map((m) => <li key={m.hash}><a href={m.hash}>{m.title}</a></li>)}
+        </ul>
+      </div>
     </WelcomeContent>
   }
 
