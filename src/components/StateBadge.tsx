@@ -40,7 +40,7 @@ export const StateBadgeContainer = styled.span`
 
 export const StateBadge = ({state}: {state: MSCState}) => {
     let text: string;
-    let className: string;
+    let className: string|undefined;
 
     switch (state) {
         case MSCState.Closed:
