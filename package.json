@@ -6,7 +6,6 @@
   "repository": "https://github.com/Half-Shot/msc-crafter",
   "author": "Half-Shot",
   "license": "MIT",
-  "private": false,
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",
     "preact": "^10.27.2",
@@ -22,5 +21,6 @@
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
     "markdown-it-highlightjs": "^4.2.0"
-  }
+  },
+  "packageManager": "yarn@4.10.3"
 }
