@@ -6,7 +6,7 @@ import markdownItFootnote from "markdown-it-footnote";
 import json from 'highlight.js/lib/languages/json';
 import "highlight.js/styles/tokyo-night-dark.min.css";
 
-const parser = markdownIt("default", { })
+export const parser = markdownIt("default", { })
   .use(markdownItFootnote)
   .use(markdownItHJS, {
     register: {

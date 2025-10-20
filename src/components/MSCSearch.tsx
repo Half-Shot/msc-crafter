@@ -1,10 +1,10 @@
 import { type SubmitEventHandler, type InputEventHandler } from "preact";
-import { useCallback, useId, useMemo, useState } from "preact/hooks";
+import { useCallback, useEffect, useId, useState } from "preact/hooks";
 import styled from "styled-components";
 import { useLocalMSCCache } from "../hooks/useLocalMSCCache";
 import type { MSC } from "../model/MSC";
 import { useHash } from "@mantine/hooks";
-import MiniSearch from "minisearch";
+import type MiniSearch from "minisearch";
 
 const Container = styled.form`
     > input {
@@ -25,18 +25,22 @@ export function MSCSearch() {
     const id = useId();
     const [matchingMSCs, setMatchingMSCs] = useState<MSC[]>([]);
     const [, setHash] = useHash();
+    const [minisearch, setMinisearch] = useState<MiniSearch<SearchableMSC>>();
 
-    const miniseach = useMemo(() => {
-        const miniSearch = new MiniSearch<SearchableMSC>({
+    useEffect(() => void (async () => {
+        const ms = await import("minisearch");
+        const miniSearch = new (ms.default)<SearchableMSC>({
             fields: ['title', 'author', 'id'] satisfies Array<keyof SearchableMSC>,
             storeFields: [],
         });
-        // TODO: Use async method
-        miniSearch.addAll(localMSCs.map<SearchableMSC>((msc) => ({title: msc.title, author: msc.author.githubUsername, id: msc.prNumber})));
-        return miniSearch;
-    }, [localMSCs]);
+        await miniSearch.addAllAsync(localMSCs.map<SearchableMSC>((msc) => ({title: msc.title, author: msc.author.githubUsername, id: msc.prNumber})));
+        setMinisearch(miniSearch);
+    })(), [localMSCs]);
 
     const onChangeHandler = useCallback<InputEventHandler<HTMLInputElement>>((ev) => {
+        if (!minisearch) {
+            return;
+        }
         if (ev.inputType === "insertReplacementText" && ev.data && !isNaN(parseInt(ev.data))) {
             // This is someone selecting a msc.
             setHash(`#msc/${ev.data}`);
@@ -45,9 +49,9 @@ export function MSCSearch() {
         }
         ev.preventDefault();
         const text = (ev.target as HTMLInputElement).value;
-        const matchingMSCs = miniseach.search(text).map(result => localMSCs.find(m => m.prNumber === result.id)!);
+        const matchingMSCs = minisearch.search(text).map(result => localMSCs.find(m => m.prNumber === result.id)!);
         setMatchingMSCs(matchingMSCs);
-    }, [miniseach]);
+    }, [minisearch]);
 
     // XXX: Deeply unreacty
     const onSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(ev => {
@@ -71,7 +75,7 @@ export function MSCSearch() {
     }, []);
 
     return <Container onSubmit={onSubmit}>
-        <input type="search" onChange={onChangeHandler} list={id} placeholder={"MSC1234..."} />
+        <input disabled={!minisearch} type="search" onChange={onChangeHandler} list={id} placeholder={"MSC1234..."} />
         <datalist id={id}>
             {matchingMSCs.map(m => <option onClick={() => console.log("boop", m.prNumber)} value={m.prNumber} label={m.title} />)}
         </datalist>

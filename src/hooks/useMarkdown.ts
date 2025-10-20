@@ -1,7 +1,5 @@
-import markdownIt from "markdown-it";
 import { useMemo } from "preact/hooks";
-
-const parser = markdownIt("default", { });
+import { parser } from "./useProposalText";
 
 export function markdownReplacer(markdown: string): string {
     markdown = markdown.replaceAll(/(https:\/\/github.com\/)?matrix-org\/matrix-spec-proposals\/pull\/(\d+)(?=\s)/g, (_subs, _github, prNumber) => {
