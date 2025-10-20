@@ -42,7 +42,7 @@ query lastIssues($num: Int!) {
       headRepository {
         nameWithOwner,
       }
-      files(last: 5) {
+      files(last: 30) {
         nodes {
           path
         }
