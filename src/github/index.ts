@@ -31,8 +31,8 @@ function determineMSCState(pullRequest: ResolvedPR): MSCState {
 }
 
 async function loadProposal(pullRequest: ResolvedPR): Promise<string|null> {
-    const filePath = pullRequest.files.nodes[0].path;
-    if (!filePath.match(/^proposals\/.+\.md$/)) {
+    const filePath = pullRequest.files.nodes.find(f => f.path.match(/^proposals\/.+\.md$/))?.path;
+    if (!filePath) {
         return null;
     }
     const branch = pullRequest.state === "MERGED" ? 'main' :  pullRequest.headRef?.name;
