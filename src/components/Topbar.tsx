@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { useGitHubAuth } from "../hooks/GitHubAuth";
 import { MSCSearch } from "./MSCSearch";
+import { AuthButton } from "./AuthButton";
 
 
 const Container = styled.header`
@@ -15,7 +15,6 @@ const Container = styled.header`
     flex: 3;
     justify-content: space-between;
 `;
-
 
 const Left = styled.span`
     flex: 1;
@@ -33,8 +32,6 @@ const AppName = styled.span`
 `
 
 export function TopBar() {
-  const githubAuth = useGitHubAuth();
-
     return <Container>
         <Left>
             <AppName>MSC Crafter</AppName>
@@ -43,8 +40,7 @@ export function TopBar() {
             <MSCSearch/>
         </Left>
         <Right>
-        {!githubAuth && <div>Unauthenticated</div>}
-        {githubAuth && <div>Authenticated as <strong>{githubAuth!.viewer.login}</strong></div>}
+            <AuthButton />
         </Right>
     </Container>
 }

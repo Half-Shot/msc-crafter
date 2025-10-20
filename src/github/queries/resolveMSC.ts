@@ -30,7 +30,15 @@ export interface ResolveMSCResponse {
       },
       headRepository: {
         nameWithOwner: string,
-      }
+      },
+      reviewThreads: {
+				nodes: {
+          id: string,
+					comments: {
+						nodes: ResolveMSCResponseComment[],
+					}
+				}[]
+			}
       "latestReviews": {
         "nodes": 
           {

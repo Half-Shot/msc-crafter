@@ -105,7 +105,7 @@ export function MSCView({msc}: {msc: MSC}) {
         <ColumnContainer>
             <Column style={{"min-width": "25%"}}>
                 <h2>Related MSCs</h2>
-                <ol>
+                <ul>
                     {
                         msc.mentionedMSCs?.map(mscNumber => <li key={mscNumber}>
                             <MSCLink kind="mention" mscNumber={mscNumber} />
@@ -116,15 +116,26 @@ export function MSCView({msc}: {msc: MSC}) {
                             <MSCLink kind="mentioned by" mscNumber={msc.prNumber} />
                         </li>)
                     }
-                </ol>
+                </ul>
+                <h2>Implementations</h2>
+                <p>Implementations matching is experimental, some may be missing.</p>
+                <ul>
+                    {
+                        msc.implementations?.map(impl => <li key={impl.url}>
+                            <a href={impl.url} target="_blank">{impl.title}</a>
+                        </li>)
+                    }
+                </ul>
                 {msc.proposalState && <VoteBlock votes={msc.proposalState}/>}
                 {proposalText && <FollowBlock>
                 <h2>Table of contents</h2>
+                <ul>
                     {
                         proposalText.headings.map(heading => <li key={heading.hash}>
                             <a href={'#' + heading.hash}>{heading.name}</a>
                         </li>)
                     }
+                </ul>
                 </FollowBlock>}
             </Column>
             <Column>

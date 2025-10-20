@@ -557,6 +557,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/oauth-authorization-url@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "@octokit/oauth-authorization-url@npm:8.0.0"
+  checksum: 10c0/ab4964bebd8d076f945a2f3210a8a0a221a408362569d9fc2f49875ad06e594365f5fd871dac08d820793f687bff50237f7acf40d9d39c5f9de7575b6f4bad93
+  languageName: node
+  linkType: hard
+
 "@octokit/openapi-types@npm:^26.0.0":
   version: 26.0.0
   resolution: "@octokit/openapi-types@npm:26.0.0"
@@ -1909,6 +1916,7 @@ __metadata:
   dependencies:
     "@mantine/hooks": "npm:^8.3.5"
     "@octokit/graphql": "npm:^9.0.2"
+    "@octokit/oauth-authorization-url": "npm:^8.0.0"
     "@preact/preset-vite": "npm:^2.10.2"
     "@types/markdown-it": "npm:^14.1.2"
     "@types/markdown-it-footnote": "npm:^3.0.4"

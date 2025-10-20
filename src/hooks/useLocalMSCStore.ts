@@ -8,7 +8,7 @@ type CachedMSC = MSC & {
     expiresAt: number;
 }
 
-const CACHE_LIVE_FOR_MS = 5 * 60000;
+const CACHE_LIVE_FOR_MS = 30 * 60000;
 
 export function useMSC(mscNumber?: number, useCache = true): MSC|null|{error: string} {
     const [msc, setMSC] = useState<CachedMSC|null>(null);
@@ -17,7 +17,7 @@ export function useMSC(mscNumber?: number, useCache = true): MSC|null|{error: st
     const githubAuth = useGitHubAuth();
 
     useEffect(() => {
-        if (!mscNumber || !githubAuth) {
+        if (!mscNumber || !githubAuth || 'viewer' in githubAuth !== true) {
             return;
         }
 

@@ -8,6 +8,19 @@ import { GitHubAuthProvider } from '../hooks/GitHubAuth';
 import styled from 'styled-components';
 import { useRecentMSCs } from '../hooks/useRecentMSCs';
 
+
+const WelcomeContent = styled.div`
+  font-size: 20px;
+  text-align: center;
+`
+
+
+const Column = styled.div`
+  width: 20vw;
+  text-align: left;
+`
+
+
 function AppWithMSC({mscNumber}: {mscNumber: number}) {
   const msc = useMSC(mscNumber, false);
   const [,addRecentCount] = useRecentMSCs();
@@ -32,12 +45,6 @@ function AppWithMSC({mscNumber}: {mscNumber: number}) {
   }
   return <MSCView msc={msc} />;
 }
-
-const WelcomeContent = styled.div`
-  font-size: 20px;
-  text-align: center;
-`
-
 export function App() {
   const [hash] = useHash();
   const currentMSCNumber = useMemo(() => {
@@ -52,22 +59,20 @@ export function App() {
   const [recentMSCs] = useRecentMSCs();
 
   let content;
-
   if (currentMSCNumber) {
     content = <AppWithMSC mscNumber={currentMSCNumber}/>
   } else {
     content = <WelcomeContent>
       <p>Search for an MSC to get started!</p>
-      <div>
+      <Column>
         <h2>Recently viewed MSCs</h2>
         <ul>
           {recentMSCs.map((m) => <li key={m.hash}><a href={m.hash}>{m.title}</a></li>)}
         </ul>
-      </div>
-    </WelcomeContent>
+      </Column>
+    </WelcomeContent>;
   }
 
-  
 
   // Home page of sorts
   return <GitHubAuthProvider>

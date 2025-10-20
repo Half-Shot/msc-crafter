@@ -1,18 +1,28 @@
 import { useLocalStorage } from "@mantine/hooks";
 import { graphql } from "@octokit/graphql";
-import { useContext, useEffect, useMemo, useState } from "preact/hooks";
+import { useCallback, useContext, useEffect, useMemo, useState } from "preact/hooks";
 import { viewerInfo } from "../github";
 import type { GithubViewer } from "../model/viewer";
 import { createContext } from "preact";
 import type { PropsWithChildren } from "preact/compat";
 
-type CurrentState = null|{graphqlWithAuth: ReturnType<typeof graphql.defaults>, viewer: GithubViewer};
+interface LoggedIn {
+    graphqlWithAuth: ReturnType<typeof graphql.defaults>;
+    viewer: GithubViewer;
+    logout: () => void;
+}
+
+interface LoggedOut {
+    checkAndStoreToken: (token: string) => Promise<void>;
+}
+
+type CurrentState = null|LoggedOut|LoggedIn;
 export const AuthContext = createContext<CurrentState>(null);
 export const useGitHubAuth = () => useContext(AuthContext);
 
 
 export function GitHubAuthProvider({children}: PropsWithChildren) {
-    const [gitHubToken] = useLocalStorage<string|null>({ key: 'msccrafter.token', defaultValue: null });
+    const [gitHubToken, storeGitHubToken] = useLocalStorage<string|null>({ key: 'msccrafter.token', defaultValue: null });
     const [viewer, setViewer] = useState<GithubViewer>();
     const graphqlWithAuth = useMemo(() => {
         if (!gitHubToken) {
@@ -25,7 +35,17 @@ export function GitHubAuthProvider({children}: PropsWithChildren) {
         });
     }, [gitHubToken]);
 
+    const checkAndStoreToken = useCallback(async (token: string) => {
+        const gql = graphql.defaults({
+            headers: {
+                authorization: `token ${token}`,
+            },
+        });
+        await viewerInfo(gql);
+        storeGitHubToken(token);
+    }, []);
 
+    // Get viewer info once logged in.
     useEffect(() => {
         if (!graphqlWithAuth) {
             return;
@@ -37,11 +57,13 @@ export function GitHubAuthProvider({children}: PropsWithChildren) {
         });
     }, [graphqlWithAuth]);
 
-    let value;
-    if (!graphqlWithAuth || !viewer) {
+    let value: CurrentState;
+    if (graphqlWithAuth && viewer) {
+        value = { graphqlWithAuth, viewer, logout: () => storeGitHubToken(null) };
+    } else if (gitHubToken) {
         value = null;
     } else {
-        value = { graphqlWithAuth, viewer };
+        value = { checkAndStoreToken };
     }
 
     return <AuthContext.Provider value={value}>

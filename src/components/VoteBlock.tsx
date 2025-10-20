@@ -3,7 +3,7 @@ export function VoteBlock({votes}: {votes: Record<string, boolean>}) {
         <h2> Votes </h2>
         {Object.entries(votes).map(([username, vote]) => 
             <p>
-                <input type="checkbox" checked={vote} />
+                <input disabled type="checkbox" checked={vote} />
                 <label>{username}</label>
             </p>
         )}

@@ -62,6 +62,11 @@ interface RootMSC {
         comments: [Comment]&Comment[],
         resolved: boolean;
     }[];
+    implementations: {
+        url: string,
+        title: string,
+        logo?: string,
+    }[],
     proposalState?: Record<string, boolean>;
     relatedEndpoints: SpecEndpoint[],
 }

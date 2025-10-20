@@ -4,8 +4,10 @@ import resolveMSCQuery from "../github/queries/resolveMSC.gql?raw";
 import viewerInfoQuery from "../github/queries/viewerInfo.gql?raw";
 import type { ResolveMSCResponse, ResolveMSCResponseComment } from "./queries/resolveMSC";
 import type { ViewerInfoResponse } from "./queries/viewerInfo";
+import { getImplementationsFromThreads } from "./implementationParser";
 
 type ResolvedPR = ResolveMSCResponse["repository"]["pullRequest"];
+
 
 function determineMSCState(pullRequest: ResolvedPR): MSCState {
     if (pullRequest.state === "CLOSED") {
@@ -36,10 +38,11 @@ async function loadProposal(pullRequest: ResolvedPR): Promise<string|null> {
         return null;
     }
     const branch = pullRequest.state === "MERGED" ? 'main' :  pullRequest.headRef?.name;
+    const name = pullRequest.state === "MERGED" ? 'matrix-org/matrix-spec-proposals/refs/heads' :  pullRequest.headRepository.nameWithOwner;
     if (!branch) {
         return null;
     }
-    const req = await fetch(`https://raw.githubusercontent.com/${pullRequest.headRepository.nameWithOwner}/${branch}/${filePath}`);
+    const req = await fetch(`https://raw.githubusercontent.com/${name}/${branch}/${filePath}`);
     if (!req.ok) {
         throw Error('Failed to fetch proposal body');
     }
@@ -102,6 +105,7 @@ export async function resolveMSC(graphql: typeof GraphQL, mscNumber: number): Pr
         relatedEndpoints: [],
         mentionedMSCs: [...mentionedProposals],
         proposalState: [MSCState.ProposedClose, MSCState.ProposedFinalCommentPeriod, MSCState.ProposedMerge].includes(state) && getTickBoxState(repository.pullRequest, state as ProposedState),
+        implementations: getImplementationsFromThreads(repository.pullRequest, proposalText),
         kind,
     } as MSC;
 

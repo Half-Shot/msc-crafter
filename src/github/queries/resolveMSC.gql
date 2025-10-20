@@ -22,6 +22,23 @@ query lastIssues($num: Int!) {
           body
         }
       }
+			reviewThreads(first: 20) {
+				nodes {
+          id,
+					comments(first: 5) {
+						nodes {
+							id,
+							author {
+								avatarUrl,
+								login
+							},
+							body,
+							createdAt,
+							minimizedReason,
+						}
+					}
+				}
+			}
       labels(first: 10) {
         nodes {
           id

@@ -1,14 +1,29 @@
 import { useMemo } from "preact/hooks";
-import { parser } from "./useProposalText";
+import markdownItHJS from "markdown-it-highlightjs";
+import markdownItFootnote from "markdown-it-footnote";
+import json from 'highlight.js/lib/languages/json';
+import markdownIt from "markdown-it";
+
+const MSPUrlRegex = /(https:\/\/github.com\/)?matrix-org\/matrix-spec-proposals\/pull\/(\d+)(?=\s|$)/;
 
 export function markdownReplacer(markdown: string): string {
-    markdown = markdown.replaceAll(/(https:\/\/github.com\/)?matrix-org\/matrix-spec-proposals\/pull\/(\d+)(?=\s)/g, (_subs, _github, prNumber) => {
+    markdown = markdown.replaceAll(new RegExp(MSPUrlRegex, 'g'), (_subs, _github, prNumber) => {
         return `[MSC${prNumber}](#msc/${prNumber})`;
     })
     return markdown;
 }
 
-export function useMarkdown(options: { stripTitle?: boolean, stripRenderedLink?: boolean }, markdown?: string) {
+export const parser = markdownIt("default", { })
+  .use(markdownItFootnote)
+  .use(markdownItHJS, {
+    register: {
+        json,
+        json5: json,
+        jsonl: json,
+    }
+  } satisfies Parameters<typeof markdownItHJS>[1])
+
+export function useMarkdown(options: { stripTitle?: boolean, stripRenderedLink?: boolean, postprocessor?: (element: HTMLParagraphElement) => void }, markdown?: string) {
     return useMemo(() => {
         if (!markdown || !markdown.trim()) {
             return;
@@ -19,9 +34,10 @@ export function useMarkdown(options: { stripTitle?: boolean, stripRenderedLink?:
         // Postprocessing stage
         const element = document.createElement("p");
         element.innerHTML = html;
-        if (options.stripRenderedLink) {
-            for (const link of element.querySelectorAll('a')) {
-                const parent = link.parentNode;
+        for (const link of element.querySelectorAll('a')) {
+            const parent = link.parentNode;
+            link.href = link.href.replace(MSPUrlRegex,(_subs, _github, prNumber) => `#msc/${prNumber}`);
+            if (options.stripRenderedLink) {
                 if (link.textContent === "Rendered") {
                     link.remove();
                 }
@@ -36,6 +52,7 @@ export function useMarkdown(options: { stripTitle?: boolean, stripRenderedLink?:
                 possibleTitle.remove();
             }
         }
+        options.postprocessor?.(element);
         if (!element.innerHTML.trim()) {
             return;
         }
