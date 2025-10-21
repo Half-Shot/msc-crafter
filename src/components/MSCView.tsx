@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { type ClosedMSC, type MSC } from "../model/MSC";
+import { MSCState, type ClosedMSC, type MSC } from "../model/MSC";
 import { StateBadge } from "./StateBadge";
 import { useMarkdown } from "../hooks/useMarkdown";
 import { useProposalText } from "../hooks/useProposalText";
@@ -10,7 +10,6 @@ import { useLocalMSCCache } from "../hooks/useLocalMSCCache";
 import { CommentView } from "./CommentView";
 import { VoteBlock } from "./VoteBlock";
 import { humanDuration } from "../utils/time";
-import { useState } from "preact/hooks";
 
 const Title = styled.h1`
   font-size: 24px;
@@ -138,6 +137,7 @@ export function MSCView({ msc }: { msc: MSC }) {
       {prBody && (
         <MemorisedDetails
           key={`msccrafter.pullrequestbodyopen.${msc.prNumber}`}
+          defaultValue={msc.state !== MSCState.Closed}
         >
           <summary>Pull request body</summary>
           <MSCBody dangerouslySetInnerHTML={{ __html: prBody }} />
