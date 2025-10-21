@@ -28,6 +28,12 @@ export function Footer() {
           </a>
         </li>
         <li>
+          Crafty Kobold logo by{" "}
+          <a href="https://mastodon.half-shot.uk/@delph@mastodon.dictatorshipcake.co.uk/115413468961680908" target="_blank">
+            Delph 🐰
+          </a>
+        </li>
+        <li>
           Written with ❤️ by{" "}
           <a href="https://mastodon.half-shot.uk/@halfy" target="_blank">
             Half-Shot 🐶
