@@ -1,4 +1,4 @@
-import type { Ref, RefObject } from "preact";
+import type { RefObject } from "preact";
 import { useEffect, useState } from "preact/hooks";
 
 export function TableOfContents({
@@ -14,9 +14,6 @@ export function TableOfContents({
     const h1Headers = [...(element.current?.querySelectorAll("h1") ?? [])];
     const h2Headers = [...(element.current?.querySelectorAll("h2") ?? [])];
     const h3Headers = [...(element.current?.querySelectorAll("h3") ?? [])];
-    console.log(h1Headers);
-    console.log(h2Headers);
-    console.log(h3Headers);
     setHeadings(
       [...h1Headers, ...h2Headers, ...h3Headers].map((e) => ({
         name: e.innerText,

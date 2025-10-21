@@ -14,6 +14,9 @@ const Container = styled.header`
   gap: 1em;
   flex: 3;
   justify-content: space-between;
+  @media screen and (max-width: 1366px) {
+    max-width: none;
+  }
   @media screen and (max-width: 800px) {
     flex-direction: column;
     text-align: center;
