@@ -1,5 +1,8 @@
 import type { MSC } from "../model/MSC";
-import type { ResolveMSCResponse } from "./queries/resolveMSC";
+import type {
+  ResolveMSCResponse,
+  ResolveMSCReviewThreadsResponse,
+} from "./queries/resolveMSC";
 
 const SynapseRegex =
   /https:\/\/github.com\/(?:matrix-org|element-hq)\/synapse\/pull\/(\d+)/g;
@@ -85,9 +88,10 @@ export function getImplementationsFromString(
 
 export function getImplementationsFromText(
   pullRequest: ResolveMSCResponse["repository"]["pullRequest"],
+  reviewThreads: ResolveMSCReviewThreadsResponse["repository"]["pullRequest"],
   proposalText: string | null,
 ): MSC["implementations"] {
-  const implThread = pullRequest.reviewThreads.nodes.find((rT) =>
+  const implThread = reviewThreads.reviewThreads.nodes.find((rT) =>
     rT.comments.nodes.some((c) =>
       c.body.startsWith("Implementation requirements:"),
     ),

@@ -1,4 +1,3 @@
-import { useHash } from "@mantine/hooks";
 import "highlight.js/styles/tokyo-night-dark.min.css";
 import { useMarkdown } from "./useMarkdown";
 
@@ -9,14 +8,25 @@ type ProposalHeading = {
 };
 
 export function useProposalText(
+  threads: { line: number }[],
   markdown?: string,
 ): { html: string; headings: ProposalHeading[] } | null {
-  const [hash] = useHash();
+  const hash = window.location.hash;
   if (!markdown) {
     return null;
   }
   const hashPrefix = hash.slice("#".length).split("/", 3).slice(0, 2).join("/");
   let headings: ProposalHeading[] = [];
+
+  const lines = markdown.split("\n");
+  for (let tId = 0; tId < threads.length; tId++) {
+    const thread = threads[tId];
+    lines[thread.line - 1] =
+      `[anchor-${tId}](thread-start:${tId})` +
+      lines[thread.line - 1] +
+      `[anchor-${tId}](thread-end:${tId})`;
+  }
+
   const html = useMarkdown(
     {
       postprocessor: (element) => {
@@ -36,7 +46,7 @@ export function useProposalText(
         }
       },
     },
-    markdown,
+    lines.join("\n"),
   );
   return html ? { html, headings } : null;
 }

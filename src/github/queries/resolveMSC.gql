@@ -11,35 +11,7 @@ query lastIssues($num: Int!) {
       createdAt
       isDraft
       closedAt
-      latestReviews(first: 20) {
-        nodes {
-          id
-          author {
-            login
-            avatarUrl
-          }
-          state
-          body
-        }
-      }
-      reviewThreads(first: 20) {
-        nodes {
-          id
-          comments(first: 5) {
-            nodes {
-              id
-              author {
-                avatarUrl
-                login
-              }
-              body
-              createdAt
-              minimizedReason
-            }
-          }
-        }
-      }
-      labels(first: 10) {
+      labels(first: 20) {
         nodes {
           id
           name
@@ -69,22 +41,6 @@ query lastIssues($num: Int!) {
           commit {
             authoredDate
           }
-        }
-      }
-      comments(last: 100) {
-        totalCount
-        pageInfo {
-          hasNextPage
-        }
-        nodes {
-          id
-          author {
-            avatarUrl
-            login
-          }
-          body
-          createdAt
-          minimizedReason
         }
       }
     }

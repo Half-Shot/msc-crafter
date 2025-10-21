@@ -30,14 +30,6 @@ export interface ResolveMSCResponse {
       headRepository: {
         nameWithOwner: string;
       };
-      reviewThreads: {
-        nodes: {
-          id: string;
-          comments: {
-            nodes: ResolveMSCResponseComment[];
-          };
-        }[];
-      };
       commits: {
         nodes: [
           {
@@ -47,6 +39,41 @@ export interface ResolveMSCResponse {
           },
         ];
       };
+      labels: {
+        nodes: {
+          id: string;
+          name: string;
+          color: string;
+          description: null;
+        }[];
+      };
+      url: string;
+      author: {
+        avatarUrl: string;
+        login: string;
+      };
+      body: string;
+    };
+  };
+}
+
+export interface ResolveMSCCommentsResponse {
+  repository: {
+    pullRequest: {
+      comments: {
+        totalCount: number;
+        pageInfo: {
+          hasNextPage: boolean;
+        };
+        nodes: ResolveMSCResponseComment[];
+      };
+    };
+  };
+}
+
+export interface ResolveMSCReviewThreadsResponse {
+  repository: {
+    pullRequest: {
       latestReviews: {
         nodes: {
           id: string;
@@ -58,27 +85,18 @@ export interface ResolveMSCResponse {
           body: string;
         }[];
       };
-      labels: {
+      reviewThreads: {
         nodes: {
+          line: number;
+          startLine: number;
+          originalLine: number;
+          isResolved: boolean;
           id: string;
-          name: string;
-          color: string;
-          description: null;
+          comments: {
+            nodes: ResolveMSCResponseComment[];
+          };
         }[];
       };
-      comments: {
-        totalCount: number;
-        pageInfo: {
-          hasNextPage: boolean;
-        };
-        nodes: ResolveMSCResponseComment[];
-      };
-      url: string;
-      author: {
-        avatarUrl: string;
-        login: string;
-      };
-      body: string;
     };
   };
 }

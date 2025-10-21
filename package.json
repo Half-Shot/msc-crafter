@@ -16,11 +16,11 @@
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",
     "preact": "^10.27.2",
+    "prettier": "^3.6.2",
     "styled-components": "^6.1.19",
     "typescript": "^5.9.3",
     "vite": "^7.1.10",
-    "vitest": "^3.2.4",
-    "prettier": "^3.6.2"
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@mantine/hooks": "^8.3.5",
@@ -31,7 +31,11 @@
     "markdown-it": "^14.1.0",
     "markdown-it-footnote": "^4.0.0",
     "markdown-it-highlightjs": "^4.2.0",
-    "minisearch": "^7.2.0"
+    "minisearch": "^7.2.0",
+    "react-markdown": "^10.1.0",
+    "rehype-highlight": "^7.0.2",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1"
   },
   "packageManager": "yarn@4.10.3"
 }

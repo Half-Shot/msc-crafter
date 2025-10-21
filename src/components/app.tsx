@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from "preact/hooks";
+import { useEffect } from "preact/hooks";
 import "./app.css";
-import { useDocumentTitle, useHash } from "@mantine/hooks";
+import { useDocumentTitle } from "@mantine/hooks";
 import { useMSC } from "../hooks/useLocalMSCStore";
 import { MSCView } from "./MSCView";
 import { TopBar } from "./Topbar";
@@ -8,9 +8,11 @@ import { GitHubAuthProvider } from "../hooks/GitHubAuth";
 import { useRecentMSCs } from "../hooks/useRecentMSCs";
 import { WelcomeView } from "./WelcomeView";
 import { Footer } from "./Footer";
+import { CurrentMSCContextProvider } from "../hooks/CurrentMSCContext";
+import { useAppHash } from "../hooks/useAppHash";
 
 function AppWithMSC({ mscNumber }: { mscNumber: number }) {
-  const msc = useMSC(mscNumber);
+  const msc = useMSC(mscNumber, true, true);
   const [, addRecentCount] = useRecentMSCs();
   useDocumentTitle(
     msc && "error" in msc === false
@@ -35,39 +37,24 @@ function AppWithMSC({ mscNumber }: { mscNumber: number }) {
       </div>
     );
   }
-  return <>
-    <MSCView msc={msc} />
-  </>;
+  return (
+    <CurrentMSCContextProvider msc={msc}>
+      <MSCView />
+    </CurrentMSCContextProvider>
+  );
 }
 
 export function App() {
-  const [hash] = useHash();
-  
-  const currentMSCNumber = useMemo(() => {
-    if (hash.startsWith("#msc/")) {
-      let currentMSCNumber = parseInt(
-        hash.slice("#msc/".length).split("/", 2)[0],
-      );
-      if (!isNaN(currentMSCNumber)) {
-        return currentMSCNumber;
-      }
-    }
-    return null;
-  }, [hash]);
-
-  let content;
-  if (currentMSCNumber) {
-    content = <AppWithMSC mscNumber={currentMSCNumber} />;
-  } else {
-    content = <WelcomeView />;
-  }
-
-  // Home page of sorts
+  const currentMSCNumber = useAppHash();
   return (
     <GitHubAuthProvider>
-      <div style={{"minHeight": "89vh"}}>
+      <div style={{ minHeight: "89vh" }}>
         <TopBar />
-        {content}
+        {currentMSCNumber ? (
+          <AppWithMSC mscNumber={currentMSCNumber} />
+        ) : (
+          <WelcomeView />
+        )}
       </div>
       <Footer />
     </GitHubAuthProvider>

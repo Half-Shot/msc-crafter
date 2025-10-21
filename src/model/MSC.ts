@@ -25,6 +25,12 @@ export interface Comment {
   updated?: Date;
 }
 
+export interface Thread {
+  comments: [Comment] & Comment[];
+  line: number;
+  resolved: boolean;
+}
+
 export interface ProposalState {
   githubUsername: string;
   state: boolean;
@@ -52,10 +58,7 @@ interface RootMSC {
     markdown: string | null;
   };
   comments: Comment[];
-  threads: {
-    comments: [Comment] & Comment[];
-    resolved: boolean;
-  }[];
+  threads: Thread[];
   implementations: {
     url: string;
     title: string;

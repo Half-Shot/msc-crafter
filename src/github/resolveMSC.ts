@@ -1,14 +1,19 @@
 import {
   MSCState,
   type ClosedMSC,
+  type Comment,
   type MSC,
   type ProposedState,
 } from "../model/MSC";
 import { graphql as GraphQL } from "@octokit/graphql";
 import resolveMSCQuery from "../github/queries/resolveMSC.gql?raw";
+import resolveMSCCommentsQuery from "../github/queries/resolveMSCComments.gql?raw";
+import resolveMSCReviewThreadsQuery from "../github/queries/resolveMSCReviewThreads.gql?raw";
 import type {
+  ResolveMSCCommentsResponse,
   ResolveMSCResponse,
   ResolveMSCResponseComment,
+  ResolveMSCReviewThreadsResponse,
 } from "./queries/resolveMSC";
 import { getImplementationsFromText } from "./implementationParser";
 
@@ -71,7 +76,7 @@ async function loadProposal(pullRequest: ResolvedPR): Promise<string | null> {
 }
 
 function getTickBoxState(
-  pullRequest: ResolvedPR,
+  pullRequest: ResolveMSCCommentsResponse["repository"]["pullRequest"],
   expectedState: ProposedState,
 ): MSC["proposalState"] | undefined {
   // TODO: Paginate
@@ -103,9 +108,17 @@ function getTickBoxState(
   );
 }
 
+/**
+ * Get a MSC from GitHub.
+ * @param graphql The authenticated graphql instance.
+ * @param mscNumber The MSC to request
+ * @param fullRender Whether to return a full MSC response, or skip details that would require more requests.
+ * @returns
+ */
 export async function resolveMSC(
   graphql: typeof GraphQL,
   mscNumber: number,
+  fullRender: boolean,
 ): Promise<MSC> {
   const { repository } = await graphql<ResolveMSCResponse>(resolveMSCQuery, {
     num: mscNumber,
@@ -121,7 +134,6 @@ export async function resolveMSC(
     ?.map((s) => parseInt(s.slice(3)))
     .forEach((s) => mentionedProposals.add(s));
   mentionedProposals.delete(mscNumber);
-
 
   const state = determineMSCState(repository.pullRequest);
 
@@ -154,27 +166,66 @@ export async function resolveMSC(
     comments: [],
     threads: [],
     mentionedMSCs: [...mentionedProposals],
-    proposalState:
-      [
-        MSCState.ProposedClose,
-        MSCState.ProposedFinalCommentPeriod,
-        MSCState.ProposedMerge,
-      ].includes(state) &&
-      getTickBoxState(repository.pullRequest, state as ProposedState),
-    implementations: getImplementationsFromText(
-      repository.pullRequest,
-      proposalText,
-    ),
+    implementations: [],
     kind,
   } as MSC;
 
-  // Get closing comment
-  if (state === MSCState.Closed) {
+  // Extra requests for fullRender
+
+  if (fullRender) {
+    const reviewThreads = await graphql<ResolveMSCReviewThreadsResponse>(
+      resolveMSCReviewThreadsQuery,
+      {
+        num: mscNumber,
+      },
+    );
+    msc.implementations = getImplementationsFromText(
+      repository.pullRequest,
+      reviewThreads.repository.pullRequest,
+      proposalText,
+    );
+    msc.threads = reviewThreads.repository.pullRequest.reviewThreads.nodes.map(
+      (thread) => ({
+        resolved: thread.isResolved,
+        line: thread.line,
+        // Fix Type
+        comments: thread.comments.nodes.map(
+          (c) =>
+            ({
+              body: { markdown: c.body },
+              author: {
+                githubUsername: c.author.login,
+              },
+              created: new Date(c.createdAt),
+            }) satisfies Comment,
+        ) as [Comment],
+      }),
+    );
+  }
+
+  if (
+    (fullRender && state === MSCState.ProposedClose) ||
+    state === MSCState.ProposedFinalCommentPeriod
+  ) {
+    const comments = await graphql<ResolveMSCCommentsResponse>(
+      resolveMSCCommentsQuery,
+      {
+        num: mscNumber,
+      },
+    );
+    msc.proposalState = getTickBoxState(comments.repository.pullRequest, state);
+  } else if (fullRender && state === MSCState.Closed) {
+    const comments = await graphql<ResolveMSCCommentsResponse>(
+      resolveMSCCommentsQuery,
+      {
+        num: mscNumber,
+      },
+    );
     // No GQL api for this, which sucks.
     const closedAtDate = new Date(repository.pullRequest.closedAt);
     let closestComment: ResolveMSCResponseComment | undefined;
     let currentTimeDiff = Number.MAX_SAFE_INTEGER;
-    for (const comment of repository.pullRequest.comments.nodes) {
+    for (const comment of comments.repository.pullRequest.comments.nodes) {
       const timeDiff = Math.abs(
         new Date(comment.createdAt).getTime() - closedAtDate.getTime(),
       );

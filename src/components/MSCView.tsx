@@ -1,15 +1,15 @@
 import styled from "styled-components";
-import { MSCState, type ClosedMSC, type MSC } from "../model/MSC";
+import { MSCState, type ClosedMSC } from "../model/MSC";
 import { StateBadge } from "./StateBadge";
 import { useMarkdown } from "../hooks/useMarkdown";
-import { useProposalText } from "../hooks/useProposalText";
-import { MSCLink } from "./MSCLink";
 import { FollowBlock } from "./FollowBlock";
 import { MemorisedDetails } from "./MemorisedDetails";
-import { useLocalMSCCache } from "../hooks/useLocalMSCCache";
 import { CommentView } from "./CommentView";
 import { VoteBlock } from "./VoteBlock";
 import { humanDuration } from "../utils/time";
+import { ProposalBody } from "./ProposalBody";
+import { useCurrentMSC } from "../hooks/CurrentMSCContext";
+import { MentionedMSCs } from "./MentionedMSCs";
 
 const Title = styled.h1`
   font-size: 24px;
@@ -26,33 +26,6 @@ const MSCBody = styled.section`
   padding-left: 2em;
   border-left: 4px solid green;
 `;
-const ProposalBody = styled.article`
-  font-size: 14px;
-  padding-left: 2em;
-  border-left: 4px solid #f4c331ff;
-  text-wrap: wrap;
-  max-width: 40vw;
-  pre {
-    max-width: 100%;
-    overflow: scroll;
-  }
-  table {
-    border: 1px solid black;
-    margin: 2em auto;
-
-    thead {
-      background-color: rgba(119, 119, 119, 1);
-      color: rgba(12, 12, 12, 1);
-    }
-
-    th {
-      padding: 0.5em;
-    }
-    td {
-      padding: 0.5em;
-    }
-  }
-`;
 
 const Container = styled.div`
   max-width: 1280px;
@@ -63,6 +36,7 @@ const Column = styled.div``;
 const ColumnContainer = styled.div`
   display: flex;
   gap: 1em;
+  margin-top: 4em;
 `;
 
 const FormattedTime = styled.time`
@@ -79,15 +53,9 @@ const KindBadge = styled.div`
   font-weight: 600;
 `;
 
-export function MSCView({ msc }: { msc: MSC }) {
+export function MSCView() {
+  const { msc, headings } = useCurrentMSC();
   const prBody = useMarkdown({ stripRenderedLink: true }, msc.prBody.markdown);
-  const proposalText = useProposalText(msc.body.markdown ?? undefined);
-  const localMSCs = useLocalMSCCache();
-
-  // Experimental, requires local caching
-  const mentioningMSCs = localMSCs.filter((m) =>
-    m.mentionedMSCs.includes(msc.prNumber),
-  );
   const closingComment = (msc as ClosedMSC).closingComment;
 
   return (
@@ -105,9 +73,6 @@ export function MSCView({ msc }: { msc: MSC }) {
               Written by {msc.author.githubUsername}
             </a>
           </span>
-          <a target="_blank" href={msc.url}>
-            Link to GitHub PR
-          </a>
           <span>
             Created:{" "}
             <FormattedTime
@@ -144,20 +109,11 @@ export function MSCView({ msc }: { msc: MSC }) {
         </MemorisedDetails>
       )}
       <ColumnContainer>
-        <Column style={{ "minWidth": "25%", "maxWidth": "25%"}}>
-          <h2>Related MSCs</h2>
-          <ul>
-            {msc.mentionedMSCs?.map((mscNumber) => (
-              <li key={mscNumber}>
-                <MSCLink kind="mention" mscNumber={mscNumber} />
-              </li>
-            ))}
-            {mentioningMSCs?.map((msc) => (
-              <li key={msc.prNumber}>
-                <MSCLink kind="mentioned by" mscNumber={msc.prNumber} />
-              </li>
-            ))}
-          </ul>
+        <Column style={{ minWidth: "25%", maxWidth: "25%" }}>
+          <a href={msc.url} target="_blank">
+            View on GitHub
+          </a>
+          <MentionedMSCs />
           <h2>Implementations</h2>
           <p>Implementations matching is experimental, some may be missing.</p>
           <ul>
@@ -170,11 +126,11 @@ export function MSCView({ msc }: { msc: MSC }) {
             ))}
           </ul>
           {msc.proposalState && <VoteBlock votes={msc.proposalState} />}
-          {proposalText && (
+          {headings && (
             <FollowBlock>
               <h2>Table of contents</h2>
               <ul>
-                {proposalText.headings.map((heading) => (
+                {headings.map((heading) => (
                   <li key={heading.hash}>
                     <a href={"#" + heading.hash}>{heading.name}</a>
                   </li>
@@ -184,12 +140,8 @@ export function MSCView({ msc }: { msc: MSC }) {
           )}
         </Column>
         <Column>
-          <h2>Proposal</h2>
-          {proposalText && (
-            <ProposalBody
-              dangerouslySetInnerHTML={{ __html: proposalText.html }}
-            />
-          )}
+          <h2 style={{ marginTop: 0 }}>Proposal</h2>
+          {msc.body && <ProposalBody />}
         </Column>
       </ColumnContainer>
     </Container>

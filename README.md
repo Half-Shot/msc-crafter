@@ -6,7 +6,6 @@ having to use GitHub's clunky UI. All data is sourced from GitHub with a 5 minut
 
 ![basic rendering of MSC4201](image.png)
 
-
 ### Features
 
 - [x] Simple identification of linked MSCs.

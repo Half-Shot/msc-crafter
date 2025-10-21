@@ -1,0 +1,25 @@
+query resolveMSCComments($num: Int!) {
+  viewer {
+    login
+  }
+  repository(owner: "matrix-org", name: "matrix-spec-proposals") {
+    pullRequest(number: $num) {
+      comments(last: 100) {
+        totalCount
+        pageInfo {
+          hasNextPage
+        }
+        nodes {
+          id
+          author {
+            avatarUrl
+            login
+          }
+          body
+          createdAt
+          minimizedReason
+        }
+      }
+    }
+  }
+}

@@ -3,14 +3,17 @@ import type { DetailsHTMLAttributes } from "preact";
 import type { PropsWithChildren } from "preact/compat";
 
 export function MemorisedDetails({
-  key,
+  storageKey,
   children,
-  defaultValue = true,
+  defaultValue: defaultOpen = true,
 }: PropsWithChildren<{
-  key: string;
-  defaultValue: boolean,
+  storageKey: string;
+  defaultValue?: boolean;
 }>): DetailsHTMLAttributes<HTMLDetailsElement> {
-  const [open, setOpen] = useSessionStorage({ key, defaultValue });
+  const [open, setOpen] = useSessionStorage({
+    key: storageKey,
+    defaultValue: defaultOpen,
+  });
   return (
     <details open={open} onToggle={(ev) => setOpen(ev.newState === "open")}>
       {children}

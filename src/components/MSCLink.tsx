@@ -7,7 +7,7 @@ export function MSCLink({
   mscNumber: number;
   kind: string;
 }) {
-  const msc = useMSC(mscNumber);
+  const msc = useMSC(mscNumber, true, false);
   return (
     <>
       <a href={`#msc/${mscNumber}`}>

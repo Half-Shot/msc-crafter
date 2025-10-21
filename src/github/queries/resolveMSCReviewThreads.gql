@@ -1,0 +1,41 @@
+query lastIssues($num: Int!) {
+  viewer {
+    login
+  }
+  repository(owner: "matrix-org", name: "matrix-spec-proposals") {
+    pullRequest(number: $num) {
+      latestReviews(first: 20) {
+        nodes {
+          id
+          author {
+            login
+            avatarUrl
+          }
+          state
+          body
+        }
+      }
+      reviewThreads(first: 50) {
+        nodes {
+          id
+          line
+          startLine
+          originalLine
+          isResolved
+          comments(first: 20) {
+            nodes {
+              id
+              author {
+                avatarUrl
+                login
+              }
+              body
+              createdAt
+              minimizedReason
+            }
+          }
+        }
+      }
+    }
+  }
+}

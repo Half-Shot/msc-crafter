@@ -8,7 +8,7 @@ export function useLocalMSCCache(): MSC[] {
       Object.entries(localStorage)
         .filter(([k]) => k.startsWith("msccrafter.msc."))
         .map(([, v]) => JSON.parse(v) as CachedMSC)
-        .map(cachedMSC => ({
+        .map((cachedMSC) => ({
           ...cachedMSC,
           created: new Date(cachedMSC.created),
           updated: new Date(cachedMSC.updated),
