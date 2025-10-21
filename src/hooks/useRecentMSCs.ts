@@ -38,5 +38,5 @@ export function useRecentMSCs(): [
     [lastRecent],
   );
 
-  return [recentMSCs.sort((a, b) => b.date - a.date), addRecent];
+  return [recentMSCs.sort((a, b) => b.date - a.date).slice(0, 10), addRecent];
 }
