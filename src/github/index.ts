@@ -86,7 +86,7 @@ export async function resolveMSC(graphql: typeof GraphQL, mscNumber: number): Pr
     const msc = {
         prNumber: mscNumber,
         created: new Date(repository.pullRequest.createdAt),
-        updated: new Date(repository.pullRequest.lastEditedAt),
+        updated: new Date(repository.pullRequest.commits.nodes[0].commit.authoredDate),
         title: repository.pullRequest.title,
         state,
         url: repository.pullRequest.url,

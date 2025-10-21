@@ -65,6 +65,11 @@ const ColumnContainer = styled.div`
     gap: 1em;
 `
 
+const FormattedTime = styled.time`
+    text-decoration: underline dashed;
+`
+
+
 const KindBadge = styled.div`
     border: 1px solid  rgba(38, 135, 150);
     border-radius: 2em;
@@ -75,7 +80,31 @@ const KindBadge = styled.div`
     font-weight: 600;
 `
 
+const HOUR = 60*60;
+const DAY = HOUR*24;
+const MONTH = DAY*30;
+const YEAR = DAY*365;
 
+function humanDuration(date: Date) {
+    const seconds = (Date.now() - date.getTime()) / 1000;
+    if (seconds < 60) {
+        return "Less than a minute ago";
+    }
+    if (seconds < HOUR) {
+        return `${Math.round(seconds/60)} minutes ago`
+    }
+    if (seconds < DAY) {
+        return `${Math.round(seconds/HOUR)} hours ago`
+    }
+    if (seconds < MONTH) {
+        return `${Math.round(seconds/DAY)} days ago`
+    }
+    if (seconds < YEAR) {
+        return `${Math.round(seconds/MONTH)} months ago`
+    }
+
+    return `${Math.round(seconds/YEAR)} years ago`;
+}
 
 export function MSCView({msc}: {msc: MSC}) {
     const prBody = useMarkdown({stripRenderedLink: true}, msc.prBody.markdown);
@@ -94,6 +123,12 @@ export function MSCView({msc}: {msc: MSC}) {
                     <a target="_blank" href={`https://github.com/${msc.author.githubUsername}`}>Written by {msc.author.githubUsername}</a>
                 </span>
                 <a target="_blank" href={msc.url}>Link to GitHub PR</a>
+                <span>
+                    Created: <FormattedTime title={msc.created.toLocaleString()} datetime={msc.created.toISOString()}>{humanDuration(msc.created)}</FormattedTime>
+                </span>
+                <span >
+                    Last updated: <FormattedTime title={msc.updated.toLocaleString()} datetime={msc.updated.toISOString()}>{humanDuration(msc.updated)}</FormattedTime>
+                </span>
                 {msc.kind.map(k => <KindBadge>{k}</KindBadge>)}
             </WidgetContainer>
             {closingComment && <CommentView comment={closingComment} kind="closed"/>}

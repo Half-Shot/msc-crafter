@@ -38,7 +38,14 @@ export interface ResolveMSCResponse {
 						nodes: ResolveMSCResponseComment[],
 					}
 				}[]
-			}
+			},
+      commits: {
+        nodes: [{
+          commit: {
+            authoredDate: string;
+          }
+        }]
+      }
       "latestReviews": {
         "nodes": 
           {

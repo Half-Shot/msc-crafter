@@ -23,18 +23,22 @@ const Left = styled.span`
 const Right = styled.span`
     font-size: 0.5em;
 `
-const AppName = styled.span`
+const AppName = styled.a`
     font-weight: 600;
     font-size: 1em;
     width: fit-content;
     flex: 1;
     margin-right: 1em;
+    text-decoration: none;
+    &:visited {
+        color: white;
+    }
 `
 
 export function TopBar() {
     return <Container>
         <Left>
-            <AppName><a href="#">MSC Crafter</a></AppName>
+            <AppName href="#">MSC Crafter</AppName>
         </Left>
         <Left>
             <MSCSearch/>

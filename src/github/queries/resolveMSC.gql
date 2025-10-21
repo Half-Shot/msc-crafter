@@ -64,6 +64,13 @@ query lastIssues($num: Int!) {
           path
         }
       }
+      commits(last: 1) {
+        nodes {
+          commit {
+            authoredDate
+          }
+        }
+      }
       comments(last: 100) {
         totalCount,
         pageInfo {
