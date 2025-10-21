@@ -9,7 +9,9 @@
   "scripts": {
     "dev": "vite dev",
     "start": "yarn dev",
-    "build": "vite build"
+    "build": "vite build",
+    "lint:prettier": "prettier src -w",
+    "lint": "yarn prettier"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",

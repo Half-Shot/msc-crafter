@@ -9,6 +9,8 @@ import { MemorisedDetails } from "./MemorisedDetails";
 import { useLocalMSCCache } from "../hooks/useLocalMSCCache";
 import { CommentView } from "./CommentView";
 import { VoteBlock } from "./VoteBlock";
+import { humanDuration } from "../utils/time";
+import { useState } from "preact/hooks";
 
 const Title = styled.h1`
   font-size: 24px;
@@ -78,32 +80,6 @@ const KindBadge = styled.div`
   font-weight: 600;
 `;
 
-const HOUR = 60 * 60;
-const DAY = HOUR * 24;
-const MONTH = DAY * 30;
-const YEAR = DAY * 365;
-
-function humanDuration(date: Date) {
-  const seconds = (Date.now() - date.getTime()) / 1000;
-  if (seconds < 60) {
-    return "Less than a minute ago";
-  }
-  if (seconds < HOUR) {
-    return `${Math.round(seconds / 60)} minutes ago`;
-  }
-  if (seconds < DAY) {
-    return `${Math.round(seconds / HOUR)} hours ago`;
-  }
-  if (seconds < MONTH) {
-    return `${Math.round(seconds / DAY)} days ago`;
-  }
-  if (seconds < YEAR) {
-    return `${Math.round(seconds / MONTH)} months ago`;
-  }
-
-  return `${Math.round(seconds / YEAR)} years ago`;
-}
-
 export function MSCView({ msc }: { msc: MSC }) {
   const prBody = useMarkdown({ stripRenderedLink: true }, msc.prBody.markdown);
   const proposalText = useProposalText(msc.body.markdown ?? undefined);
@@ -137,7 +113,7 @@ export function MSCView({ msc }: { msc: MSC }) {
             Created:{" "}
             <FormattedTime
               title={msc.created.toLocaleString()}
-              datetime={msc.created.toISOString()}
+              dateTime={msc.created.toISOString()}
             >
               {humanDuration(msc.created)}
             </FormattedTime>
@@ -146,7 +122,7 @@ export function MSCView({ msc }: { msc: MSC }) {
             Last updated:{" "}
             <FormattedTime
               title={msc.updated.toLocaleString()}
-              datetime={msc.updated.toISOString()}
+              dateTime={msc.updated.toISOString()}
             >
               {humanDuration(msc.updated)}
             </FormattedTime>
@@ -168,7 +144,7 @@ export function MSCView({ msc }: { msc: MSC }) {
         </MemorisedDetails>
       )}
       <ColumnContainer>
-        <Column style={{ "min-width": "25%" }}>
+        <Column style={{ "minWidth": "25%", "maxWidth": "25%"}}>
           <h2>Related MSCs</h2>
           <ul>
             {msc.mentionedMSCs?.map((mscNumber) => (

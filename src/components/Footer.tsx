@@ -1,0 +1,21 @@
+import styled from "styled-components"
+
+const Container = styled.footer`
+    font-size: 1.25em;
+    ul {
+        display: flex;
+        justify-items: space-evenly;
+        list-style: none;
+        justify-content: space-evenly;
+    }
+`
+
+export function Footer() {
+    return <Container>
+        <ul>
+            <li><a href="https://github.com/Half-Shot/msc-crafter" target="_blank">GitHub</a></li>
+            <li><a href="https://github.com/Half-Shot/msc-crafter/issues/new" target="_blank">Report a bug</a></li>
+            <li>Written with ❤️ by <a href="https://mastodon.half-shot.uk/@halfy" target="_blank">Half-Shot 🐶</a></li>
+        </ul>
+    </Container>
+}

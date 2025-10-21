@@ -30,13 +30,6 @@ export interface ProposalState {
   state: boolean;
 }
 
-export interface SpecEndpoint {
-  new: boolean;
-  relatedSpecUrl: string;
-  name: string;
-  body: string;
-}
-
 interface RootMSC {
   prNumber: number;
   created: Date;
@@ -69,7 +62,6 @@ interface RootMSC {
     logo?: string;
   }[];
   proposalState?: Record<string, boolean>;
-  relatedEndpoints: SpecEndpoint[];
 }
 
 export interface OpenMSC extends RootMSC {

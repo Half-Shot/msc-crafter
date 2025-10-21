@@ -9,7 +9,7 @@ const MatrixJsSdkUrlRegex =
 const MatrixJsSdkShortRegex = /\/matrix-org\/matrix-js-sdk#(\d+)/g;
 const ComplementRegex =
   /https:\/\/github.com\/matrix-org\/complement\/pull\/(\d+)/g;
-const GitHubLinkedPR = /([^\/\s]+)\/([^\/\d]+)#(\d+)/g;
+const GitHubLinkedPR = /(\w[^\/\s]+)\/(\w[^\/\d\s]+)#(\d+)/g;
 const GenericGitHubProjectRegex =
   /https:\/\/github.com\/([^\/]+)\/([^\/]+)\/pull\/(\d+)/g;
 const GenericGitLabProjectRegex =
@@ -83,7 +83,7 @@ export function getImplementationsFromString(
   return impls;
 }
 
-export function getImplementationsFromThreads(
+export function getImplementationsFromText(
   pullRequest: ResolveMSCResponse["repository"]["pullRequest"],
   proposalText: string | null,
 ): MSC["implementations"] {

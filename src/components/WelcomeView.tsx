@@ -5,7 +5,7 @@ import { useGitHubAuth } from "../hooks/GitHubAuth";
 import { useMemo } from "preact/hooks";
 
 const WelcomeContent = styled.main`
-  font-size: 20px;
+  font-size: 1.25em;
   display: flex;
   gap: 4em;
 `;

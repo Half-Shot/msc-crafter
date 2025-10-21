@@ -5,12 +5,12 @@ import { useMSC } from "../hooks/useLocalMSCStore";
 import { MSCView } from "./MSCView";
 import { TopBar } from "./Topbar";
 import { GitHubAuthProvider } from "../hooks/GitHubAuth";
-import styled from "styled-components";
 import { useRecentMSCs } from "../hooks/useRecentMSCs";
 import { WelcomeView } from "./WelcomeView";
+import { Footer } from "./Footer";
 
 function AppWithMSC({ mscNumber }: { mscNumber: number }) {
-  const msc = useMSC(mscNumber, false);
+  const msc = useMSC(mscNumber);
   const [, addRecentCount] = useRecentMSCs();
   useDocumentTitle(
     msc && "error" in msc === false
@@ -35,11 +35,14 @@ function AppWithMSC({ mscNumber }: { mscNumber: number }) {
       </div>
     );
   }
-  return <MSCView msc={msc} />;
+  return <>
+    <MSCView msc={msc} />
+  </>;
 }
 
 export function App() {
   const [hash] = useHash();
+  
   const currentMSCNumber = useMemo(() => {
     if (hash.startsWith("#msc/")) {
       let currentMSCNumber = parseInt(
@@ -62,8 +65,11 @@ export function App() {
   // Home page of sorts
   return (
     <GitHubAuthProvider>
-      <TopBar />
-      {content}
+      <div style={{"minHeight": "89vh"}}>
+        <TopBar />
+        {content}
+      </div>
+      <Footer />
     </GitHubAuthProvider>
   );
 }
