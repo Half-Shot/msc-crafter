@@ -61,17 +61,18 @@ export function Heading({
   const { setHeadings } = useCurrentMSC();
   const hash = window.location.hash;
   const hashPrefix = hash.slice("#".length).split("/", 3).slice(0, 2).join("/");
-
-  const innerText = children as string;
-  const hashID = `${hashPrefix}/${innerText.toLowerCase().replaceAll(/\s/g, "-")}`;
+  const hashID =
+    typeof children === "string"
+      ? `${hashPrefix}/${children.toLowerCase().replaceAll(/\s/g, "-")}`
+      : undefined;
 
   useEffect(() => {
-    if (!hash) {
+    if (!hash || !hashID || typeof children !== "string") {
       return;
     }
     setHeadings((headings) => [
       ...headings,
-      { name: innerText, subheadings: [], hash: hashID },
+      { name: children, subheadings: [], hash: hashID },
     ]);
   }, [hash]);
 
