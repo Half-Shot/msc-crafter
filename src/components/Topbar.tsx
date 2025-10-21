@@ -34,7 +34,7 @@ const AppName = styled.span`
 export function TopBar() {
     return <Container>
         <Left>
-            <AppName>MSC Crafter</AppName>
+            <AppName><a href="#">MSC Crafter</a></AppName>
         </Left>
         <Left>
             <MSCSearch/>
