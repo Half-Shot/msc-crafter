@@ -17,7 +17,8 @@
     "styled-components": "^6.1.19",
     "typescript": "^5.9.3",
     "vite": "^7.1.10",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "prettier": "^3.6.2"
   },
   "dependencies": {
     "@mantine/hooks": "^8.3.5",

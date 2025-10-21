@@ -7,10 +7,10 @@ query lastIssues($num: Int!) {
       id
       title
       state
-      lastEditedAt,
-      createdAt,
-      isDraft,
-      closedAt,
+      lastEditedAt
+      createdAt
+      isDraft
+      closedAt
       latestReviews(first: 20) {
         nodes {
           id
@@ -22,23 +22,23 @@ query lastIssues($num: Int!) {
           body
         }
       }
-			reviewThreads(first: 20) {
-				nodes {
-          id,
-					comments(first: 5) {
-						nodes {
-							id,
-							author {
-								avatarUrl,
-								login
-							},
-							body,
-							createdAt,
-							minimizedReason,
-						}
-					}
-				}
-			}
+      reviewThreads(first: 20) {
+        nodes {
+          id
+          comments(first: 5) {
+            nodes {
+              id
+              author {
+                avatarUrl
+                login
+              }
+              body
+              createdAt
+              minimizedReason
+            }
+          }
+        }
+      }
       labels(first: 10) {
         nodes {
           id
@@ -57,7 +57,7 @@ query lastIssues($num: Int!) {
         name
       }
       headRepository {
-        nameWithOwner,
+        nameWithOwner
       }
       files(last: 30) {
         nodes {
@@ -72,19 +72,19 @@ query lastIssues($num: Int!) {
         }
       }
       comments(last: 100) {
-        totalCount,
+        totalCount
         pageInfo {
           hasNextPage
         }
         nodes {
-          id,
+          id
           author {
-            avatarUrl,
+            avatarUrl
             login
-          },
-          body,
-          createdAt,
-          minimizedReason,
+          }
+          body
+          createdAt
+          minimizedReason
         }
       }
     }

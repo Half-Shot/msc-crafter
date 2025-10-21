@@ -13,7 +13,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -27,4 +26,6 @@
   }
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}

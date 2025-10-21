@@ -1,4 +1,4 @@
-query viewerInfo() {
+query viewerInfo {
   viewer {
     login
     avatarUrl

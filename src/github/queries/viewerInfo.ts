@@ -1,6 +1,6 @@
 export interface ViewerInfoResponse {
   viewer: {
-    login: string,
-    avatarUrl: string,
-  },
+    login: string;
+    avatarUrl: string;
+  };
 }

@@ -1,14 +1,14 @@
 query lastIssues($searchQ: String!) {
-	search(query: $searchQ, type: ISSUE, first: 5) {
-		nodes {
-			__typename
-			... on PullRequest {
-				title
-				number
-                author {
-                    login
-                }
-			}
-		}
-	}
+  search(query: $searchQ, type: ISSUE, first: 5) {
+    nodes {
+      __typename
+      ... on PullRequest {
+        title
+        number
+        author {
+          login
+        }
+      }
+    }
+  }
 }
