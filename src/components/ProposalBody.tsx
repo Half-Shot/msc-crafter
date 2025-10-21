@@ -104,7 +104,7 @@ export function CommentThread({
   );
 }
 
-export const ProposalBody= forwardRef<HTMLElement>((_props, ref) => {
+export const ProposalBody = forwardRef<HTMLElement>((_props, ref) => {
   const { msc } = useCurrentMSC();
 
   if (!msc.body.markdown) {

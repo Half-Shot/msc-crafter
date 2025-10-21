@@ -8,11 +8,9 @@ const LoggedInContainer = styled.div`
   flex-direction: column;
 `;
 
-
 const Button = styled.button`
   width: fit-content;
 `;
-
 
 export function AuthButton() {
   const tokenInput = useRef<HTMLInputElement>(null);

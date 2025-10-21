@@ -22,7 +22,6 @@ export function FollowBlock(props: PropsWithChildren) {
   const [scrollData] = useWindowScroll();
   const [fixedCheckPoint, setFixedCheckPoint] = useState<number | null>();
 
-
   useEffect(() => {
     if (isSmallScreen) {
       setFixedCheckPoint(null);

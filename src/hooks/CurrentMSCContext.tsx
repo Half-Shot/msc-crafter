@@ -3,7 +3,6 @@ import { createContext } from "preact";
 import type { PropsWithChildren } from "preact/compat";
 import type { MSC } from "../model/MSC";
 
-
 type CurrentState = null | {
   msc: MSC;
 };

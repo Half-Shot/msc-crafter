@@ -28,7 +28,6 @@ const Right = styled.span`
   font-size: 0.5em;
 `;
 
-
 const AppLogo = styled.img`
   width: 2.5em;
   margin-right: 1em;
@@ -54,7 +53,10 @@ export function TopBar() {
   return (
     <Container>
       <Left>
-        <AppName href="#"><AppLogo src={Logo} />MSC Crafter</AppName>
+        <AppName href="#">
+          <AppLogo src={Logo} />
+          MSC Crafter
+        </AppName>
       </Left>
       <Left>
         <MSCSearch />

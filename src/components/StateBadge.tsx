@@ -12,38 +12,37 @@ export const StateBadgeContainer = styled.span`
 
   &.closed {
     border-color: rgba(137, 0, 0, 1);
-    background-color: rgba(137, 0, 0, 0.80);
+    background-color: rgba(137, 0, 0, 0.8);
   }
-  
+
   &.p-close {
     border-style: dashed;
     border-color: rgba(137, 0, 0, 1);
-    background-color: rgba(137, 0, 0, 0.80);
+    background-color: rgba(137, 0, 0, 0.8);
   }
-    
 
   &.merged {
     border-color: rgba(89, 0, 137, 1);
-    background-color: rgba(89, 0, 137, 0.80);
+    background-color: rgba(89, 0, 137, 0.8);
   }
 
   &.ready {
     border-style: dashed;
     border-color: rgba(89, 0, 137, 1);
-    background-color: rgba(89, 0, 137, 0.80);
+    background-color: rgba(89, 0, 137, 0.8);
   }
 
   &.open {
     color: rgba(41, 41, 41);
     border-color: rgba(80, 212, 53, 1);
-    background-color: rgba(80, 212, 53, 0.80);
+    background-color: rgba(80, 212, 53, 0.8);
   }
 
   &.p-fcp {
     color: rgba(41, 41, 41);
     border-style: dashed;
     border-color: rgba(212, 146, 53, 1);
-    background-color: rgba(212, 146, 53, 0.80);
+    background-color: rgba(212, 146, 53, 0.8);
   }
 `;
 

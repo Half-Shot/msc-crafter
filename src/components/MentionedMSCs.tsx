@@ -12,25 +12,24 @@ export function MentionedMSCs() {
   );
 
   const content = useMemo(() => {
-        return [
-          ...msc.mentionedMSCs?.map((mscNumber) => (
-            <li key={mscNumber}>
-              <MSCLink kind="mention" mscNumber={mscNumber} />
-            </li>
-          )),
-        ...mentioningMSCs?.map((msc) => (
-          <li key={msc.prNumber}>
-            <MSCLink kind="mentioned by" mscNumber={msc.prNumber} />
-          </li>
-        ))]
+    return [
+      ...msc.mentionedMSCs?.map((mscNumber) => (
+        <li key={mscNumber}>
+          <MSCLink kind="mention" mscNumber={mscNumber} />
+        </li>
+      )),
+      ...mentioningMSCs?.map((msc) => (
+        <li key={msc.prNumber}>
+          <MSCLink kind="mentioned by" mscNumber={msc.prNumber} />
+        </li>
+      )),
+    ];
   }, [msc.mentionedMSCs, localMSCs]);
 
   return (
     <>
       <h2>Related MSCs</h2>
-      <ul>
-        {content}
-      </ul>
+      <ul>{content}</ul>
     </>
   );
 }

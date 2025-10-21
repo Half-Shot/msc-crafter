@@ -29,11 +29,15 @@ html {
     color: var(--mc-color-inactive);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     color: var(--mc-color-heading);
   }
 }
-
 
 @media (prefers-color-scheme: dark) {
   :root {

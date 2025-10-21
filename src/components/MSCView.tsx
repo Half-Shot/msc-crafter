@@ -46,7 +46,6 @@ const RightColumn = styled.div`
   }
 `;
 
-
 const ColumnContainer = styled.div`
   display: flex;
   gap: 1em;
@@ -77,18 +76,19 @@ export function MSCView() {
   const prBody = useMarkdown({ stripRenderedLink: true }, msc.prBody.markdown);
   const closingComment = (msc as ClosedMSC).closingComment;
   const proposalBodyRef = useRef<HTMLElement>(null);
-  
+
   return (
     <Container>
       <header>
         <WidgetContainer>
-          <Title>{msc.title}</Title><StateBadge state={msc.state} />
+          <Title>{msc.title}</Title>
+          <StateBadge state={msc.state} />
         </WidgetContainer>
         <WidgetContainer>
           <span>
             Written by
             <a
-              style={{'marginLeft': '0.5em'}}
+              style={{ marginLeft: "0.5em" }}
               target="_blank"
               href={`https://github.com/${msc.author.githubUsername}`}
             >
