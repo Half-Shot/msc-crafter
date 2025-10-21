@@ -4,8 +4,7 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/tokyo-night-dark.min.css";
-import { useEffect, useMemo } from "preact/hooks";
-import type { PropsWithChildren } from "preact/compat";
+import { forwardRef, type PropsWithChildren } from "preact/compat";
 import rehypeRaw from "rehype-raw";
 import type { Thread } from "../model/MSC";
 import { MemorisedDetails } from "./MemorisedDetails";
@@ -13,9 +12,12 @@ import { MemorisedDetails } from "./MemorisedDetails";
 const Container = styled.article`
   font-size: 14px;
   padding-left: 2em;
-  border-left: 4px solid #f4c331ff;
+  border-left: 4px solid var(--mc-color-highlight);
+  @media screen and (max-width: 800px) {
+    border-left: none;
+    padding-left: 0;
+  }
   text-wrap: wrap;
-  max-width: 40vw;
   pre {
     max-width: 100%;
     overflow: scroll;
@@ -58,23 +60,12 @@ export function Heading({
   type,
   children,
 }: PropsWithChildren<{ type: "h1" | "h2" | "h3" }>) {
-  const { setHeadings } = useCurrentMSC();
   const hash = window.location.hash;
   const hashPrefix = hash.slice("#".length).split("/", 3).slice(0, 2).join("/");
   const hashID =
     typeof children === "string"
       ? `${hashPrefix}/${children.toLowerCase().replaceAll(/\s/g, "-")}`
       : undefined;
-
-  useEffect(() => {
-    if (!hash || !hashID || typeof children !== "string") {
-      return;
-    }
-    setHeadings((headings) => [
-      ...headings,
-      { name: children, subheadings: [], hash: hashID },
-    ]);
-  }, [hash]);
 
   if (!hash) {
     return;
@@ -113,48 +104,46 @@ export function CommentThread({
   );
 }
 
-export function ProposalBody() {
-  const { msc, setHeadings } = useCurrentMSC();
-  const markdown = useMemo(() => {
-    if (!msc.body.markdown) {
-      return null;
-    }
-    const lines = msc.body.markdown.split("\n");
-    for (let tId = 0; tId < msc.threads.length; tId++) {
-      const thread = msc.threads[tId];
-      lines[thread.line - 1] =
-        `<div x-thread-anchor="${tId}">` + lines[thread.line - 1] + `</div>`;
-    }
-    setHeadings([]);
-    return (
-      <Container>
-        <Markdown
-          remarkPlugins={[remarkGfm]}
-          rehypePlugins={[rehypeHighlight, rehypeRaw]}
-          skipHtml={false}
-          components={{
-            h1: ({ children }) => <Heading type="h1">{children}</Heading>,
-            h2: ({ children }) => <Heading type="h2">{children}</Heading>,
-            h3: ({ children }) => <Heading type="h3">{children}</Heading>,
-            div: (el) => {
-              if (el["x-thread-anchor"]) {
-                return (
-                  <CommentThread
-                    thread={msc.threads[parseInt(el["x-thread-anchor"])]}
-                  >
-                    {el.children}
-                  </CommentThread>
-                );
-              }
-              return null;
-            },
-          }}
-        >
-          {lines.join("\n")}
-        </Markdown>
-      </Container>
-    );
-  }, [msc]);
+export const ProposalBody= forwardRef<HTMLElement>((_props, ref) => {
+  const { msc } = useCurrentMSC();
 
-  return markdown;
-}
+  if (!msc.body.markdown) {
+    return;
+  }
+
+  const lines = msc.body.markdown.split("\n");
+  for (let tId = 0; tId < msc.threads.length; tId++) {
+    const thread = msc.threads[tId];
+    lines[thread.line - 1] =
+      `<div x-thread-anchor="${tId}">` + lines[thread.line - 1] + `</div>`;
+  }
+
+  return (
+    <Container ref={ref}>
+      <Markdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeHighlight, rehypeRaw]}
+        skipHtml={false}
+        components={{
+          h1: ({ children }) => <Heading type="h1">{children}</Heading>,
+          h2: ({ children }) => <Heading type="h2">{children}</Heading>,
+          h3: ({ children }) => <Heading type="h3">{children}</Heading>,
+          div: (el) => {
+            if (el["x-thread-anchor"]) {
+              return (
+                <CommentThread
+                  thread={msc.threads[parseInt(el["x-thread-anchor"])]}
+                >
+                  {el.children}
+                </CommentThread>
+              );
+            }
+            return null;
+          },
+        }}
+      >
+        {lines.join("\n")}
+      </Markdown>
+    </Container>
+  );
+});

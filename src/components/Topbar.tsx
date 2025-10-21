@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { MSCSearch } from "./MSCSearch";
 import { AuthButton } from "./AuthButton";
+import Logo from "./logo.png";
 
 const Container = styled.header`
   font-size: 24pt;
@@ -13,6 +14,10 @@ const Container = styled.header`
   gap: 1em;
   flex: 3;
   justify-content: space-between;
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+    text-align: center;
+  }
 `;
 
 const Left = styled.span`
@@ -22,6 +27,16 @@ const Left = styled.span`
 const Right = styled.span`
   font-size: 0.5em;
 `;
+
+
+const AppLogo = styled.img`
+  width: 2.5em;
+  margin-right: 1em;
+
+  @media (prefers-color-scheme: dark) {
+    filter: invert(80%);
+  }
+`;
 const AppName = styled.a`
   font-weight: 600;
   font-size: 1em;
@@ -30,15 +45,16 @@ const AppName = styled.a`
   margin-right: 1em;
   text-decoration: none;
   &:visited {
-    color: white;
+    color: var(--mc-color-text-fg);
   }
+  white-space: nowrap;
 `;
 
 export function TopBar() {
   return (
     <Container>
       <Left>
-        <AppName href="#">MSC Crafter</AppName>
+        <AppName href="#"><AppLogo src={Logo} />MSC Crafter</AppName>
       </Left>
       <Left>
         <MSCSearch />

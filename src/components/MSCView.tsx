@@ -10,6 +10,8 @@ import { humanDuration } from "../utils/time";
 import { ProposalBody } from "./ProposalBody";
 import { useCurrentMSC } from "../hooks/CurrentMSCContext";
 import { MentionedMSCs } from "./MentionedMSCs";
+import { useRef } from "preact/hooks";
+import { TableOfContents } from "./TableOfContents";
 
 const Title = styled.h1`
   font-size: 24px;
@@ -18,25 +20,42 @@ const WidgetContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 2em;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
+  align-items: first baseline;
 `;
 
 const MSCBody = styled.section`
   font-size: 14px;
   padding-left: 2em;
-  border-left: 4px solid green;
 `;
 
 const Container = styled.div`
   max-width: 1280px;
   margin: auto;
 `;
-const Column = styled.div``;
+const LeftColumn = styled.div`
+  width: 25%;
+  @media screen and (max-width: 800px) {
+    width: 100%;
+  }
+`;
+const RightColumn = styled.div`
+  width: 75%;
+  @media screen and (max-width: 800px) {
+    width: 100%;
+  }
+`;
+
 
 const ColumnContainer = styled.div`
   display: flex;
   gap: 1em;
-  margin-top: 4em;
+  margin-top: 2em;
+  flex-direction: row;
+
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+  }
 `;
 
 const FormattedTime = styled.time`
@@ -54,23 +73,26 @@ const KindBadge = styled.div`
 `;
 
 export function MSCView() {
-  const { msc, headings } = useCurrentMSC();
+  const { msc } = useCurrentMSC();
   const prBody = useMarkdown({ stripRenderedLink: true }, msc.prBody.markdown);
   const closingComment = (msc as ClosedMSC).closingComment;
-
+  const proposalBodyRef = useRef<HTMLElement>(null);
+  
   return (
     <Container>
       <header>
-        <Title>
-          {msc.title} <StateBadge state={msc.state} />
-        </Title>
+        <WidgetContainer>
+          <Title>{msc.title}</Title><StateBadge state={msc.state} />
+        </WidgetContainer>
         <WidgetContainer>
           <span>
+            Written by
             <a
+              style={{'marginLeft': '0.5em'}}
               target="_blank"
               href={`https://github.com/${msc.author.githubUsername}`}
             >
-              Written by {msc.author.githubUsername}
+              {msc.author.githubUsername}
             </a>
           </span>
           <span>
@@ -101,7 +123,7 @@ export function MSCView() {
       </header>
       {prBody && (
         <MemorisedDetails
-          key={`msccrafter.pullrequestbodyopen.${msc.prNumber}`}
+          storageKey={`msccrafter.pullrequestbodyopen.${msc.prNumber}`}
           defaultValue={msc.state !== MSCState.Closed}
         >
           <summary>Pull request body</summary>
@@ -109,7 +131,7 @@ export function MSCView() {
         </MemorisedDetails>
       )}
       <ColumnContainer>
-        <Column style={{ minWidth: "25%", maxWidth: "25%" }}>
+        <LeftColumn>
           <a href={msc.url} target="_blank">
             View on GitHub
           </a>
@@ -126,23 +148,14 @@ export function MSCView() {
             ))}
           </ul>
           {msc.proposalState && <VoteBlock votes={msc.proposalState} />}
-          {headings && (
-            <FollowBlock>
-              <h2>Table of contents</h2>
-              <ul>
-                {headings.map((heading) => (
-                  <li key={heading.hash}>
-                    <a href={"#" + heading.hash}>{heading.name}</a>
-                  </li>
-                ))}
-              </ul>
-            </FollowBlock>
-          )}
-        </Column>
-        <Column>
+          <FollowBlock>
+            <TableOfContents element={proposalBodyRef} />
+          </FollowBlock>
+        </LeftColumn>
+        <RightColumn>
           <h2 style={{ marginTop: 0 }}>Proposal</h2>
-          {msc.body && <ProposalBody />}
-        </Column>
+          {msc.body && <ProposalBody ref={proposalBodyRef} />}
+        </RightColumn>
       </ColumnContainer>
     </Container>
   );

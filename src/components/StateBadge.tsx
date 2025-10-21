@@ -7,34 +7,43 @@ export const StateBadgeContainer = styled.span`
   color: #ffffffe0;
   background-color: #525252cf;
   padding: 8px;
-  font-size: 0.8rem;
+  font-size: 1.1rem;
+  font-weight: 600;
 
   &.closed {
-    border-color: rgba(137, 0, 0, 0.81);
-    background-color: rgba(137, 0, 0, 0.81);
+    border-color: rgba(137, 0, 0, 1);
+    background-color: rgba(137, 0, 0, 0.80);
   }
+  
+  &.p-close {
+    border-style: dashed;
+    border-color: rgba(137, 0, 0, 1);
+    background-color: rgba(137, 0, 0, 0.80);
+  }
+    
 
   &.merged {
-    border-color: rgba(138, 138, 138, 0.81);
-    background-color: rgba(89, 0, 137, 0.81);
+    border-color: rgba(89, 0, 137, 1);
+    background-color: rgba(89, 0, 137, 0.80);
+  }
+
+  &.ready {
+    border-style: dashed;
+    border-color: rgba(89, 0, 137, 1);
+    background-color: rgba(89, 0, 137, 0.80);
   }
 
   &.open {
     color: rgba(41, 41, 41);
     border-color: rgba(80, 212, 53, 1);
-    background-color: rgba(80, 212, 53, 0.81);
+    background-color: rgba(80, 212, 53, 0.80);
   }
 
   &.p-fcp {
     color: rgba(41, 41, 41);
     border-style: dashed;
     border-color: rgba(212, 146, 53, 1);
-    background-color: rgba(212, 146, 53, 0.81);
-  }
-  &.p-fcp {
-    color: rgba(41, 41, 41);
-    border-color: rgba(212, 146, 53, 1);
-    background-color: rgba(212, 146, 53, 0.81);
+    background-color: rgba(212, 146, 53, 0.80);
   }
 `;
 

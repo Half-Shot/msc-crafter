@@ -8,6 +8,12 @@ const LoggedInContainer = styled.div`
   flex-direction: column;
 `;
 
+
+const Button = styled.button`
+  width: fit-content;
+`;
+
+
 export function AuthButton() {
   const tokenInput = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +51,7 @@ export function AuthButton() {
     return (
       <LoggedInContainer>
         <span>Logged in as {githubAuth.viewer.login}</span>
-        <button onClick={() => githubAuth.logout()}>Logout</button>
+        <Button onClick={() => githubAuth.logout()}>Logout</Button>
       </LoggedInContainer>
     );
   }
@@ -60,11 +66,11 @@ export function AuthButton() {
           type="password"
           placeholder="GitHub PAT"
         />
-        <button disabled={busy}>Store token</button>
+        <Button disabled={busy}>Store token</Button>
       </form>
     );
   }
   return (
-    <button onClick={() => setShowTokenForm(true)}>Login to GitHub</button>
+    <Button onClick={() => setShowTokenForm(true)}>Login to GitHub</Button>
   );
 }

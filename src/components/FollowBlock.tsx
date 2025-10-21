@@ -1,4 +1,4 @@
-import { useWindowScroll } from "@mantine/hooks";
+import { useMediaQuery, useWindowScroll } from "@mantine/hooks";
 import {
   useEffect,
   useId,
@@ -18,9 +18,16 @@ const Container = styled.div`
 export function FollowBlock(props: PropsWithChildren) {
   const id = useId();
   const ref = useRef<HTMLDivElement>(null);
+  const isSmallScreen = useMediaQuery("screen and (max-width: 1366px)");
   const [scrollData] = useWindowScroll();
   const [fixedCheckPoint, setFixedCheckPoint] = useState<number | null>();
+
+
   useEffect(() => {
+    if (isSmallScreen) {
+      setFixedCheckPoint(null);
+      return;
+    }
     if (fixedCheckPoint && scrollData.y < fixedCheckPoint) {
       setFixedCheckPoint(null);
     } else if (!fixedCheckPoint && ref.current) {
@@ -29,7 +36,7 @@ export function FollowBlock(props: PropsWithChildren) {
         setFixedCheckPoint(scrollData.y);
       }
     }
-  }, [scrollData, ref.current]);
+  }, [scrollData, ref.current, isSmallScreen]);
 
   return (
     <Container id={id} ref={ref} className={fixedCheckPoint ? "follow" : ""}>
