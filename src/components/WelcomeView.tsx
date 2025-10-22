@@ -8,6 +8,7 @@ const WelcomeContent = styled.main`
   font-size: 1.25em;
   display: flex;
   gap: 4em;
+  flex-wrap: wrap;
 `;
 
 const Column = styled.div`

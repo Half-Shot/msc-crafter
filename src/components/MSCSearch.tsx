@@ -123,7 +123,7 @@ export function MSCSearch() {
         type="search"
         onChange={onChangeHandler}
         list={id}
-        placeholder={"MSC1234..."}
+        placeholder={"Search 'MSC1234...'"}
       />
       <datalist id={id}>
         {matchingMSCs.map((m) => (

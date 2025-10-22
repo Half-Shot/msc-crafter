@@ -121,7 +121,7 @@ export function MSCView() {
           <CommentView comment={closingComment} kind="closed" />
         )}
       </header>
-      {prBody && (
+      {prBody ? (
         <MemorisedDetails
           storageKey={`msccrafter.pullrequestbodyopen.${msc.prNumber}`}
           defaultValue={msc.state !== MSCState.Closed}
@@ -129,7 +129,10 @@ export function MSCView() {
           <summary>Pull request body</summary>
           <MSCBody dangerouslySetInnerHTML={{ __html: prBody }} />
         </MemorisedDetails>
+      ) : (
+        <p>No Pull Request body provided</p>
       )}
+
       <ColumnContainer>
         <LeftColumn>
           <a href={msc.url} target="_blank">

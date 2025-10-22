@@ -11,6 +11,9 @@ export function TableOfContents({
   );
 
   useEffect(() => {
+    if (headings.length) {
+      return;
+    }
     const h1Headers = [...(element.current?.querySelectorAll("h1") ?? [])];
     const h2Headers = [...(element.current?.querySelectorAll("h2") ?? [])];
     const h3Headers = [...(element.current?.querySelectorAll("h3") ?? [])];
@@ -20,7 +23,7 @@ export function TableOfContents({
         hash: e.id,
       })),
     );
-  }, []);
+  });
 
   return (
     <>

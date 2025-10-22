@@ -5,10 +5,11 @@ import styled from "styled-components";
 
 const LoggedInContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 `;
 
 const Button = styled.button`
+  margin-left: 1em;
   width: fit-content;
 `;
 

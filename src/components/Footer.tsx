@@ -7,6 +7,9 @@ const Container = styled.footer`
     justify-items: space-evenly;
     list-style: none;
     justify-content: space-evenly;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1em;
   }
 `;
 
@@ -29,7 +32,10 @@ export function Footer() {
         </li>
         <li>
           Crafty Kobold logo by{" "}
-          <a href="https://mastodon.half-shot.uk/@delph@mastodon.dictatorshipcake.co.uk/115413468961680908" target="_blank">
+          <a
+            href="https://mastodon.half-shot.uk/@delph@mastodon.dictatorshipcake.co.uk/115413468961680908"
+            target="_blank"
+          >
             Delph 🐰
           </a>
         </li>

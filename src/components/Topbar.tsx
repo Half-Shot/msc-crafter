@@ -20,6 +20,7 @@ const Container = styled.header`
   @media screen and (max-width: 800px) {
     flex-direction: column;
     text-align: center;
+    gap: 0.1em;
   }
 `;
 
