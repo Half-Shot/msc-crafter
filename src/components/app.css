@@ -3,6 +3,14 @@
   display: flex;
   flex-direction: column;
   gap: 1em;
-  max-width: 1280px;
   margin: auto;
+}
+
+@keyframes scrolling {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-15em);
+  }
 }

@@ -7,6 +7,8 @@
 
   --mc-color-bg: rgb(253, 253, 253);
   --mc-color-text-fg: #212529;
+  --mc-color-error: rgb(163, 53, 53);
+  --mc-color-bg-error: rgb(240, 145, 145);
   --mc-color-heading: #343a40;
   --mc-color-highlight: #0098d4;
   --mc-color-inactive: #003a52;
@@ -44,6 +46,8 @@ html {
     --mc-color-bg: rgb(32, 32, 32);
     --mc-color-text-fg: rgb(218, 218, 218);
     --mc-color-heading: rgb(204, 204, 204);
+    --mc-color-error: rgb(243, 17, 17);
+    --mc-color-bg-error: rgb(54, 10, 10);
     --mc-color-highlight: #0098d4;
     --mc-color-inactive: #5297b4;
   }

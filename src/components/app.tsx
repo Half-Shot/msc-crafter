@@ -10,8 +10,15 @@ import { WelcomeView } from "./WelcomeView";
 import { Footer } from "./Footer";
 import { CurrentMSCContextProvider } from "../hooks/CurrentMSCContext";
 import { useAppHash } from "../hooks/useAppHash";
+import { NumericLoader } from "./atoms/NumericLoader";
+import {
+  AnimationContextProvider,
+  useAnimationState,
+} from "../hooks/AnimationContext";
+import { Notice } from "./atoms/Notice";
 
 function AppWithMSC({ mscNumber }: { mscNumber: number }) {
+  const { isAnimating } = useAnimationState();
   const msc = useMSC(mscNumber, true, true);
   const [, addRecentCount] = useRecentMSCs();
   useDocumentTitle(
@@ -26,15 +33,19 @@ function AppWithMSC({ mscNumber }: { mscNumber: number }) {
     }
   }, [msc]);
 
-  if (!msc) {
-    return <b>Loading MSC {mscNumber}</b>;
-  }
-  if ("error" in msc) {
+  console.log({ msc, isAnimating });
+
+  if (!msc || isAnimating || "error" in msc) {
+    const mscError = msc && "error" in msc && msc.error;
     return (
-      <div>
-        <p>Error loading MSC: </p>
-        <pre>{msc.error}</pre>
-      </div>
+      <>
+        <NumericLoader mscNumber={mscNumber} ready={!!msc} error={!!mscError} />
+        {mscError && (
+          <Notice heading="Error loading MSC" kind="error">
+            {mscError}
+          </Notice>
+        )}
+      </>
     );
   }
   return (
@@ -46,16 +57,21 @@ function AppWithMSC({ mscNumber }: { mscNumber: number }) {
 
 export function App() {
   const currentMSCNumber = useAppHash();
+
   return (
     <GitHubAuthProvider>
-      <div style={{ minHeight: "89vh" }}>
-        <TopBar />
-        {currentMSCNumber ? (
-          <AppWithMSC mscNumber={currentMSCNumber} />
-        ) : (
-          <WelcomeView />
-        )}
-      </div>
+      <AnimationContextProvider>
+        <div style={{ minHeight: "89vh" }}>
+          <TopBar />
+          {currentMSCNumber ? (
+            <AppWithMSC mscNumber={currentMSCNumber} />
+          ) : (
+            <>
+              <WelcomeView />
+            </>
+          )}
+        </div>
+      </AnimationContextProvider>
       <Footer />
     </GitHubAuthProvider>
   );

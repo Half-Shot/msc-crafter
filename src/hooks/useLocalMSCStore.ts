@@ -32,6 +32,8 @@ export function useMSC(
     if (!mscNumber || !githubAuth || "viewer" in githubAuth !== true) {
       return;
     }
+    // Nullify before load
+    setMSC(null);
 
     if (useCache) {
       // Load from cache
