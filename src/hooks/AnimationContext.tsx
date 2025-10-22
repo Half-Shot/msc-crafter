@@ -44,13 +44,11 @@ export function AnimationContextProvider({ children }: PropsWithChildren) {
     if (ongoingAnimationCounter.size > 0) {
       setIsAnimating(true);
     } else {
-      console.log("clearing animation");
       // Delay the close
       timerRef.current = setTimeout(() => {
         setIsAnimating(false);
       }, 500);
     }
-    console.log("state update", ongoingAnimationCounter, isAnimating);
   }, [ongoingAnimationCounter]);
 
   return (

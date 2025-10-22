@@ -33,8 +33,6 @@ function AppWithMSC({ mscNumber }: { mscNumber: number }) {
     }
   }, [msc]);
 
-  console.log({ msc, isAnimating });
-
   if (!msc || isAnimating || "error" in msc) {
     const mscError = msc && "error" in msc && msc.error;
     return (
