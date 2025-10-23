@@ -111,13 +111,6 @@ export const ProposalBody = forwardRef<HTMLElement>((_props, ref) => {
     return;
   }
 
-  const lines = msc.body.markdown.split("\n");
-  for (let tId = 0; tId < msc.threads.length; tId++) {
-    const thread = msc.threads[tId];
-    lines[thread.line - 1] =
-      `<div x-thread-anchor="${tId}">` + lines[thread.line - 1] + `</div>`;
-  }
-
   return (
     <Container ref={ref}>
       <Markdown
@@ -128,21 +121,9 @@ export const ProposalBody = forwardRef<HTMLElement>((_props, ref) => {
           h1: ({ children }) => <Heading type="h1">{children}</Heading>,
           h2: ({ children }) => <Heading type="h2">{children}</Heading>,
           h3: ({ children }) => <Heading type="h3">{children}</Heading>,
-          div: (el) => {
-            if (el["x-thread-anchor"]) {
-              return (
-                <CommentThread
-                  thread={msc.threads[parseInt(el["x-thread-anchor"])]}
-                >
-                  {el.children}
-                </CommentThread>
-              );
-            }
-            return null;
-          },
         }}
       >
-        {lines.join("\n")}
+        {msc.body.markdown}
       </Markdown>
     </Container>
   );
