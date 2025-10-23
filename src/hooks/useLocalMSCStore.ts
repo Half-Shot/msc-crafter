@@ -32,8 +32,6 @@ export function useMSC(
     if (!mscNumber || !githubAuth || "viewer" in githubAuth !== true) {
       return;
     }
-    // Nullify before load
-    setMSC(null);
 
     if (useCache) {
       // Load from cache
@@ -55,6 +53,9 @@ export function useMSC(
         // Expired.
       } // Never cached.
     }
+
+    // Only nullify after we've found the cache to be empty, to avoid flicker.
+    setMSC(null);
 
     resolveMSC(githubAuth.graphqlWithAuth, mscNumber, fullRender)
       .then((resultMsc) => {
