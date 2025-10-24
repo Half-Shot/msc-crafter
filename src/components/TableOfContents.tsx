@@ -1,9 +1,9 @@
 import type { RefObject } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { ContentBlock } from "./atoms/ContentBlock";
+import { ContentBlockWithHeading } from "./atoms/ContentBlock";
 import styled from "styled-components";
 
-const Container = styled(ContentBlock)`
+const Container = styled(ContentBlockWithHeading)`
   max-width: 100%;
   li {
     list-style: none;
@@ -55,8 +55,7 @@ export function TableOfContents({
   }, []);
 
   return (
-    <Container>
-      <h2>Table of contents</h2>
+    <Container heading="Table of contents">
       <ol>
         {headings.map((heading) => (
           <li key={heading.hash} className={"level-" + heading.level}>

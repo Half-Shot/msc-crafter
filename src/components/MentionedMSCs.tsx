@@ -2,7 +2,7 @@ import { useMemo } from "preact/hooks";
 import { useCurrentMSC } from "../hooks/CurrentMSCContext";
 import { useLocalMSCCache } from "../hooks/useLocalMSCCache";
 import { MSCLink } from "./MSCLink";
-import { ContentBlock } from "./atoms/ContentBlock";
+import { ContentBlockWithHeading } from "./atoms/ContentBlock";
 
 export function MentionedMSCs() {
   const { msc } = useCurrentMSC();
@@ -28,9 +28,8 @@ export function MentionedMSCs() {
   }, [msc.mentionedMSCs, localMSCs]);
 
   return (
-    <ContentBlock>
-      <h2>Related MSCs</h2>
+    <ContentBlockWithHeading heading="Related MSCs">
       {content.length ? <ul>{content}</ul> : <p>No mentioned MCSs</p>}
-    </ContentBlock>
+    </ContentBlockWithHeading>
   );
 }

@@ -1,3 +1,4 @@
+import type { PropsWithChildren } from "preact/compat";
 import styled from "styled-components";
 
 export const ContentBlock = styled.div`
@@ -6,4 +7,35 @@ export const ContentBlock = styled.div`
   border-radius: var(--mc-border-radius);
   background: var(--mc-color-block-bg);
   border: 2px solid var(--mc-color-block-border);
+
+  &.withHeading {
+    padding: 0;
+  }
 `;
+
+const ContentBlockContent = styled.div`
+  padding: var(--mc-block-padding);
+`;
+
+const ContentBlockHeading = styled.span`
+  width: calc(100% - var(--mc-block-padding));
+  font-weight: 600;
+  font-size: 1.25em;
+  background: var(--mc-color-block-border);
+  padding: 0.5em;
+  display: block;
+  border-radius: var(--mc-border-radius) var(--mc-border-radius) 0 0;
+  border-bottom: 2px solid var(--mc-color-block-border);
+`;
+
+export function ContentBlockWithHeading({
+  heading,
+  children,
+}: PropsWithChildren<{ heading: string }>) {
+  return (
+    <ContentBlock className="withHeading">
+      <ContentBlockHeading>{heading}</ContentBlockHeading>
+      <ContentBlockContent>{children}</ContentBlockContent>
+    </ContentBlock>
+  );
+}

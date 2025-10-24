@@ -1,8 +1,8 @@
-import { ContentBlock } from "./atoms/ContentBlock";
+import { ContentBlockWithHeading } from "./atoms/ContentBlock";
 
 export function VoteBlock({ votes }: { votes: Record<string, boolean> }) {
   return (
-    <ContentBlock>
+    <ContentBlockWithHeading heading="Votes">
       <h2> Votes </h2>
       {Object.entries(votes).map(([username, vote]) => (
         <p>
@@ -10,6 +10,6 @@ export function VoteBlock({ votes }: { votes: Record<string, boolean> }) {
           <label>{username}</label>
         </p>
       ))}
-    </ContentBlock>
+    </ContentBlockWithHeading>
   );
 }

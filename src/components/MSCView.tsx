@@ -13,7 +13,7 @@ import { MentionedMSCs } from "./MentionedMSCs";
 import { useRef, useState } from "preact/hooks";
 import { TableOfContents } from "./TableOfContents";
 import { ProposalRawView } from "./ProposalRawView";
-import { ContentBlock } from "./atoms/ContentBlock";
+import { ContentBlock, ContentBlockWithHeading } from "./atoms/ContentBlock";
 import { ToggleButtonRow } from "./atoms/ToggleButtonRow";
 
 const Title = styled.h1`
@@ -167,8 +167,7 @@ export function MSCView() {
             />
           </ContentBlock>
           <MentionedMSCs />
-          <ContentBlock>
-            <h2>Implementations</h2>
+          <ContentBlockWithHeading heading="Implementations">
             <p>
               Implementations matching is experimental, some may be missing.
             </p>
@@ -181,14 +180,14 @@ export function MSCView() {
                 </li>
               ))}
             </ul>
-          </ContentBlock>
+          </ContentBlockWithHeading>
           {msc.proposalState && <VoteBlock votes={msc.proposalState} />}
           {currentProposalView === ProposalView.Rendered && (
             <TableOfContents element={proposalBodyRef} />
           )}
         </LeftColumn>
         <RightColumn>
-          <ContentBlock>
+          <ContentBlockWithHeading heading="Proposal">
             {currentProposalView === ProposalView.Rendered && (
               <ProposalBody ref={proposalBodyRef} />
             )}
@@ -198,7 +197,7 @@ export function MSCView() {
             {currentProposalView === ProposalView.Plain && (
               <ProposalRawView showThreads={false} />
             )}
-          </ContentBlock>
+          </ContentBlockWithHeading>
         </RightColumn>
       </ColumnContainer>
     </Container>
