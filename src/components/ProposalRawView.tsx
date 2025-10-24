@@ -62,7 +62,7 @@ const ThreadCommentContent = styled.div`
   padding-left: 2em;
 `;
 
-export function CommentThread({ thread }: { thread: Thread }) {
+function CommentThread({ thread }: { thread: Thread }) {
   const preview = thread.comments[0].body.markdown
     .trimStart()
     .split("\n")[0]
@@ -133,7 +133,7 @@ export function CodeLine({
  * @returns {undefined}
  *   Nothing.
  */
-export function starryNightGutter(
+function starryNightGutter(
   tree: ReturnType<Awaited<ReturnType<typeof createStarryNight>>["highlight"]>,
 ) {
   /** @type {Array<RootContent>} */
@@ -238,7 +238,7 @@ export function starryNightGutter(
   tree.children = replacement as any;
 }
 
-export const ProposalRawView = ({ showThreads }: { showThreads: boolean }) => {
+const ProposalRawView = ({ showThreads }: { showThreads: boolean }) => {
   const { msc } = useCurrentMSC();
   const [renderedCode, setRenderedCode] = useState();
 
@@ -273,3 +273,5 @@ export const ProposalRawView = ({ showThreads }: { showThreads: boolean }) => {
 
   return <Container>{renderedCode}</Container>;
 };
+
+export default ProposalRawView;

@@ -6,14 +6,17 @@ import { MemorisedDetails } from "./MemorisedDetails";
 import { CommentView } from "./CommentView";
 import { VoteBlock } from "./VoteBlock";
 import { humanDuration } from "../time";
-import { ProposalBody } from "./ProposalBody";
 import { useCurrentMSC } from "../hooks/CurrentMSCContext";
 import { MentionedMSCs } from "./MentionedMSCs";
 import { useRef, useState } from "preact/hooks";
 import { TableOfContents } from "./TableOfContents";
-import { ProposalRawView } from "./ProposalRawView";
 import { ContentBlock, ContentBlockWithHeading } from "./atoms/ContentBlock";
 import { ToggleButtonRow } from "./atoms/ToggleButtonRow";
+import { lazy, Suspense } from "preact/compat";
+
+const ProposalBody = lazy(() => import("./ProposalBody"));
+const ProposalRawView = lazy(() => import("./ProposalRawView"));
+
 
 const Title = styled.h1`
   font-size: 24px;
@@ -190,15 +193,17 @@ export function MSCView() {
             heading="Proposal"
             padding={currentProposalView === ProposalView.Rendered}
           >
-            {currentProposalView === ProposalView.Rendered && (
-              <ProposalBody ref={proposalBodyRef} />
-            )}
-            {currentProposalView === ProposalView.Threads && (
-              <ProposalRawView showThreads={true} />
-            )}
-            {currentProposalView === ProposalView.Plain && (
-              <ProposalRawView showThreads={false} />
-            )}
+            <Suspense fallback={false}>
+              {currentProposalView === ProposalView.Rendered && (
+                <ProposalBody ref={proposalBodyRef} />
+              )}
+              {currentProposalView === ProposalView.Threads && (
+                <ProposalRawView showThreads={true} />
+              )}
+              {currentProposalView === ProposalView.Plain && (
+                <ProposalRawView showThreads={false} />
+              )}
+            </Suspense>
           </ContentBlockWithHeading>
         </RightColumn>
       </ColumnContainer>

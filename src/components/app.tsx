@@ -2,7 +2,6 @@ import { useEffect } from "preact/hooks";
 import "./app.css";
 import { useDocumentTitle } from "@mantine/hooks";
 import { useMSC } from "../hooks/useLocalMSCStore";
-import { MSCView } from "./MSCView";
 import { TopBar } from "./Topbar";
 import { GitHubAuthProvider } from "../hooks/GitHubAuth";
 import { useRecentMSCs } from "../hooks/useRecentMSCs";
@@ -16,6 +15,9 @@ import {
   useAnimationState,
 } from "../hooks/AnimationContext";
 import { Notice } from "./atoms/Notice";
+import { lazy, Suspense } from "preact/compat";
+
+const MSCView = lazy(() => import("./MSCView"));
 
 function AppWithMSC({ mscNumber }: { mscNumber: number }) {
   const { isAnimating } = useAnimationState();
@@ -48,7 +50,9 @@ function AppWithMSC({ mscNumber }: { mscNumber: number }) {
   }
   return (
     <CurrentMSCContextProvider msc={msc}>
-      <MSCView />
+      <Suspense fallback={false}>
+        <MSCView />
+      </Suspense>
     </CurrentMSCContextProvider>
   );
 }

@@ -61,7 +61,7 @@ export function Heading({
   }
 }
 
-export const ProposalBody = forwardRef<HTMLElement>((_props, ref) => {
+const ProposalBody = forwardRef<HTMLElement>((_props, ref) => {
   const { msc } = useCurrentMSC();
 
   if (!msc.body.markdown) {
@@ -85,3 +85,5 @@ export const ProposalBody = forwardRef<HTMLElement>((_props, ref) => {
     </Container>
   );
 });
+
+export default ProposalBody;
