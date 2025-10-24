@@ -1,6 +1,7 @@
 @import "@fontsource/jetbrains-mono";
 @import "@fontsource-variable/inter";
 @import "@wooorm/starry-night/style/both";
+@import "highlight.js/styles/tokyo-night-dark.min.css";
 
 :root {
   font-family: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "STIX Two Math", "Cambria Math", "Noto Sans Math", "Dejavu Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";

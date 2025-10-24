@@ -7,7 +7,7 @@ import markdownIt from "markdown-it";
 const MSPUrlRegex =
   /(https:\/\/github.com\/)?matrix-org\/matrix-spec-proposals\/pull\/(\d+)(?=\s|$)/;
 
-export function markdownReplacer(markdown: string): string {
+function markdownReplacer(markdown: string): string {
   markdown = markdown.replaceAll(
     new RegExp(MSPUrlRegex, "g"),
     (_subs, _github, prNumber) => {
@@ -17,7 +17,7 @@ export function markdownReplacer(markdown: string): string {
   return markdown;
 }
 
-export const parser = markdownIt("default", {})
+const parser = markdownIt("default", {})
   .use(markdownItFootnote)
   .use(markdownItHJS, {
     register: {

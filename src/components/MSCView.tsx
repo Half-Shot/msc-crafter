@@ -1,9 +1,6 @@
 import styled from "styled-components";
-import { MSCState, type ClosedMSC } from "../model/MSC";
+import { type ClosedMSC } from "../model/MSC";
 import { StateBadge } from "./StateBadge";
-import { useMarkdown } from "../hooks/useMarkdown";
-import { MemorisedDetails } from "./MemorisedDetails";
-import { CommentView } from "./CommentView";
 import { VoteBlock } from "./VoteBlock";
 import { humanDuration } from "../time";
 import { useCurrentMSC } from "../hooks/CurrentMSCContext";
@@ -16,6 +13,8 @@ import { lazy, Suspense } from "preact/compat";
 
 const ProposalBody = lazy(() => import("./ProposalBody"));
 const ProposalRawView = lazy(() => import("./ProposalRawView"));
+const PullRequestBody = lazy(() => import("./PullRequestBody"));
+const CommentView = lazy(() => import("./CommentView"));
 
 
 const Title = styled.h1`
@@ -34,11 +33,6 @@ const WidgetContainer = styled(ContentBlock)`
   gap: 2em;
   margin-bottom: 1em;
   align-items: first baseline;
-`;
-
-const PullRequestBody = styled.section`
-  font-size: 14px;
-  padding-left: 2em;
 `;
 
 const Container = styled.div`
@@ -95,7 +89,6 @@ export default function MSCView() {
     ProposalView.Rendered,
   );
 
-  const prBody = useMarkdown({ stripRenderedLink: true }, msc.prBody.markdown);
   const closingComment = (msc as ClosedMSC).closingComment;
   const proposalBodyRef = useRef<HTMLElement>(null);
 
@@ -143,19 +136,7 @@ export default function MSCView() {
           <CommentView comment={closingComment} kind="closed" />
         )}
       </header>
-      <ContentBlock>
-        {prBody ? (
-          <MemorisedDetails
-            storageKey={`msccrafter.pullrequestbodyopen.${msc.prNumber}`}
-            defaultValue={msc.state !== MSCState.Closed}
-          >
-            <summary>Pull request body</summary>
-            <PullRequestBody dangerouslySetInnerHTML={{ __html: prBody }} />
-          </MemorisedDetails>
-        ) : (
-          <p>No Pull Request body provided</p>
-        )}
-      </ContentBlock>
+      {msc.body && <PullRequestBody msc={msc} />}
       <ColumnContainer>
         <LeftColumn>
           <ContentBlock>

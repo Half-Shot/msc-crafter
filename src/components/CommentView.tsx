@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import type { Comment } from "../model/MSC";
-import { useMarkdown } from "../hooks/useMarkdown";
+import Markdown from "react-markdown";
 
 const Container = styled.div`
   padding: 1em;
@@ -13,23 +13,21 @@ const Author = styled.div`
   font-weight: 600;
 `;
 
-export function CommentView({
+export default function CommentView({
   comment,
   kind,
 }: {
   comment: Comment;
   kind: "closed";
 }) {
-  const html = useMarkdown({}, comment.body.markdown);
-
-  if (!html) {
+  if (!comment.body.markdown) {
     return;
   }
 
   return (
     <Container className={kind}>
       <Author>{comment.author.githubUsername} closed this MSC</Author>
-      <p dangerouslySetInnerHTML={{ __html: html }}></p>
+      <Markdown>{comment.body.markdown}</Markdown>
     </Container>
   );
 }

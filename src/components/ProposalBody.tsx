@@ -3,7 +3,6 @@ import { useCurrentMSC } from "../hooks/CurrentMSCContext";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
-import "highlight.js/styles/tokyo-night-dark.min.css";
 import { forwardRef, type PropsWithChildren } from "preact/compat";
 import rehypeRaw from "rehype-raw";
 
