@@ -1,5 +1,9 @@
+@import "@fontsource/jetbrains-mono";
+@import "@fontsource-variable/inter";
+@import "@wooorm/starry-night/style/both";
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "STIX Two Math", "Cambria Math", "Noto Sans Math", "Dejavu Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   line-height: 1.5;
   font-weight: 400;
 
@@ -13,6 +17,7 @@
   --mc-color-highlight: #0098d4;
   --mc-color-inactive: #003a52;
   --mc-border-radius: 4px;
+  --mc-font-monospace: "JetBrains Mono";
 
   --mc-block-padding: 1em 2em;
   --mc-color-block-bg: rgb(235, 235, 235);
@@ -55,7 +60,6 @@ html {
     --mc-color-bg-error: rgb(54, 10, 10);
     --mc-color-highlight: #0098d4;
     --mc-color-inactive: #5297b4;
-    --mc-color-bg-texteditor: rgb(35, 45, 70);
 
     --mc-color-block-bg: rgb(48, 48, 48);
     --mc-color-block-border: rgb(63, 63, 63);

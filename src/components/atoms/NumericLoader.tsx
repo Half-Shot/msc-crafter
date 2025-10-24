@@ -7,7 +7,7 @@ const BigNumber = styled.span`
     width: 1em;
     display: block;
     text-align: center;
-    font: monospace;
+    font-family: var(--mc-font-monospace);
     pointer-events: none;
     @media (prefers-reduced-motion: no-preference) {
         &.animate {

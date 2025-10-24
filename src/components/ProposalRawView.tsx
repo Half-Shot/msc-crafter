@@ -1,8 +1,6 @@
 import styled from "styled-components";
 import { useCurrentMSC } from "../hooks/CurrentMSCContext";
 
-// @ts-ignore Should be fine
-import "@wooorm/starry-night/style/both";
 import {
   useEffect,
   useState,
@@ -27,7 +25,7 @@ const Container = styled.article`
 `;
 
 const LineNumber = styled.span`
-  font: monospace;
+  font-family: var(--mc-font-monospace);
   text-align: right;
   user-select: none;
   margin-left: 0.5em;
@@ -54,7 +52,7 @@ const ThreadTitle = styled.span`
 `;
 
 const ThreadPreview = styled.span`
-  font-family: monospace;
+  font-family: var(--mc-font-monospace);
   background: var(--mc-color-bg);
   padding-left: 0.2em;
   border-radius: 0.5em;
@@ -98,7 +96,7 @@ export function CommentThread({ thread }: { thread: Thread }) {
 }
 
 const CodeLineContainer = styled.span`
-  font-family: monospace;
+  font-family: var(--mc-font-monospace);
   display: flex;
   gap: 1.2em;
 `;

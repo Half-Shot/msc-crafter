@@ -438,6 +438,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource-variable/inter@npm:^5.2.8":
+  version: 5.2.8
+  resolution: "@fontsource-variable/inter@npm:5.2.8"
+  checksum: 10c0/35b46df31c8c18f55f87228acf6297e4dac6cc9f38d0faaafdaf5a40e40c386cf1bfb115fb0fe0dcdb9b7e14f582843693ccf070d9c903072a5b2fc0f8dfde56
+  languageName: node
+  linkType: hard
+
+"@fontsource/jetbrains-mono@npm:^5.2.8":
+  version: 5.2.8
+  resolution: "@fontsource/jetbrains-mono@npm:5.2.8"
+  checksum: 10c0/a51a1ad9cc847ccb3f5986d00b49fcd0eb2061200eb9caf215f968d658806e96e0ee305ab45df3d167f62223e45935cb7e89f984e7fb88fbe6928855a20e044e
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -824,6 +838,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tsconfig/node24@npm:^24.0.1":
+  version: 24.0.1
+  resolution: "@tsconfig/node24@npm:24.0.1"
+  checksum: 10c0/18e2ad5946bc6ddc9fbe37c4537439245da16eb8a5888641a1cdbc412a465ee321b5fa7c0ffc489c929d65c8bd0698ece9e8f3c52ae2596433ad0e866857bc83
+  languageName: node
+  linkType: hard
+
 "@types/chai@npm:^5.2.2":
   version: 5.2.2
   resolution: "@types/chai@npm:5.2.2"
@@ -920,6 +941,15 @@ __metadata:
   version: 2.1.0
   resolution: "@types/ms@npm:2.1.0"
   checksum: 10c0/5ce692ffe1549e1b827d99ef8ff71187457e0eb44adbae38fdf7b9a74bae8d20642ee963c14516db1d35fa2652e65f47680fdf679dcbde52bbfadd021f497225
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^24.9.1":
+  version: 24.9.1
+  resolution: "@types/node@npm:24.9.1"
+  dependencies:
+    undici-types: "npm:~7.16.0"
+  checksum: 10c0/c52f8168080ef9a7c3dc23d8ac6061fab5371aad89231a0f6f4c075869bc3de7e89b075b1f3e3171d9e5143d0dda1807c3dab8e32eac6d68f02e7480e7e78576
   languageName: node
   linkType: hard
 
@@ -1031,6 +1061,18 @@ __metadata:
     loupe: "npm:^3.1.4"
     tinyrainbow: "npm:^2.0.0"
   checksum: 10c0/024a9b8c8bcc12cf40183c246c244b52ecff861c6deb3477cbf487ac8781ad44c68a9c5fd69f8c1361878e55b97c10d99d511f2597f1f7244b5e5101d028ba64
+  languageName: node
+  linkType: hard
+
+"@wooorm/starry-night@npm:^3.8.0":
+  version: 3.8.0
+  resolution: "@wooorm/starry-night@npm:3.8.0"
+  dependencies:
+    "@types/hast": "npm:^3.0.0"
+    import-meta-resolve: "npm:^4.0.0"
+    vscode-oniguruma: "npm:^2.0.0"
+    vscode-textmate: "npm:^9.0.0"
+  checksum: 10c0/8b340fdc53a03a642e556b7c525aaa811fd757691980fdeb861a9adbf9ab7e84cc79ce58b11278e604d0c0ebcd85262c798a927019c8a57c9c9d36bba601f4ec
   languageName: node
   linkType: hard
 
@@ -1255,6 +1297,13 @@ __metadata:
   version: 3.0.0
   resolution: "chownr@npm:3.0.0"
   checksum: 10c0/43925b87700f7e3893296c8e9c56cc58f926411cce3a6e5898136daaf08f08b9a8eb76d37d3267e707d0dcc17aed2e2ebdf5848c0c3ce95cf910a919935c1b10
+  languageName: node
+  linkType: hard
+
+"classnames@npm:^2.5.1":
+  version: 2.5.1
+  resolution: "classnames@npm:2.5.1"
+  checksum: 10c0/afff4f77e62cea2d79c39962980bf316bacb0d7c49e13a21adaadb9221e1c6b9d3cdb829d8bb1b23c406f4e740507f37e1dcf506f7e3b7113d17c5bab787aa69
   languageName: node
   linkType: hard
 
@@ -1787,7 +1836,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hast-util-to-jsx-runtime@npm:^2.0.0":
+"hast-util-to-jsx-runtime@npm:^2.0.0, hast-util-to-jsx-runtime@npm:^2.3.6":
   version: 2.3.6
   resolution: "hast-util-to-jsx-runtime@npm:2.3.6"
   dependencies:
@@ -1922,6 +1971,13 @@ __metadata:
   dependencies:
     safer-buffer: "npm:>= 2.1.2 < 3.0.0"
   checksum: 10c0/98102bc66b33fcf5ac044099d1257ba0b7ad5e3ccd3221f34dd508ab4070edff183276221684e1e0555b145fce0850c9f7d2b60a9fcac50fbb4ea0d6e845a3b1
+  languageName: node
+  linkType: hard
+
+"import-meta-resolve@npm:^4.0.0":
+  version: 4.2.0
+  resolution: "import-meta-resolve@npm:4.2.0"
+  checksum: 10c0/3ee8aeecb61d19b49d2703987f977e9d1c7d4ba47db615a570eaa02fe414f40dfa63f7b953e842cbe8470d26df6371332bfcf21b2fd92b0112f9fea80dde2c4c
   languageName: node
   linkType: hard
 
@@ -2823,17 +2879,25 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "msc-crafter@workspace:."
   dependencies:
+    "@fontsource-variable/inter": "npm:^5.2.8"
+    "@fontsource/jetbrains-mono": "npm:^5.2.8"
     "@mantine/hooks": "npm:^8.3.5"
     "@octokit/graphql": "npm:^9.0.2"
     "@preact/preset-vite": "npm:^2.10.2"
+    "@tsconfig/node24": "npm:^24.0.1"
     "@types/markdown-it": "npm:^14.1.2"
     "@types/markdown-it-footnote": "npm:^3.0.4"
+    "@types/node": "npm:^24.9.1"
+    "@wooorm/starry-night": "npm:^3.8.0"
+    classnames: "npm:^2.5.1"
+    hast-util-to-jsx-runtime: "npm:^2.3.6"
     highlight.js: "npm:^11.11.1"
     markdown-it: "npm:^14.1.0"
     markdown-it-footnote: "npm:^4.0.0"
     markdown-it-highlightjs: "npm:^4.2.0"
     minisearch: "npm:^7.2.0"
     preact: "npm:^10.27.2"
+    preact-render-to-string: "npm:^6.6.3"
     prettier: "npm:^3.6.2"
     react-markdown: "npm:^10.1.0"
     rehype-highlight: "npm:^7.0.2"
@@ -3035,6 +3099,15 @@ __metadata:
     picocolors: "npm:^1.1.1"
     source-map-js: "npm:^1.2.1"
   checksum: 10c0/5127cc7c91ed7a133a1b7318012d8bfa112da9ef092dddf369ae699a1f10ebbd89b1b9f25f3228795b84585c72aabd5ced5fc11f2ba467eedf7b081a66fad024
+  languageName: node
+  linkType: hard
+
+"preact-render-to-string@npm:^6.6.3":
+  version: 6.6.3
+  resolution: "preact-render-to-string@npm:6.6.3"
+  peerDependencies:
+    preact: ">=10 || >= 11.0.0-0"
+  checksum: 10c0/da2e8ecc50637649d36330026afeb6044f9c3aa464a64ad24cf639f36461072b0a76caf7c40b17251c5731e916291527e4367f2f208877324d4f2ac87294ab76
   languageName: node
   linkType: hard
 
@@ -3636,6 +3709,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"undici-types@npm:~7.16.0":
+  version: 7.16.0
+  resolution: "undici-types@npm:7.16.0"
+  checksum: 10c0/3033e2f2b5c9f1504bdc5934646cb54e37ecaca0f9249c983f7b1fc2e87c6d18399ebb05dc7fd5419e02b2e915f734d872a65da2e3eeed1813951c427d33cc9a
+  languageName: node
+  linkType: hard
+
 "unified@npm:^11.0.0":
   version: 11.0.5
   resolution: "unified@npm:11.0.5"
@@ -3917,6 +3997,20 @@ __metadata:
   bin:
     vitest: vitest.mjs
   checksum: 10c0/5bf53ede3ae6a0e08956d72dab279ae90503f6b5a05298a6a5e6ef47d2fd1ab386aaf48fafa61ed07a0ebfe9e371772f1ccbe5c258dd765206a8218bf2eb79eb
+  languageName: node
+  linkType: hard
+
+"vscode-oniguruma@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "vscode-oniguruma@npm:2.0.1"
+  checksum: 10c0/8d44354ad038f5ba10edf6fc3e3fd6dbacf0db6ecbe924a632b8c0a2929dbdad451c619164e48539b5a80ff112fc51d368b4637db2ed202a4fd5504621275289
+  languageName: node
+  linkType: hard
+
+"vscode-textmate@npm:^9.0.0":
+  version: 9.2.1
+  resolution: "vscode-textmate@npm:9.2.1"
+  checksum: 10c0/2e58d1d0b962e1731936acc7b9c390c9478be39d8b8155a1eb78b2dbf90a119550542d4899ea4250e52aedc9c68d77a8f1c6acf8ad172ee19c588da02708063c
   languageName: node
   linkType: hard
 
