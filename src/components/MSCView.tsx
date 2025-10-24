@@ -89,7 +89,7 @@ enum ProposalView {
   Plain = "Plain",
 }
 
-export function MSCView() {
+export default function MSCView() {
   const { msc } = useCurrentMSC();
   const [currentProposalView, setProposalView] = useState<ProposalView>(
     ProposalView.Rendered,
