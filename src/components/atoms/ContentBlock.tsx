@@ -1,4 +1,5 @@
-import type { PropsWithChildren } from "preact/compat";
+import classNames from "classnames";
+import type { JSX, PropsWithChildren } from "preact/compat";
 import styled from "styled-components";
 
 export const ContentBlock = styled.div`
@@ -8,13 +9,15 @@ export const ContentBlock = styled.div`
   background: var(--mc-color-block-bg);
   border: 2px solid var(--mc-color-block-border);
 
-  &.withHeading {
+  &.heading {
     padding: 0;
   }
 `;
 
 const ContentBlockContent = styled.div`
-  padding: var(--mc-block-padding);
+  &.padding {
+    padding: var(--mc-block-padding);
+  }
 `;
 
 const ContentBlockHeading = styled.span`
@@ -31,11 +34,21 @@ const ContentBlockHeading = styled.span`
 export function ContentBlockWithHeading({
   heading,
   children,
-}: PropsWithChildren<{ heading: string }>) {
+  className,
+  padding = true,
+}: PropsWithChildren<{
+  heading: JSX.Element | string;
+  className?: string;
+  padding?: boolean;
+}>) {
   return (
-    <ContentBlock className="withHeading">
+    <ContentBlock className={classNames("heading", className)}>
       <ContentBlockHeading>{heading}</ContentBlockHeading>
-      <ContentBlockContent>{children}</ContentBlockContent>
+      <ContentBlockContent
+        className={classNames(padding && !!children && "padding")}
+      >
+        {children}
+      </ContentBlockContent>
     </ContentBlock>
   );
 }

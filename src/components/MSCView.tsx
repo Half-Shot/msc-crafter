@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { MSCState, type ClosedMSC } from "../model/MSC";
 import { StateBadge } from "./StateBadge";
 import { useMarkdown } from "../hooks/useMarkdown";
-import { FollowBlock } from "./FollowBlock";
 import { MemorisedDetails } from "./MemorisedDetails";
 import { CommentView } from "./CommentView";
 import { VoteBlock } from "./VoteBlock";
@@ -187,7 +186,10 @@ export function MSCView() {
           )}
         </LeftColumn>
         <RightColumn>
-          <ContentBlockWithHeading heading="Proposal">
+          <ContentBlockWithHeading
+            heading="Proposal"
+            padding={currentProposalView === ProposalView.Rendered}
+          >
             {currentProposalView === ProposalView.Rendered && (
               <ProposalBody ref={proposalBodyRef} />
             )}
