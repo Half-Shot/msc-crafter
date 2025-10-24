@@ -15,6 +15,7 @@ import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 import { ContentBlockWithHeading } from "./atoms/ContentBlock";
 import Markdown from "react-markdown";
 import { Author } from "./atoms/Author";
+import type { createStarryNight } from "@wooorm/starry-night";
 
 const Container = styled.article`
   display: flex;
