@@ -3,7 +3,7 @@ import { resolveMSC } from "../github";
 import { useEffect, useState } from "preact/hooks";
 import { useOnlineStatus } from "./useOnlineStatus";
 import { useGitHubAuth } from "./GitHubAuth";
-import { HOUR_S, MONTH_S, YEAR_S } from "../utils/time";
+import { HOUR_S, MONTH_S, YEAR_S } from "../time";
 
 export type CachedMSC = Omit<MSC, "created" | "updated"> & {
   expiresAt: number;

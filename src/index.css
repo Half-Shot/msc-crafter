@@ -12,6 +12,11 @@
   --mc-color-heading: #343a40;
   --mc-color-highlight: #0098d4;
   --mc-color-inactive: #003a52;
+  --mc-border-radius: 4px;
+
+  --mc-block-padding: 1em 2em;
+  --mc-color-block-bg: rgb(235, 235, 235);
+  --mc-color-block-border: rgb(215, 215, 215);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -50,5 +55,9 @@ html {
     --mc-color-bg-error: rgb(54, 10, 10);
     --mc-color-highlight: #0098d4;
     --mc-color-inactive: #5297b4;
+    --mc-color-bg-texteditor: rgb(35, 45, 70);
+
+    --mc-color-block-bg: rgb(48, 48, 48);
+    --mc-color-block-border: rgb(63, 63, 63);
   }
 }

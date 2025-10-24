@@ -6,13 +6,9 @@ import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/tokyo-night-dark.min.css";
 import { forwardRef, type PropsWithChildren } from "preact/compat";
 import rehypeRaw from "rehype-raw";
-import type { Thread } from "../model/MSC";
-import { MemorisedDetails } from "./MemorisedDetails";
 
 const Container = styled.article`
   font-size: 14px;
-  padding-left: 2em;
-  border-left: 4px solid var(--mc-color-highlight);
   @media screen and (max-width: 800px) {
     border-left: none;
     padding-left: 0;
@@ -40,22 +36,6 @@ const Container = styled.article`
   }
 `;
 
-const CommentThreadContainer = styled.div`
-  padding-left: 2em;
-  border: 1px solid #947a2dff;
-  border-left: 4px solid #947a2dff;
-`;
-
-const SingleCommentContainer = styled.div`
-  margin-left: 1em;
-  border: 1px solid #2d6b94ff;
-  border-left: 4px solid #2d6b94ff;
-`;
-
-const CommentedLine = styled.summary`
-  text-decoration: underline dotted;
-`;
-
 export function Heading({
   type,
   children,
@@ -79,29 +59,6 @@ export function Heading({
     case "h3":
       return <h3 id={hashID}>{children}</h3>;
   }
-}
-
-export function CommentThread({
-  thread,
-  children,
-}: PropsWithChildren<{ thread: Thread }>) {
-  return (
-    <MemorisedDetails
-      storageKey={`msccrafter.msc.comment-${thread.line}`}
-      defaultValue={false}
-    >
-      <CommentedLine>{children}</CommentedLine>
-      <CommentThreadContainer>
-        <summary>Comment on line {thread.line}</summary>
-        {thread.comments.map((c) => (
-          <SingleCommentContainer>
-            <span>{c.author.githubUsername} said</span>
-            <Markdown>{c.body.markdown}</Markdown>
-          </SingleCommentContainer>
-        ))}
-      </CommentThreadContainer>
-    </MemorisedDetails>
-  );
 }
 
 export const ProposalBody = forwardRef<HTMLElement>((_props, ref) => {

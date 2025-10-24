@@ -11,8 +11,7 @@ const Container = styled.div`
 
   &.error {
     background-color: var(--mc-color-bg-error);
-    border-color: var(--mc-color-error);
-    border-radius: 4px;
+    border-radius: var(--mc-border-radius);
     padding: 1em 1.5em;
   }
 

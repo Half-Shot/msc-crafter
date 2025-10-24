@@ -6,17 +6,27 @@ import { FollowBlock } from "./FollowBlock";
 import { MemorisedDetails } from "./MemorisedDetails";
 import { CommentView } from "./CommentView";
 import { VoteBlock } from "./VoteBlock";
-import { humanDuration } from "../utils/time";
+import { humanDuration } from "../time";
 import { ProposalBody } from "./ProposalBody";
 import { useCurrentMSC } from "../hooks/CurrentMSCContext";
 import { MentionedMSCs } from "./MentionedMSCs";
-import { useRef } from "preact/hooks";
+import { useRef, useState } from "preact/hooks";
 import { TableOfContents } from "./TableOfContents";
+import { ProposalRawView } from "./ProposalRawView";
+import { ContentBlock } from "./atoms/ContentBlock";
+import { ToggleButtonRow } from "./atoms/ToggleButtonRow";
 
 const Title = styled.h1`
   font-size: 24px;
 `;
-const WidgetContainer = styled.div`
+
+const TitleBlock = styled.div`
+  display: flex;
+  align-items: first baseline;
+  gap: 2em;
+`;
+
+const WidgetContainer = styled(ContentBlock)`
   display: flex;
   flex-direction: row;
   gap: 2em;
@@ -24,7 +34,7 @@ const WidgetContainer = styled.div`
   align-items: first baseline;
 `;
 
-const MSCBody = styled.section`
+const PullRequestBody = styled.section`
   font-size: 14px;
   padding-left: 2em;
 `;
@@ -71,8 +81,18 @@ const KindBadge = styled.div`
   font-weight: 600;
 `;
 
+enum ProposalView {
+  Rendered = "Rendered",
+  Threads = "Threads",
+  Plain = "Plain",
+}
+
 export function MSCView() {
   const { msc } = useCurrentMSC();
+  const [currentProposalView, setProposalView] = useState<ProposalView>(
+    ProposalView.Rendered,
+  );
+
   const prBody = useMarkdown({ stripRenderedLink: true }, msc.prBody.markdown);
   const closingComment = (msc as ClosedMSC).closingComment;
   const proposalBodyRef = useRef<HTMLElement>(null);
@@ -80,10 +100,10 @@ export function MSCView() {
   return (
     <Container>
       <header>
-        <WidgetContainer>
+        <TitleBlock>
           <Title>{msc.title}</Title>
           <StateBadge state={msc.state} />
-        </WidgetContainer>
+        </TitleBlock>
         <WidgetContainer>
           <span>
             Written by
@@ -121,43 +141,64 @@ export function MSCView() {
           <CommentView comment={closingComment} kind="closed" />
         )}
       </header>
-      {prBody ? (
-        <MemorisedDetails
-          storageKey={`msccrafter.pullrequestbodyopen.${msc.prNumber}`}
-          defaultValue={msc.state !== MSCState.Closed}
-        >
-          <summary>Pull request body</summary>
-          <MSCBody dangerouslySetInnerHTML={{ __html: prBody }} />
-        </MemorisedDetails>
-      ) : (
-        <p>No Pull Request body provided</p>
-      )}
-
+      <ContentBlock>
+        {prBody ? (
+          <MemorisedDetails
+            storageKey={`msccrafter.pullrequestbodyopen.${msc.prNumber}`}
+            defaultValue={msc.state !== MSCState.Closed}
+          >
+            <summary>Pull request body</summary>
+            <PullRequestBody dangerouslySetInnerHTML={{ __html: prBody }} />
+          </MemorisedDetails>
+        ) : (
+          <p>No Pull Request body provided</p>
+        )}
+      </ContentBlock>
       <ColumnContainer>
         <LeftColumn>
-          <a href={msc.url} target="_blank">
-            View on GitHub
-          </a>
+          <ContentBlock>
+            <a href={msc.url} target="_blank">
+              View on GitHub
+            </a>
+            <ToggleButtonRow
+              values={Object.values(ProposalView)}
+              value={currentProposalView}
+              onChange={setProposalView}
+            />
+          </ContentBlock>
           <MentionedMSCs />
-          <h2>Implementations</h2>
-          <p>Implementations matching is experimental, some may be missing.</p>
-          <ul>
-            {msc.implementations?.map((impl) => (
-              <li key={impl.url}>
-                <a href={impl.url} target="_blank">
-                  {impl.title}
-                </a>
-              </li>
-            ))}
-          </ul>
+          <ContentBlock>
+            <h2>Implementations</h2>
+            <p>
+              Implementations matching is experimental, some may be missing.
+            </p>
+            <ul>
+              {msc.implementations?.map((impl) => (
+                <li key={impl.url}>
+                  <a href={impl.url} target="_blank">
+                    {impl.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </ContentBlock>
           {msc.proposalState && <VoteBlock votes={msc.proposalState} />}
-          <FollowBlock>
+          {currentProposalView === ProposalView.Rendered && (
             <TableOfContents element={proposalBodyRef} />
-          </FollowBlock>
+          )}
         </LeftColumn>
         <RightColumn>
-          <h2 style={{ marginTop: 0 }}>Proposal</h2>
-          {msc.body && <ProposalBody ref={proposalBodyRef} />}
+          <ContentBlock>
+            {currentProposalView === ProposalView.Rendered && (
+              <ProposalBody ref={proposalBodyRef} />
+            )}
+            {currentProposalView === ProposalView.Threads && (
+              <ProposalRawView showThreads={true} />
+            )}
+            {currentProposalView === ProposalView.Plain && (
+              <ProposalRawView showThreads={false} />
+            )}
+          </ContentBlock>
         </RightColumn>
       </ColumnContainer>
     </Container>
