@@ -10,7 +10,7 @@ import { useGitHubAuth } from "../hooks/GitHubAuth";
 const Container = styled.form`
   > input {
     font-size: 0.75em;
-    border-radius: 8px;
+    border-radius: var(--mc-border-radius);
   }
 `;
 
