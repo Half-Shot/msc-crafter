@@ -35,7 +35,10 @@ const WidgetContainer = styled(ContentBlock)`
 `;
 
 const Container = styled.div`
-  max-width: 1280px;
+  max-width: 66vw;
+  @media screen and (max-width: 1366px) {
+    max-width: none;
+  }
   margin: auto;
 `;
 const LeftColumn = styled.div`
