@@ -18,8 +18,8 @@ const Button = styled.button`
 const Fieldset = styled.fieldset`
   border: none;
   margin: 0;
-  margin-top: 1em;
   padding: 0;
+  font-size: 0.8em;
 `;
 
 export function ToggleButtonRow<T extends string>({

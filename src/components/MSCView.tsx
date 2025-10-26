@@ -16,7 +16,6 @@ const ProposalRawView = lazy(() => import("./ProposalRawView"));
 const PullRequestBody = lazy(() => import("./PullRequestBody"));
 const CommentView = lazy(() => import("./CommentView"));
 
-
 const Title = styled.h1`
   font-size: 24px;
 `;
@@ -75,6 +74,12 @@ const KindBadge = styled.div`
   padding: 0.25em 1em;
   font-size: 1rem;
   font-weight: 600;
+`;
+
+const ProposalBlockHeading = styled.div`
+  display: flex;
+  align-items: first baseline;
+  justify-content: space-between;
 `;
 
 enum ProposalView {
@@ -143,11 +148,6 @@ export default function MSCView() {
             <a href={msc.url} target="_blank">
               View on GitHub
             </a>
-            <ToggleButtonRow
-              values={Object.values(ProposalView)}
-              value={currentProposalView}
-              onChange={setProposalView}
-            />
           </ContentBlock>
           <MentionedMSCs />
           <ContentBlockWithHeading heading="Implementations">
@@ -171,18 +171,25 @@ export default function MSCView() {
         </LeftColumn>
         <RightColumn>
           <ContentBlockWithHeading
-            heading="Proposal"
+            heading={
+              <ProposalBlockHeading>
+                <span>Proposal</span>{" "}
+                <ToggleButtonRow
+                  values={Object.values(ProposalView)}
+                  value={currentProposalView}
+                  onChange={setProposalView}
+                />
+              </ProposalBlockHeading>
+            }
             padding={currentProposalView === ProposalView.Rendered}
           >
             <Suspense fallback={false}>
-              {currentProposalView === ProposalView.Rendered && (
+              {currentProposalView === ProposalView.Rendered ? (
                 <ProposalBody ref={proposalBodyRef} />
-              )}
-              {currentProposalView === ProposalView.Threads && (
-                <ProposalRawView showThreads={true} />
-              )}
-              {currentProposalView === ProposalView.Plain && (
-                <ProposalRawView showThreads={false} />
+              ) : (
+                <ProposalRawView
+                  showThreads={currentProposalView === ProposalView.Threads}
+                />
               )}
             </Suspense>
           </ContentBlockWithHeading>
