@@ -35,11 +35,13 @@ function AppWithMSC({ mscNumber }: { mscNumber: number }) {
     }
   }, [msc]);
 
+  const mscError = msc && "error" in msc && msc.error;
+  const numericLoader = <NumericLoader mscNumber={mscNumber} ready={!!msc} error={!!mscError} />
+
   if (!msc || isAnimating || "error" in msc) {
-    const mscError = msc && "error" in msc && msc.error;
     return (
       <>
-        <NumericLoader mscNumber={mscNumber} ready={!!msc} error={!!mscError} />
+        {numericLoader}
         {mscError && (
           <Notice heading="Error loading MSC" kind="error">
             {mscError}
@@ -50,7 +52,7 @@ function AppWithMSC({ mscNumber }: { mscNumber: number }) {
   }
   return (
     <CurrentMSCContextProvider msc={msc}>
-      <Suspense fallback={false}>
+      <Suspense fallback={numericLoader}>
         <MSCView />
       </Suspense>
     </CurrentMSCContextProvider>
