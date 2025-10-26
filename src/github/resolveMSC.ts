@@ -28,6 +28,10 @@ function determineMSCState(pullRequest: ResolvedPR): MSCState {
     return MSCState.Draft;
   }
 
+  const isClosing = pullRequest.labels.nodes.some(
+    (s) => s.name === "disposition-close",
+  );
+
   if (
     pullRequest.labels.nodes.some(
       (s) => s.name === "finished-final-comment-period",
@@ -37,7 +41,9 @@ function determineMSCState(pullRequest: ResolvedPR): MSCState {
   }
 
   if (pullRequest.labels.nodes.some((s) => s.name === "final-comment-period")) {
-    return MSCState.FinalCommentPeriod;
+    return isClosing
+      ? MSCState.FinalCommentPeriodClose
+      : MSCState.FinalCommentPeriod;
   }
 
   if (
@@ -45,7 +51,9 @@ function determineMSCState(pullRequest: ResolvedPR): MSCState {
       (s) => s.name === "proposed-final-comment-period",
     )
   ) {
-    return MSCState.ProposedFinalCommentPeriod;
+    return isClosing
+      ? MSCState.ProposedClose
+      : MSCState.ProposedFinalCommentPeriod;
   }
   return MSCState.Open;
 }
@@ -197,6 +205,7 @@ export async function resolveMSC(
                 githubUsername: c.author.login,
               },
               created: new Date(c.createdAt),
+              updated: c.updatedAt ? new Date(c.updatedAt) : undefined,
             }) satisfies Comment,
         ) as [Comment],
       }),

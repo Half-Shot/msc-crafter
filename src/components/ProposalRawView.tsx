@@ -11,7 +11,7 @@ import type { Thread } from "../model/MSC";
 import { toJsxRuntime } from "hast-util-to-jsx-runtime";
 import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 import { ContentBlockWithHeading } from "./atoms/ContentBlock";
-import Markdown from "react-markdown";
+import Markdown from "./atoms/Markdown";
 import { Author } from "./atoms/Author";
 
 const Container = styled.article`
@@ -43,6 +43,7 @@ const ThreadContainer = styled(ContentBlockWithHeading)`
 const ThreadComment = styled.div`
   border-radius: 0.5em;
   margin-top: 0.25em;
+  padding: 0 1em;
 `;
 
 const ThreadTitle = styled.span`
@@ -76,15 +77,21 @@ function CommentThread({ thread }: { thread: Thread }) {
           <button onClick={() => setOpen((o) => !o)}>
             {isOpen ? "Close" : "Open"}
           </button>
-          <span>Thread</span>
           <ThreadPreview>{preview}...</ThreadPreview>
+          {thread.resolved && <span>(Resolved)</span>}
         </ThreadTitle>
       }
     >
       {isOpen &&
         thread.comments.map((c) => (
           <ThreadComment>
-            <Author username={c.author.githubUsername}>said</Author>
+            <Author
+              username={c.author.githubUsername}
+              createdAt={c.created}
+              updatedAt={c.updated}
+            >
+              said
+            </Author>
             <ThreadCommentContent>
               <Markdown>{c.body.markdown}</Markdown>
             </ThreadCommentContent>
@@ -104,17 +111,19 @@ export function CodeLine({
   children,
   "data-line-number": dln,
   showThreads,
+  onlyOpenThreads,
   ...passthrough
 }: PropsWithChildren<
   HTMLAttributes<HTMLSpanElement> & {
     "data-line-number": number;
     showThreads: boolean;
+    onlyOpenThreads: boolean;
   }
 >) {
   const { msc } = useCurrentMSC();
   const threads = showThreads
     ? msc.threads
-        .filter((t) => t.line === dln)
+        .filter((t) => t.line === dln && (!onlyOpenThreads || !t.resolved))
         .map((t) => <CommentThread thread={t} />)
     : null;
 
@@ -126,7 +135,13 @@ export function CodeLine({
   );
 }
 
-const ProposalRawView = ({ showThreads }: { showThreads: boolean }) => {
+const ProposalRawView = ({
+  showThreads,
+  onlyOpenThreads,
+}: {
+  showThreads: boolean;
+  onlyOpenThreads?: boolean;
+}) => {
   const { msc, renderTree } = useCurrentMSC();
   const [renderedCode, setRenderedCode] = useState();
 
@@ -142,13 +157,17 @@ const ProposalRawView = ({ showThreads }: { showThreads: boolean }) => {
           components: {
             "line-number": LineNumber,
             "code-line": (props) => (
-              <CodeLine showThreads={showThreads} {...props} />
+              <CodeLine
+                showThreads={showThreads}
+                onlyOpenThreads={onlyOpenThreads}
+                {...props}
+              />
             ),
           },
         }),
       );
     })();
-  }, [msc.body.markdown, showThreads]);
+  }, [msc.body.markdown, showThreads, onlyOpenThreads]);
 
   return <Container>{renderedCode}</Container>;
 };

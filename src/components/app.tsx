@@ -36,7 +36,9 @@ function AppWithMSC({ mscNumber }: { mscNumber: number }) {
   }, [msc]);
 
   const mscError = msc && "error" in msc && msc.error;
-  const numericLoader = <NumericLoader mscNumber={mscNumber} ready={!!msc} error={!!mscError} />
+  const numericLoader = (
+    <NumericLoader mscNumber={mscNumber} ready={!!msc} error={!!mscError} />
+  );
 
   if (!msc || isAnimating || "error" in msc) {
     return (

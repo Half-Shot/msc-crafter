@@ -6,6 +6,7 @@ export interface ResolveMSCResponseComment {
   };
   body: string;
   createdAt: string;
+  updatedAt: string;
   minimizedReason: null;
 }
 

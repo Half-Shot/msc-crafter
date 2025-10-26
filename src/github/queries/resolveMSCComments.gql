@@ -17,6 +17,7 @@ query resolveMSCComments($num: Int!) {
           }
           body
           createdAt
+          updatedAt
           minimizedReason
         }
       }

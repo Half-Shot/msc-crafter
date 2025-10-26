@@ -3,6 +3,7 @@ export enum MSCState {
   Open,
   ProposedFinalCommentPeriod,
   FinalCommentPeriod,
+  FinalCommentPeriodClose,
   ProposedMerge,
   Merged,
   ProposedClose,

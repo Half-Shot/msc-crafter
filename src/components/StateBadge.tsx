@@ -79,6 +79,10 @@ export const StateBadge = ({ state }: { state: MSCState }) => {
       text = "Proposed FCP";
       className = "p-fcp";
       break;
+    case MSCState.FinalCommentPeriodClose:
+      text = "FCP Close";
+      className = "p-close";
+      break;
     case MSCState.ProposedMerge:
       text = "Ready to merge";
       className = "ready";

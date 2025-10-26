@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { type ClosedMSC } from "../model/MSC";
 import { StateBadge } from "./StateBadge";
 import { VoteBlock } from "./VoteBlock";
-import { humanDuration } from "../time";
 import { useCurrentMSC } from "../hooks/CurrentMSCContext";
 import { MentionedMSCs } from "./MentionedMSCs";
 import { useRef, useState } from "preact/hooks";
@@ -10,6 +9,7 @@ import { TableOfContents } from "./TableOfContents";
 import { ContentBlock, ContentBlockWithHeading } from "./atoms/ContentBlock";
 import { ToggleButtonRow } from "./atoms/ToggleButtonRow";
 import { lazy, Suspense } from "preact/compat";
+import RelativeTime from "./atoms/RelativeTime";
 
 const ProposalBody = lazy(() => import("./ProposalBody"));
 const ProposalRawView = lazy(() => import("./ProposalRawView"));
@@ -62,10 +62,6 @@ const ColumnContainer = styled.div`
   }
 `;
 
-const FormattedTime = styled.time`
-  text-decoration: underline dashed;
-`;
-
 const KindBadge = styled.div`
   border: 1px solid rgba(38, 135, 150);
   border-radius: 2em;
@@ -82,9 +78,14 @@ const ProposalBlockHeading = styled.div`
   justify-content: space-between;
 `;
 
+const Disclaimer = styled.p`
+  font-size: 0.8em;
+`;
+
 enum ProposalView {
   Rendered = "Rendered",
-  Threads = "Threads",
+  Threads = "All Threads",
+  OpenThreads = "Open Threads",
   Plain = "Plain",
 }
 
@@ -116,22 +117,10 @@ export default function MSCView() {
             </a>
           </span>
           <span>
-            Created:{" "}
-            <FormattedTime
-              title={msc.created.toLocaleString()}
-              dateTime={msc.created.toISOString()}
-            >
-              {humanDuration(msc.created)}
-            </FormattedTime>
+            Created: <RelativeTime>{msc.created}</RelativeTime>
           </span>
           <span>
-            Last updated:{" "}
-            <FormattedTime
-              title={msc.updated.toLocaleString()}
-              dateTime={msc.updated.toISOString()}
-            >
-              {humanDuration(msc.updated)}
-            </FormattedTime>
+            Last updated: <RelativeTime>{msc.updated}</RelativeTime>
           </span>
           {msc.kind.map((k) => (
             <KindBadge>{k}</KindBadge>
@@ -151,11 +140,8 @@ export default function MSCView() {
           </ContentBlock>
           <MentionedMSCs />
           <ContentBlockWithHeading heading="Implementations">
-            <p>
-              Implementations matching is experimental, some may be missing.
-            </p>
             <ul>
-              {msc.implementations?.map((impl) => (
+              {msc.implementations.map((impl) => (
                 <li key={impl.url}>
                   <a href={impl.url} target="_blank">
                     {impl.title}
@@ -163,6 +149,10 @@ export default function MSCView() {
                 </li>
               ))}
             </ul>
+            <p>
+              {!msc.implementations.length && <p>No linked implementations</p>}
+            </p>
+            <Disclaimer>Implementations matching is experimental.</Disclaimer>
           </ContentBlockWithHeading>
           {msc.proposalState && <VoteBlock votes={msc.proposalState} />}
           {currentProposalView === ProposalView.Rendered && (
@@ -188,7 +178,13 @@ export default function MSCView() {
                 <ProposalBody ref={proposalBodyRef} />
               ) : (
                 <ProposalRawView
-                  showThreads={currentProposalView === ProposalView.Threads}
+                  showThreads={
+                    currentProposalView === ProposalView.Threads ||
+                    currentProposalView === ProposalView.OpenThreads
+                  }
+                  onlyOpenThreads={
+                    currentProposalView === ProposalView.OpenThreads
+                  }
                 />
               )}
             </Suspense>

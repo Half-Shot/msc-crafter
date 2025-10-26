@@ -52,7 +52,7 @@ export function TableOfContents({
         level: e.tagName.toLowerCase(),
       })),
     );
-  }, []);
+  });
 
   return (
     <Container heading="Table of contents">

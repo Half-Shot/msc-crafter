@@ -1,15 +1,31 @@
-import { MSCState, type MSC, type OpenMSC } from "../model/MSC";
+import {
+  MSCState,
+  type Comment,
+  type MSC,
+  type OpenMSC,
+  type Thread,
+} from "../model/MSC";
 import { resolveMSC } from "../github";
 import { useEffect, useState } from "preact/hooks";
 import { useOnlineStatus } from "./useOnlineStatus";
 import { useGitHubAuth } from "./GitHubAuth";
 import { HOUR_S, MONTH_S, YEAR_S } from "../time";
 
-export type CachedMSC = Omit<MSC, "created" | "updated"> & {
+export type CachedComment = Omit<Comment, "created" | "updated"> & {
+  created: string;
+  updated?: string;
+};
+
+export type CachedThread = Omit<Thread, "comments"> & {
+  comments: [CachedComment] & CachedComment[];
+};
+
+export type CachedMSC = Omit<MSC, "created" | "updated" | "threads"> & {
   expiresAt: number;
   created: string;
   updated: string;
   renderState: "full" | "partial";
+  threads: CachedThread[];
 };
 
 const CACHE_LIVE_FOR_MS = HOUR_S * 500; // MSC that is updated frequently, 30 min cache.
@@ -17,6 +33,25 @@ const CACHE_LIVE_FOR_MERGED_MS = HOUR_S * 8000; // MSC that is merged, 8 hour ca
 const CACHE_LIVE_FOR_STALE_MS = MONTH_S * 1000; // MSC that is stale.
 
 const STALE_MSC_THRESHOLD_MS = YEAR_S * 1000;
+
+function deseraliseMSC(parsed: CachedMSC): MSC {
+  return {
+    ...parsed,
+    threads: parsed.threads.map((t) => ({
+      ...t,
+      comments: t.comments.map(
+        (c) =>
+          ({
+            ...c,
+            created: new Date(c.created),
+            updated: c.updated ? new Date(c.updated) : undefined,
+          }) satisfies Comment,
+      ) as [Comment] & Comment[],
+    })),
+    created: new Date(parsed.created),
+    updated: new Date(parsed.updated),
+  };
+}
 
 export function useMSC(
   mscNumber?: number,
@@ -42,11 +77,7 @@ export function useMSC(
           console.log(`Loading ${mscNumber} from cache`);
           // If the render state was partial and we want a full render then we have to go again.
           if (parsed.renderState !== "partial" || !fullRender) {
-            setMSC({
-              ...parsed,
-              created: new Date(parsed.created),
-              updated: new Date(parsed.updated),
-            } satisfies MSC);
+            setMSC(deseraliseMSC(parsed));
             return;
           }
         }
@@ -70,6 +101,14 @@ export function useMSC(
         }
         const v = {
           ...resultMsc,
+          threads: resultMsc.threads.map((t) => ({
+            ...t,
+            comments: t.comments.map((c) => ({
+              ...c,
+              created: c.created.toString(),
+              updated: c.updated?.toString(),
+            })),
+          })),
           created: resultMsc.created.toString(),
           updated: resultMsc.updated.toString(),
           expiresAt: Date.now() + expiresAt,
