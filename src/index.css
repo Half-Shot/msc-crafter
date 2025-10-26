@@ -4,7 +4,23 @@
 @import "highlight.js/styles/tokyo-night-dark.min.css";
 
 :root {
-  font-family: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "STIX Two Math", "Cambria Math", "Noto Sans Math", "Dejavu Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family:
+    "Inter Variable",
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    "STIX Two Math",
+    "Cambria Math",
+    "Noto Sans Math",
+    "Dejavu Sans",
+    Arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol";
   line-height: 1.5;
   font-weight: 400;
 
