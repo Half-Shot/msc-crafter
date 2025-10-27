@@ -8,18 +8,27 @@ export function humanDuration(date: Date) {
   if (seconds < 60) {
     return "Less than a minute ago";
   }
+  let durationWord = "";
+  let integer = 0;
   if (seconds < HOUR_S) {
-    return `${Math.round(seconds / 60)} minutes ago`;
+    integer = Math.round(seconds / 60);
+    durationWord = "minute"
   }
-  if (seconds < DAY_S) {
-    return `${Math.round(seconds / HOUR_S)} hours ago`;
+  else if (seconds < DAY_S) {
+    integer = Math.round(seconds / HOUR_S);
+    durationWord = "hour"
   }
-  if (seconds < MONTH_S) {
-    return `${Math.round(seconds / DAY_S)} days ago`;
+  else if (seconds < MONTH_S) {
+    integer = Math.round(seconds / DAY_S);
+    durationWord = "day"
   }
-  if (seconds < YEAR_S) {
-    return `${Math.round(seconds / MONTH_S)} months ago`;
+  else if (seconds < YEAR_S) {
+    integer = Math.round(seconds / MONTH_S);
+    durationWord = "month"
+  } else {
+    integer = Math.round(seconds / YEAR_S);
+    durationWord = "year";
   }
 
-  return `${Math.round(seconds / YEAR_S)} years ago`;
+  return `${integer} ${durationWord}${integer > 1 ? "s": ""} ago`;
 }
