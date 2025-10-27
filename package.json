@@ -40,6 +40,7 @@
     "markdown-it-highlightjs": "^4.2.0",
     "minisearch": "^7.2.0",
     "preact-render-to-string": "^6.6.3",
+    "react-icons": "^5.5.0",
     "react-markdown": "^10.1.0",
     "rehype-highlight": "^7.0.2",
     "rehype-raw": "^7.0.0",
