@@ -1,6 +1,9 @@
 import type { ComponentProps } from "preact";
 import styled from "styled-components";
 import { default as ReactMarkdown } from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 
 const Container = styled.div`
   blockquote {
@@ -16,7 +19,11 @@ export default function Markdown(
 ): ReturnType<typeof ReactMarkdown> {
   return (
     <Container>
-      <ReactMarkdown {...props}></ReactMarkdown>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeHighlight, rehypeRaw]}
+        {...props}
+      ></ReactMarkdown>
     </Container>
   );
 }

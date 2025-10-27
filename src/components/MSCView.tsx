@@ -10,6 +10,7 @@ import { ContentBlock, ContentBlockWithHeading } from "./atoms/ContentBlock";
 import { ToggleButtonRow } from "./atoms/ToggleButtonRow";
 import { lazy, Suspense } from "preact/compat";
 import RelativeTime from "./atoms/RelativeTime";
+import { GoCommentDiscussion, GoFileBinary, GoNote } from "react-icons/go";
 
 const ProposalBody = lazy(() => import("./ProposalBody"));
 const ProposalRawView = lazy(() => import("./ProposalRawView"));
@@ -171,6 +172,33 @@ export default function MSCView() {
                   values={Object.values(ProposalView)}
                   value={currentProposalView}
                   onChange={setProposalView}
+                  labels={{
+                    [ProposalView.Rendered]: (
+                      <span>
+                        <GoNote size={16} />
+                        Plain
+                      </span>
+                    ),
+                    [ProposalView.Plain]: (
+                      <span>
+                        <GoFileBinary size={16} />
+                        Plain
+                      </span>
+                    ),
+                    [ProposalView.OpenThreads]: (
+                      <span>
+                        <GoCommentDiscussion />
+                        {msc.threads.filter((t) => !t.resolved).length} Open
+                        Threads
+                      </span>
+                    ),
+                    [ProposalView.Threads]: (
+                      <span>
+                        <GoCommentDiscussion title="Threads" />
+                        {msc.threads.length} Threads
+                      </span>
+                    ),
+                  }}
                 />
               </ProposalBlockHeading>
             }

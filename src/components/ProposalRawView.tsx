@@ -13,6 +13,7 @@ import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 import { ContentBlockWithHeading } from "./atoms/ContentBlock";
 import Markdown from "./atoms/Markdown";
 import { Author } from "./atoms/Author";
+import { GoChevronDown, GoChevronUp } from "react-icons/go";
 
 const Container = styled.article`
   display: flex;
@@ -75,7 +76,7 @@ function CommentThread({ thread }: { thread: Thread }) {
       heading={
         <ThreadTitle>
           <button onClick={() => setOpen((o) => !o)}>
-            {isOpen ? "Close" : "Open"}
+            {isOpen ? <GoChevronUp width={36} /> : <GoChevronDown width={36} />}
           </button>
           <ThreadPreview>{preview}...</ThreadPreview>
           {thread.resolved && <span>(Resolved)</span>}

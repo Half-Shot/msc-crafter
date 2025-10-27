@@ -1,10 +1,7 @@
 import styled from "styled-components";
 import { useCurrentMSC } from "../hooks/CurrentMSCContext";
 import Markdown from "./atoms/Markdown";
-import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
 import { forwardRef, type PropsWithChildren } from "preact/compat";
-import rehypeRaw from "rehype-raw";
 
 const Container = styled.article`
   font-size: 14px;
@@ -70,8 +67,6 @@ const ProposalBody = forwardRef<HTMLElement>((_props, ref) => {
   return (
     <Container ref={ref}>
       <Markdown
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeHighlight, rehypeRaw]}
         skipHtml={false}
         components={{
           h1: ({ children }) => <Heading type="h1">{children}</Heading>,
