@@ -176,7 +176,7 @@ export default function MSCView() {
                     [ProposalView.Rendered]: (
                       <span>
                         <GoNote size={16} />
-                        Plain
+                        Rendered
                       </span>
                     ),
                     [ProposalView.Plain]: (
