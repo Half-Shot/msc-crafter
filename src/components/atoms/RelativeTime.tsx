@@ -6,7 +6,6 @@ const Container = styled.time`
 `;
 
 export default function RelativeTime({ children }: { children: Date }) {
-  console.log(children);
   return (
     <Container
       title={children.toLocaleString()}

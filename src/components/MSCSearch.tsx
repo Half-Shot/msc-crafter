@@ -1,17 +1,74 @@
 import { type SubmitEventHandler, type InputEventHandler } from "preact";
-import { useCallback, useEffect, useId, useState } from "preact/hooks";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "preact/hooks";
 import styled from "styled-components";
 import { useLocalMSCCache } from "../hooks/useLocalMSCCache";
-import { useDebouncedCallback, useHash } from "@mantine/hooks";
+import { useDebouncedCallback, useHash, useHotkeys } from "@mantine/hooks";
 import type MiniSearch from "minisearch";
 import { searchForMSCs } from "../github";
 import { useGitHubAuth } from "../hooks/GitHubAuth";
+import { GoSearch } from "react-icons/go";
+import { useRecentMSCs } from "../hooks/useRecentMSCs";
+import classNames from "classnames";
 
-const Container = styled.form`
-  > input {
-    font-size: 0.75em;
-    border-radius: var(--mc-border-radius);
+const SearchButton = styled.button`
+  font-size: 0.75em;
+  border-radius: var(--mc-border-radius);
+  border: 1px solid var(--mc-color-block-border);
+  background: var(--mc-color-bg);
+  padding: 0.3rem 8rem 0.3em 0.5em;
+  color: var(--mc-color-text-secondary);
+  cursor: text;
+`;
+
+const SearchInput = styled.input`
+  font-size: 0.9em;
+  border-radius: var(--mc-border-radius);
+  border: 1px solid var(--mc-color-block-border);
+  background: var(--mc-color-bg);
+  color: var(--mc-color-text-secondary);
+  padding-top: 0;
+  margin-top: 0;
+  width: 100%;
+`;
+
+const SearchContainer = styled.dialog`
+  width: 40vw;
+  padding: 0.5em;
+  border: 1px solid var(--mc-color-block-border);
+  border-radius: var(--mc-border-radius);
+  margin-top: 1em;
+`;
+
+const SectionHeader = styled.h2`
+  font-size: 0.6em;
+  font-weight: 600;
+  color: var(--mc-color-text-secondary);
+`;
+
+const MSCEntry = styled.a`
+  display: block;
+  font-size: 0.6em;
+  font-weight: 400;
+  list-style: none;
+  color: var(--mc-color-highlight);
+  text-decoration: none;
+
+  &.highlight {
+    font-weight: 600;
   }
+`;
+
+const InfoText = styled.p`
+  display: block;
+  font-size: 0.6em;
+  font-weight: 400;
+  color: var(--mc-color-text-secondary);
 `;
 
 interface SearchableMSC {
@@ -23,10 +80,39 @@ interface SearchableMSC {
 export function MSCSearch() {
   const localMSCs = useLocalMSCCache();
   const auth = useGitHubAuth();
-  const id = useId();
   const [matchingMSCs, setMatchingMSCs] = useState<SearchableMSC[]>([]);
   const [, setHash] = useHash();
   const [minisearch, setMinisearch] = useState<MiniSearch<SearchableMSC>>();
+  const searchRef = useRef<HTMLInputElement>(null);
+  const searchDialog = useRef<HTMLDialogElement>(null);
+  const [recentMSCs] = useRecentMSCs();
+  const allMSCs = useLocalMSCCache();
+  const yourMSCs = useMemo(() => {
+    if (!auth || "viewer" in auth === false) {
+      return;
+    }
+    return allMSCs.filter((m) => m.author.githubUsername === auth.viewer.login);
+  }, [auth, allMSCs]);
+
+  useHotkeys(
+    [
+      [
+        "ctrl+K",
+        () => {
+          if (searchDialog.current?.open) {
+            searchDialog.current.close();
+          } else {
+            searchDialog.current?.showModal();
+          }
+        },
+      ],
+    ],
+    ["INPUT", "TEXTAREA"],
+  );
+
+  const closeModal = useCallback(() => {
+    searchDialog.current?.close();
+  }, [searchDialog.current]);
 
   useEffect(
     () =>
@@ -52,39 +138,35 @@ export function MSCSearch() {
 
   const searchFn = useDebouncedCallback(async (text: string) => {
     // minisearch is checked in onChangeHandler
-    const matchingMSCs: SearchableMSC[] = minisearch!
-      .search(text)
-      .map((s) => ({ author: s.author, title: s.title, id: s.number }));
+    // use a map to ensure uniqueness.
+    const matchingMSCs: Map<string, SearchableMSC> = new Map(
+      minisearch!
+        .search(text)
+        .map((s) => [
+          s.id.toString(),
+          { author: s.author, title: s.title, id: s.id },
+        ]),
+    );
     if (auth && "graphqlWithAuth" in auth) {
       try {
         const found = await searchForMSCs(auth.graphqlWithAuth, text);
-        matchingMSCs.push(
-          ...found.map((s) => ({
+        for (const s of found) {
+          matchingMSCs.set(s.number.toString(), {
             author: s.author.login,
             title: s.title,
             id: s.number,
-          })),
-        );
+          });
+        }
       } catch (ex) {
         console.warn("Failed to search GitHub", ex);
       }
     }
-    setMatchingMSCs(matchingMSCs);
+    setMatchingMSCs([...matchingMSCs.values()]);
   }, 250);
 
   const onChangeHandler = useCallback<InputEventHandler<HTMLInputElement>>(
     (ev) => {
       ev.preventDefault();
-      if (
-        ev.inputType === "insertReplacementText" &&
-        ev.data &&
-        !isNaN(parseInt(ev.data))
-      ) {
-        // This is someone selecting a msc.
-        setHash(`#msc/${ev.data}`);
-        (ev.target as HTMLInputElement).value = "";
-        return;
-      }
       if (!minisearch) {
         return;
       }
@@ -94,42 +176,94 @@ export function MSCSearch() {
     [minisearch],
   );
 
-  // XXX: Deeply unreacty
-  const onSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>((ev) => {
-    ev.preventDefault();
-    const search = (ev.target as HTMLFormElement)
-      .children[0] as HTMLInputElement;
-    const searchField = search.value;
-    let parsedMSC: number;
-    if (searchField.startsWith("MSC")) {
-      parsedMSC = parseInt(searchField.slice(3).trim());
-    } else {
-      parsedMSC = parseInt(searchField.trim());
-      if (isNaN(parsedMSC)) {
+  const onSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
+    (ev) => {
+      ev.preventDefault();
+      if (!searchRef.current) {
         return;
       }
-    }
+      const searchField = searchRef.current.value;
+      let parsedMSC: number;
+      if (searchField.startsWith("MSC")) {
+        parsedMSC = parseInt(searchField.slice(3).trim());
+      } else {
+        parsedMSC = parseInt(searchField.trim());
+      }
 
-    if (parsedMSC && !isNaN(parsedMSC)) {
-      setHash(`#msc/${parsedMSC}`);
-      (ev.target as HTMLInputElement).value = "";
-    }
-  }, []);
+      if (parsedMSC && !isNaN(parsedMSC)) {
+        setHash(`#msc/${parsedMSC}`);
+        closeModal();
+      } else if (matchingMSCs[0]) {
+        setHash(`#msc/${matchingMSCs[0].id}`);
+        closeModal();
+      } // otherwise, no matches
+    },
+    [searchRef.current, matchingMSCs],
+  );
 
   return (
-    <Container onSubmit={onSubmit}>
-      <input
-        disabled={!minisearch}
-        type="search"
-        onChange={onChangeHandler}
-        list={id}
-        placeholder={"Search 'MSC1234...'"}
-      />
-      <datalist id={id}>
-        {matchingMSCs.map((m) => (
-          <option value={m.id} label={m.title} />
-        ))}
-      </datalist>
-    </Container>
+    <>
+      <SearchContainer closedBy="any" ref={searchDialog}>
+        <form onSubmit={onSubmit}>
+          <SearchInput
+            type="search"
+            placeholder="Search MSCs"
+            autoFocus={true}
+            onChange={onChangeHandler}
+            ref={searchRef}
+          ></SearchInput>
+          {!auth ||
+            ("viewer" in auth === false && (
+              <InfoText>Not logged in, only searching local cache.</InfoText>
+            ))}
+          {!searchRef.current?.value ? (
+            <>
+              <section>
+                <SectionHeader>Recents</SectionHeader>
+                {recentMSCs.slice(0, 4).map((m) => (
+                  <MSCEntry key={m.hash} href={m.hash} onClick={closeModal}>
+                    {m.title}
+                  </MSCEntry>
+                ))}
+              </section>
+              {yourMSCs && (
+                <section>
+                  <SectionHeader>Your MSCs</SectionHeader>
+                  {yourMSCs.slice(0, 4).map((m) => (
+                    <MSCEntry
+                      key={m.prNumber}
+                      href={`#msc/${m.prNumber}`}
+                      onClick={closeModal}
+                    >
+                      {m.title}
+                    </MSCEntry>
+                  ))}
+                </section>
+              )}
+            </>
+          ) : (
+            <section>
+              <SectionHeader>Results</SectionHeader>
+              {matchingMSCs.map((m, i) => (
+                <MSCEntry
+                  className={classNames(i === 0 && "highlight")}
+                  key={m.id}
+                  href={`#msc/${m.id}`}
+                  onClick={closeModal}
+                >
+                  {m.title}
+                </MSCEntry>
+              ))}
+              {matchingMSCs.length === 0 && (
+                <InfoText>No matches found</InfoText>
+              )}
+            </section>
+          )}
+        </form>
+      </SearchContainer>
+      <SearchButton onClick={() => searchDialog.current?.showModal()}>
+        <GoSearch /> Search MSCs [Ctrl+K]
+      </SearchButton>
+    </>
   );
 }

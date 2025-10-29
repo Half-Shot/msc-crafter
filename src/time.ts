@@ -12,23 +12,20 @@ export function humanDuration(date: Date) {
   let integer = 0;
   if (seconds < HOUR_S) {
     integer = Math.round(seconds / 60);
-    durationWord = "minute"
-  }
-  else if (seconds < DAY_S) {
+    durationWord = "minute";
+  } else if (seconds < DAY_S) {
     integer = Math.round(seconds / HOUR_S);
-    durationWord = "hour"
-  }
-  else if (seconds < MONTH_S) {
+    durationWord = "hour";
+  } else if (seconds < MONTH_S) {
     integer = Math.round(seconds / DAY_S);
-    durationWord = "day"
-  }
-  else if (seconds < YEAR_S) {
+    durationWord = "day";
+  } else if (seconds < YEAR_S) {
     integer = Math.round(seconds / MONTH_S);
-    durationWord = "month"
+    durationWord = "month";
   } else {
     integer = Math.round(seconds / YEAR_S);
     durationWord = "year";
   }
 
-  return `${integer} ${durationWord}${integer > 1 ? "s": ""} ago`;
+  return `${integer} ${durationWord}${integer > 1 ? "s" : ""} ago`;
 }
