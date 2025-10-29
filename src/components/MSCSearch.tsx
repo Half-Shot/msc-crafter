@@ -21,9 +21,13 @@ const SearchButton = styled.button`
   border-radius: var(--mc-border-radius);
   border: 1px solid var(--mc-color-block-border);
   background: var(--mc-color-bg);
-  padding: 0.3rem 8rem 0.3em 0.5em;
+  max-width: 500px;
+  width: 20em;
+  padding: 0.3rem 0 0.3em 0.5em;
+  text-align: left;
   color: var(--mc-color-text-secondary);
   cursor: text;
+  line-break: anywhere;
 `;
 
 const SearchInput = styled.input`
@@ -38,11 +42,16 @@ const SearchInput = styled.input`
 `;
 
 const SearchContainer = styled.dialog`
+  min-width: 800px;
   width: 40vw;
   padding: 0.5em;
   border: 1px solid var(--mc-color-block-border);
   border-radius: var(--mc-border-radius);
   margin-top: 1em;
+  @media screen and (max-width: 900px) {
+    min-width: 0;
+    width: 100%;
+  }
 `;
 
 const SectionHeader = styled.h2`
