@@ -31,7 +31,7 @@ const SearchButton = styled.button`
 `;
 
 const SearchInput = styled.input`
-  font-size: 0.9em;
+  font-size: 0.75em;
   border-radius: var(--mc-border-radius);
   border: 1px solid var(--mc-color-block-border);
   background: var(--mc-color-bg);
@@ -145,17 +145,7 @@ export function MSCSearch() {
     [localMSCs],
   );
 
-  const searchFn = useDebouncedCallback(async (text: string) => {
-    // minisearch is checked in onChangeHandler
-    // use a map to ensure uniqueness.
-    const matchingMSCs: Map<string, SearchableMSC> = new Map(
-      minisearch!
-        .search(text)
-        .map((s) => [
-          s.id.toString(),
-          { author: s.author, title: s.title, id: s.id },
-        ]),
-    );
+  const searchGHFn = useDebouncedCallback(async (text: string, matchingMSCs: Map<string, SearchableMSC>) => {
     if (auth && "graphqlWithAuth" in auth) {
       try {
         const found = await searchForMSCs(auth.graphqlWithAuth, text);
@@ -171,7 +161,28 @@ export function MSCSearch() {
       }
     }
     setMatchingMSCs([...matchingMSCs.values()]);
-  }, 250);
+    console.log('Completed search', matchingMSCs);
+  }, 150);
+
+  const searchFn = useCallback(async (text: string) => {
+    // minisearch is checked in onChangeHandler
+    // use a map to ensure uniqueness.
+    const matchingMSCs: Map<string, SearchableMSC> = new Map(
+      minisearch!
+        .search(text)
+        .map((s) => [
+          s.id.toString(),
+          { author: s.author, title: s.title, id: s.id },
+        ]),
+    );
+    console.log("Found", matchingMSCs, "local matches");
+    setMatchingMSCs([...matchingMSCs.values()]);
+
+    if (auth && "graphqlWithAuth" in auth) {
+      console.log("Searching remote");
+      await searchGHFn(text, matchingMSCs);
+    }
+  }, [minisearch, auth, searchGHFn]);
 
   const onChangeHandler = useCallback<InputEventHandler<HTMLInputElement>>(
     (ev) => {
