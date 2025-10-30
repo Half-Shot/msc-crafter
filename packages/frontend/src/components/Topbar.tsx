@@ -12,7 +12,6 @@ const Container = styled.header`
   flex-direction: row;
   width: 100%;
   gap: 1em;
-  flex: 3;
   justify-content: space-between;
   @media screen and (max-width: 1366px) {
     max-width: none;
@@ -25,7 +24,7 @@ const Container = styled.header`
 `;
 
 const Left = styled.span`
-  flex: 1;
+  flex: 1 2;
   max-width: fit-content;
 `;
 const Right = styled.span`
@@ -44,7 +43,7 @@ const AppName = styled.a`
   font-weight: 600;
   font-size: 1em;
   width: fit-content;
-  flex: 1;
+  flex: 3;
   margin-right: 1em;
   text-decoration: none;
   &:visited {

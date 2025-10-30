@@ -150,6 +150,9 @@ export function MSCSearch() {
       try {
         const found = await searchForMSCs(auth.graphqlWithAuth, text);
         for (const s of found) {
+          if (s.__typename === "Issue") {
+            continue;
+          }
           matchingMSCs.set(s.number.toString(), {
             author: s.author.login,
             title: s.title,

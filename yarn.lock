@@ -528,6 +528,50 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@msc-crafter/backend@workspace:packages/service":
+  version: 0.0.0-use.local
+  resolution: "@msc-crafter/backend@workspace:packages/service"
+  dependencies:
+    typescript: "npm:^5.9.3"
+  languageName: unknown
+  linkType: soft
+
+"@msc-crafter/frontend@workspace:packages/frontend":
+  version: 0.0.0-use.local
+  resolution: "@msc-crafter/frontend@workspace:packages/frontend"
+  dependencies:
+    "@fontsource-variable/inter": "npm:^5.2.8"
+    "@fontsource/jetbrains-mono": "npm:^5.2.8"
+    "@mantine/hooks": "npm:^8.3.5"
+    "@octokit/graphql": "npm:^9.0.2"
+    "@preact/preset-vite": "npm:^2.10.2"
+    "@tsconfig/node24": "npm:^24.0.1"
+    "@types/markdown-it": "npm:^14.1.2"
+    "@types/markdown-it-footnote": "npm:^3.0.4"
+    "@types/node": "npm:^24.9.1"
+    "@wooorm/starry-night": "npm:^3.8.0"
+    classnames: "npm:^2.5.1"
+    hast-util-to-jsx-runtime: "npm:^2.3.6"
+    highlight.js: "npm:^11.11.1"
+    markdown-it: "npm:^14.1.0"
+    markdown-it-footnote: "npm:^4.0.0"
+    markdown-it-highlightjs: "npm:^4.2.0"
+    minisearch: "npm:^7.2.0"
+    preact: "npm:^10.27.2"
+    preact-render-to-string: "npm:^6.6.3"
+    prettier: "npm:^3.6.2"
+    react-icons: "npm:^5.5.0"
+    react-markdown: "npm:^10.1.0"
+    rehype-highlight: "npm:^7.0.2"
+    rehype-raw: "npm:^7.0.0"
+    remark-gfm: "npm:^4.0.1"
+    styled-components: "npm:^6.1.19"
+    typescript: "npm:^5.9.3"
+    vite: "npm:^7.1.10"
+    vitest: "npm:^3.2.4"
+  languageName: unknown
+  linkType: soft
+
 "@npmcli/agent@npm:^3.0.0":
   version: 3.0.0
   resolution: "@npmcli/agent@npm:3.0.0"
@@ -2878,36 +2922,6 @@ __metadata:
 "msc-crafter@workspace:.":
   version: 0.0.0-use.local
   resolution: "msc-crafter@workspace:."
-  dependencies:
-    "@fontsource-variable/inter": "npm:^5.2.8"
-    "@fontsource/jetbrains-mono": "npm:^5.2.8"
-    "@mantine/hooks": "npm:^8.3.5"
-    "@octokit/graphql": "npm:^9.0.2"
-    "@preact/preset-vite": "npm:^2.10.2"
-    "@tsconfig/node24": "npm:^24.0.1"
-    "@types/markdown-it": "npm:^14.1.2"
-    "@types/markdown-it-footnote": "npm:^3.0.4"
-    "@types/node": "npm:^24.9.1"
-    "@wooorm/starry-night": "npm:^3.8.0"
-    classnames: "npm:^2.5.1"
-    hast-util-to-jsx-runtime: "npm:^2.3.6"
-    highlight.js: "npm:^11.11.1"
-    markdown-it: "npm:^14.1.0"
-    markdown-it-footnote: "npm:^4.0.0"
-    markdown-it-highlightjs: "npm:^4.2.0"
-    minisearch: "npm:^7.2.0"
-    preact: "npm:^10.27.2"
-    preact-render-to-string: "npm:^6.6.3"
-    prettier: "npm:^3.6.2"
-    react-icons: "npm:^5.5.0"
-    react-markdown: "npm:^10.1.0"
-    rehype-highlight: "npm:^7.0.2"
-    rehype-raw: "npm:^7.0.0"
-    remark-gfm: "npm:^4.0.1"
-    styled-components: "npm:^6.1.19"
-    typescript: "npm:^5.9.3"
-    vite: "npm:^7.1.10"
-    vitest: "npm:^3.2.4"
   languageName: unknown
   linkType: soft
 
