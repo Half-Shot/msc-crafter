@@ -176,6 +176,19 @@ export class CrafterService {
           405,
         );
       }
+    } else if (url.pathname === "/health") {
+      if (req.method === "GET") {
+        res.setHeader("Content-Type", "application/json");
+        res.write(Buffer.from(JSON.stringify({"ok": true})));
+        res.end();
+        return;
+      } else {
+        throw new ApiError(
+          "MC_WRONG_METHOD",
+          "Unexpected method, expected GET",
+          405,
+        );
+      }
     }
     throw new ApiError("MC_NOT_FOUND", "No API implemented on this path", 404);
   }
