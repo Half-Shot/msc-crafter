@@ -1,5 +1,5 @@
 query lastIssues($searchQ: String!) {
-  search(query: $searchQ, first: 5) {
+  search(query: $searchQ, first: 5, type: ISSUE_ADVANCED) {
     nodes {
       __typename
       ... on PullRequest {
