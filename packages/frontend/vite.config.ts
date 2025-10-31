@@ -12,6 +12,7 @@ export default defineConfig({
   plugins: [preact()],
   base: process.env.VITE_BASE ?? "/",
   build: {
+    sourcemap: true, // We're open source, so share the code!
     rollupOptions: {
       output: {
         manualChunks: {
