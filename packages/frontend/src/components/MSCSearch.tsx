@@ -171,7 +171,7 @@ export function MSCSearch() {
   );
 
   const searchFn = useCallback(
-    async (text: string) => {
+    (text: string) => {
       // minisearch is checked in onChangeHandler
       // use a map to ensure uniqueness.
       const matchingMSCs: Map<string, SearchableMSC> = new Map(
@@ -187,7 +187,9 @@ export function MSCSearch() {
 
       if (auth && "graphqlWithAuth" in auth) {
         console.log("Searching remote");
-        await searchGHFn(text, matchingMSCs);
+        void searchGHFn(text, matchingMSCs);
+      } else {
+        console.log("Not logged in, not searching remote");
       }
     },
     [minisearch, auth, searchGHFn],
@@ -200,7 +202,7 @@ export function MSCSearch() {
         return;
       }
       const text = (ev.target as HTMLInputElement).value;
-      void searchFn(text);
+      searchFn(text);
     },
     [minisearch],
   );
