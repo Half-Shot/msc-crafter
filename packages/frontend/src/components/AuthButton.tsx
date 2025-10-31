@@ -13,7 +13,6 @@ const Button = styled.button`
   width: fit-content;
 `;
 
-
 export function AuthButton() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -22,10 +21,7 @@ export function AuthButton() {
   const onLoginClick = useCallback<MouseEventHandler<HTMLButtonElement>>(
     (ev) => {
       ev.preventDefault();
-      if (
-        !githubAuth ||
-        "getLoginURL" in githubAuth === false
-      ) {
+      if (!githubAuth || "getLoginURL" in githubAuth === false) {
         return;
       }
       setError(null);
@@ -57,6 +53,8 @@ export function AuthButton() {
   }
 
   return (
-    <Button onClick={onLoginClick} disabled={busy}>{busy ? "Working on it" : "Login to GitHub"}</Button>
+    <Button onClick={onLoginClick} disabled={busy}>
+      {busy ? "Working on it" : "Login to GitHub"}
+    </Button>
   );
 }

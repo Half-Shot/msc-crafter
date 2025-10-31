@@ -145,47 +145,53 @@ export function MSCSearch() {
     [localMSCs],
   );
 
-  const searchGHFn = useDebouncedCallback(async (text: string, matchingMSCs: Map<string, SearchableMSC>) => {
-    if (auth && "graphqlWithAuth" in auth) {
-      try {
-        const found = await searchForMSCs(auth.graphqlWithAuth, text);
-        for (const s of found) {
-          if (s.__typename === "Issue") {
-            continue;
+  const searchGHFn = useDebouncedCallback(
+    async (text: string, matchingMSCs: Map<string, SearchableMSC>) => {
+      if (auth && "graphqlWithAuth" in auth) {
+        try {
+          const found = await searchForMSCs(auth.graphqlWithAuth, text);
+          for (const s of found) {
+            if (s.__typename === "Issue") {
+              continue;
+            }
+            matchingMSCs.set(s.number.toString(), {
+              author: s.author.login,
+              title: s.title,
+              id: s.number,
+            });
           }
-          matchingMSCs.set(s.number.toString(), {
-            author: s.author.login,
-            title: s.title,
-            id: s.number,
-          });
+        } catch (ex) {
+          console.warn("Failed to search GitHub", ex);
         }
-      } catch (ex) {
-        console.warn("Failed to search GitHub", ex);
       }
-    }
-    setMatchingMSCs([...matchingMSCs.values()]);
-    console.log('Completed search', matchingMSCs);
-  }, 150);
+      setMatchingMSCs([...matchingMSCs.values()]);
+      console.log("Completed search", matchingMSCs);
+    },
+    150,
+  );
 
-  const searchFn = useCallback(async (text: string) => {
-    // minisearch is checked in onChangeHandler
-    // use a map to ensure uniqueness.
-    const matchingMSCs: Map<string, SearchableMSC> = new Map(
-      minisearch!
-        .search(text)
-        .map((s) => [
-          s.id.toString(),
-          { author: s.author, title: s.title, id: s.id },
-        ]),
-    );
-    console.log("Found", matchingMSCs, "local matches");
-    setMatchingMSCs([...matchingMSCs.values()]);
+  const searchFn = useCallback(
+    async (text: string) => {
+      // minisearch is checked in onChangeHandler
+      // use a map to ensure uniqueness.
+      const matchingMSCs: Map<string, SearchableMSC> = new Map(
+        minisearch!
+          .search(text)
+          .map((s) => [
+            s.id.toString(),
+            { author: s.author, title: s.title, id: s.id },
+          ]),
+      );
+      console.log("Found", matchingMSCs, "local matches");
+      setMatchingMSCs([...matchingMSCs.values()]);
 
-    if (auth && "graphqlWithAuth" in auth) {
-      console.log("Searching remote");
-      await searchGHFn(text, matchingMSCs);
-    }
-  }, [minisearch, auth, searchGHFn]);
+      if (auth && "graphqlWithAuth" in auth) {
+        console.log("Searching remote");
+        await searchGHFn(text, matchingMSCs);
+      }
+    },
+    [minisearch, auth, searchGHFn],
+  );
 
   const onChangeHandler = useCallback<InputEventHandler<HTMLInputElement>>(
     (ev) => {

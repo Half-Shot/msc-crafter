@@ -2,7 +2,7 @@
   "extends": ["@tsconfig/node24"],
   "compilerOptions": {
     "noEmit": true,
-    "erasableSyntaxOnly": true,
+    "erasableSyntaxOnly": true
   },
   "include": ["lib"]
 }

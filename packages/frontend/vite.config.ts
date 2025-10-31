@@ -9,9 +9,13 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['preact', '@mantine/hooks', 'styled-components'],
-          parsing: ['markdown-it', 'highlight.js'],
-          rawparsing: ['@wooorm/starry-night', 'hast-util-to-jsx-runtime', 'react-markdown']
+          vendor: ["preact", "@mantine/hooks", "styled-components"],
+          parsing: ["markdown-it", "highlight.js"],
+          rawparsing: [
+            "@wooorm/starry-night",
+            "hast-util-to-jsx-runtime",
+            "react-markdown",
+          ],
         },
       },
     },
