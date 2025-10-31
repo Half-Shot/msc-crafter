@@ -148,6 +148,7 @@ export function MSCSearch() {
   const searchGHFn = useDebouncedCallback(
     async (text: string, matchingMSCs: Map<string, SearchableMSC>) => {
       if (auth && "graphqlWithAuth" in auth) {
+        console.log("Searching remote");
         try {
           const found = await searchForMSCs(auth.graphqlWithAuth, text);
           for (const s of found) {
@@ -163,9 +164,11 @@ export function MSCSearch() {
         } catch (ex) {
           console.warn("Failed to search GitHub", ex);
         }
+        setMatchingMSCs([...matchingMSCs.values()]);
+        console.log("Completed search", matchingMSCs);
+      } else {
+        console.log("Not logged in, not searching remote");
       }
-      setMatchingMSCs([...matchingMSCs.values()]);
-      console.log("Completed search", matchingMSCs);
     },
     150,
   );
@@ -184,13 +187,7 @@ export function MSCSearch() {
       );
       console.log("Found", matchingMSCs, "local matches");
       setMatchingMSCs([...matchingMSCs.values()]);
-
-      if (auth && "graphqlWithAuth" in auth) {
-        console.log("Searching remote");
-        void searchGHFn(text, matchingMSCs);
-      } else {
-        console.log("Not logged in, not searching remote");
-      }
+      void searchGHFn(text, matchingMSCs);
     },
     [minisearch, auth, searchGHFn],
   );
