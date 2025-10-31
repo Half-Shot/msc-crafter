@@ -15,8 +15,6 @@
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",
-    "@tsconfig/node24": "^24.0.1",
-    "@types/node": "^24.9.1",
     "preact": "^10.27.2",
     "prettier": "^3.6.2",
     "styled-components": "^6.1.19",

@@ -1,6 +1,6 @@
-import { useCallback, useRef, useState } from "preact/hooks";
+import { useCallback, useState } from "preact/hooks";
 import { useGitHubAuth } from "../hooks/GitHubAuth";
-import type { SubmitEventHandler } from "preact";
+import type { MouseEventHandler } from "preact";
 import styled from "styled-components";
 
 const LoggedInContainer = styled.div`
@@ -13,27 +13,28 @@ const Button = styled.button`
   width: fit-content;
 `;
 
+
 export function AuthButton() {
-  const tokenInput = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [showTokenForm, setShowTokenForm] = useState(false);
   const githubAuth = useGitHubAuth();
 
-  const onSubmitForm = useCallback<SubmitEventHandler<HTMLFormElement>>(
+  const onLoginClick = useCallback<MouseEventHandler<HTMLButtonElement>>(
     (ev) => {
       ev.preventDefault();
       if (
         !githubAuth ||
-        "checkAndStoreToken" in githubAuth === false ||
-        !tokenInput.current
+        "getLoginURL" in githubAuth === false
       ) {
         return;
       }
       setError(null);
       setBusy(true);
       githubAuth
-        .checkAndStoreToken(tokenInput.current?.value)
+        .getLoginURL()
+        .then((url) => {
+          window.location.replace(url);
+        })
         .catch((ex) => {
           setError(ex.message);
         })
@@ -55,21 +56,7 @@ export function AuthButton() {
     );
   }
 
-  if (showTokenForm) {
-    return (
-      <form onSubmit={onSubmitForm}>
-        {error && <p>Error: {error}</p>}
-        <input
-          disabled={busy}
-          ref={tokenInput}
-          type="password"
-          placeholder="GitHub PAT"
-        />
-        <Button disabled={busy}>Store token</Button>
-      </form>
-    );
-  }
   return (
-    <Button onClick={() => setShowTokenForm(true)}>Login to GitHub</Button>
+    <Button onClick={onLoginClick} disabled={busy}>{busy ? "Working on it" : "Login to GitHub"}</Button>
   );
 }

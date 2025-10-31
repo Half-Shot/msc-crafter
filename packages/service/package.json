@@ -1,0 +1,24 @@
+{
+  "name": "@msc-crafter/backend",
+  "version": "1.0.0",
+  "description": "Backend for msc-crafter",
+  "repository": "https://github.com/Half-Shot/msc-crafter",
+  "author": "Half-Shot",
+  "license": "Apache-2.0",
+  "main": "lib/index.mts",
+  "scripts": {
+    "start": "node lib/index.mts",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@tsconfig/node24": "^24.0.1",
+    "@types/node": "^24.9.1",
+    "typescript": "^5.9.3"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "@octokit/oauth-methods": "^6.0.1"
+  }
+}
