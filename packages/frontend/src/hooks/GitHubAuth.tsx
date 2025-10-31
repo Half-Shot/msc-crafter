@@ -12,6 +12,7 @@ import type { GithubViewer } from "../model/viewer";
 import { createContext } from "preact";
 import type { PropsWithChildren } from "preact/compat";
 
+
 interface LoggedIn {
   graphqlWithAuth: ReturnType<typeof graphql.defaults>;
   viewer: GithubViewer;
@@ -35,6 +36,8 @@ type CurrentState = null | LoggedOut | LoggedIn;
 export const AuthContext = createContext<CurrentState>(null);
 export const useGitHubAuth = () => useContext(AuthContext);
 
+const BackendURL = new URL(import.meta.env.VITE_BACKEND_URL);
+
 export function GitHubAuthProvider({ children }: PropsWithChildren) {
   const [storedAuthData, storeGitHubToken] = useLocalStorage<string | null>({
     key: "msccrafter.token",
@@ -52,14 +55,13 @@ export function GitHubAuthProvider({ children }: PropsWithChildren) {
       storeGitHubToken(null);
       return;
     }
-    const exchangeUrl = new URL("http://localhost:8080/auth/refresh");
+    const exchangeUrl = new URL("/auth/refresh", BackendURL);
     const req = await fetch(exchangeUrl, {
       body: JSON.stringify({ refresh_token: oauthData.refresh_token }),
       headers: { "Content-Type": "application/json" },
       method: "POST",
     });
     const response = await req.json();
-    console.log("Storing new token", response);
     storeGitHubToken(JSON.stringify(response));
     setTimeout(() => onTokenExpired, Date.now() - response.expires_at);
   }, []);
@@ -91,7 +93,7 @@ export function GitHubAuthProvider({ children }: PropsWithChildren) {
   }, [storedAuthData]);
 
   const getLoginURL = useCallback(async () => {
-    const exchangeUrl = new URL("http://localhost:8080/auth");
+    const exchangeUrl = new URL("/auth", BackendURL);
     const req = await fetch(exchangeUrl);
     const res = await req.json();
     return res.url;
@@ -123,7 +125,7 @@ export function GitHubAuthProvider({ children }: PropsWithChildren) {
     if (!authState) {
       return;
     }
-    const exchangeUrl = new URL("http://localhost:8080/auth/exchange");
+    const exchangeUrl = new URL("/auth/exchange", BackendURL);
     exchangeUrl.searchParams.set("state", authState);
     (async () => {
       console.log("Exchanging token");
@@ -133,7 +135,6 @@ export function GitHubAuthProvider({ children }: PropsWithChildren) {
         method: "POST",
       });
       const response = await req.json();
-      console.log("Fetching new token", response);
       storeGitHubToken(JSON.stringify(response));
       // Remove state after authing
       window.location.search = "";

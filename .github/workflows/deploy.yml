@@ -41,7 +41,7 @@ jobs:
       - name: Install dependencies for frontend
         run: yarn workspaces focus @msc-crafter/frontend
       - name: Build
-        run: cd packages/frontend && VITE_BASE=/msc-crafter yarn build
+        run: cd packages/frontend && VITE_BASE=/msc-crafter VITE_BACKEND_URL=https://msccrafter.half-shot.uk yarn build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
