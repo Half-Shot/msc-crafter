@@ -199,7 +199,9 @@ export function MSCSearch() {
         return;
       }
       const text = (ev.target as HTMLInputElement).value;
-      searchFn(text);
+      if (text) {
+        searchFn(text);
+      }
     },
     [minisearch],
   );

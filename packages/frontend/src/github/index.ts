@@ -20,7 +20,7 @@ export async function searchForMSCs(
   // N.B We don't stop the user from breaking out of this query, if they want to break their
   // own app then that's fine.
   const { search } = await graphql<SearchMCSCsResponse>(searchMSCsQuery, {
-    searchQ: `repo:matrix-org/matrix-spec-proposals ${query}`,
+    searchQ: `${query} type:pr repo:matrix-org/matrix-spec-proposals`,
   });
   return search.nodes;
 }
