@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import type { Comment } from "../model/MSC";
+import type { Comment } from "../models/MSC";
 import Markdown from "./atoms/Markdown";
 import { Author } from "./atoms/Author";
 

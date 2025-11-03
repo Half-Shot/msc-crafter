@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { type ClosedMSC } from "../model/MSC";
+import { type ClosedMSC } from "../models/MSC";
 import { StateBadge } from "./StateBadge";
 import { VoteBlock } from "./VoteBlock";
 import { useCurrentMSC } from "../hooks/CurrentMSCContext";

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { MSCState } from "../model/MSC";
+import { MSCState } from "../models/MSC";
 
 export const StateBadgeContainer = styled.span`
   border: 3px solid #525252ff;

@@ -8,7 +8,7 @@ import {
   useState,
 } from "preact/hooks";
 import { viewerInfo } from "../github";
-import type { GithubViewer } from "../model/viewer";
+import type { GithubViewer } from "../models/viewer";
 import { createContext } from "preact";
 import type { PropsWithChildren } from "preact/compat";
 

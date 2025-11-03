@@ -1,5 +1,5 @@
 import { useMemo } from "preact/hooks";
-import type { MSC } from "../model/MSC";
+import type { MSC } from "../models/MSC";
 import type { CachedMSC } from "./useLocalMSCStore";
 
 export function useLocalMSCCache(): MSC[] {

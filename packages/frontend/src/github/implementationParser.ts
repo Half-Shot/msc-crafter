@@ -1,4 +1,4 @@
-import type { MSC } from "../model/MSC";
+import type { MSC } from "../models/MSC";
 import type {
   ResolveMSCResponse,
   ResolveMSCReviewThreadsResponse,

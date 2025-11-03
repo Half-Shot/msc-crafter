@@ -4,7 +4,7 @@ import {
   type Comment,
   type MSC,
   type ProposedState,
-} from "../model/MSC";
+} from "../models/MSC";
 import { graphql as GraphQL } from "@octokit/graphql";
 import resolveMSCQuery from "../github/queries/resolveMSC.gql?raw";
 import resolveMSCCommentsQuery from "../github/queries/resolveMSCComments.gql?raw";

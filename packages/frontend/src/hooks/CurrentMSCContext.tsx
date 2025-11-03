@@ -1,7 +1,7 @@
 import { useCallback, useContext, useState } from "preact/hooks";
 import { createContext } from "preact";
 import type { PropsWithChildren } from "preact/compat";
-import type { MSC } from "../model/MSC";
+import type { MSC } from "../models/MSC";
 import type { createStarryNight } from "@wooorm/starry-night";
 import type { Root } from "hast";
 

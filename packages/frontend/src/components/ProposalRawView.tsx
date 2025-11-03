@@ -7,7 +7,7 @@ import {
   type HTMLAttributes,
   type PropsWithChildren,
 } from "preact/compat";
-import type { Thread } from "../model/MSC";
+import type { Thread } from "../models/MSC";
 import { toJsxRuntime } from "hast-util-to-jsx-runtime";
 import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 import { ContentBlockWithHeading } from "./atoms/ContentBlock";

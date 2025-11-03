@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { MSCState, type MSC } from "../model/MSC";
+import { MSCState, type MSC } from "../models/MSC";
 import { ContentBlock } from "./atoms/ContentBlock";
 import { MemorisedDetails } from "./MemorisedDetails";
 import { useMarkdown } from "../hooks/useMarkdown";

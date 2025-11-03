@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { humanDuration } from "../../time";
+import { humanDuration } from "../../utils/time";
 
 const Container = styled.time`
   text-decoration: underline dashed;

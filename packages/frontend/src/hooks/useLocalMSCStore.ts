@@ -4,12 +4,12 @@ import {
   type MSC,
   type OpenMSC,
   type Thread,
-} from "../model/MSC";
+} from "../models/MSC";
 import { resolveMSC } from "../github";
 import { useEffect, useState } from "preact/hooks";
 import { useOnlineStatus } from "./useOnlineStatus";
 import { useGitHubAuth } from "./GitHubAuth";
-import { HOUR_S, MONTH_S, YEAR_S } from "../time";
+import { HOUR_S, MONTH_S, YEAR_S } from "../utils/time";
 
 export type CachedComment = Omit<Comment, "created" | "updated"> & {
   created: string;
