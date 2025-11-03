@@ -11,6 +11,7 @@ import { ToggleButtonRow } from "./atoms/ToggleButtonRow";
 import { lazy, Suspense } from "preact/compat";
 import RelativeTime from "./atoms/RelativeTime";
 import { GoCommentDiscussion, GoFileBinary, GoNote } from "react-icons/go";
+import { Author } from "./atoms/Author";
 
 const ProposalBody = lazy(() => import("./ProposalBody"));
 const ProposalRawView = lazy(() => import("./ProposalRawView"));
@@ -111,14 +112,13 @@ export default function MSCView() {
         </TitleBlock>
         <WidgetContainer>
           <span>
-            Written by
-            <a
-              style={{ marginLeft: "0.5em" }}
-              target="_blank"
-              href={`https://github.com/${msc.author.githubUsername}`}
+            <Author
+              linkify
+              username={msc.author.githubUsername}
+              avatarUrl={msc.author.avatarUrl}
             >
-              {msc.author.githubUsername}
-            </a>
+              Written by
+            </Author>
           </span>
           <span>
             Created: <RelativeTime>{msc.created}</RelativeTime>

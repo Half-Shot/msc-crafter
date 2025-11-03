@@ -2,6 +2,7 @@ import { useCallback, useState } from "preact/hooks";
 import { useGitHubAuth } from "../hooks/GitHubAuth";
 import type { MouseEventHandler } from "preact";
 import styled from "styled-components";
+import { Author } from "./atoms/Author";
 
 const LoggedInContainer = styled.div`
   display: flex;
@@ -46,7 +47,12 @@ export function AuthButton() {
   } else if ("viewer" in githubAuth) {
     return (
       <LoggedInContainer>
-        <span>Logged in as {githubAuth.viewer.login}</span>
+        <Author
+          username={githubAuth.viewer.login}
+          avatarUrl={githubAuth.viewer.avatarUrl}
+        >
+          Logged in as
+        </Author>
         <Button onClick={() => githubAuth.logout()}>Logout</Button>
       </LoggedInContainer>
     );

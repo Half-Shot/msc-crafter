@@ -50,7 +50,7 @@ export interface ResolveMSCResponse {
       };
       url: string;
       author: {
-        avatarUrl: string;
+        avatarUrl?: string;
         login: string;
       };
       body: string;

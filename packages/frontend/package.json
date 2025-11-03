@@ -7,7 +7,7 @@
   "author": "Half-Shot",
   "license": "Apache-2.0",
   "scripts": {
-    "dev": "vite dev",
+    "dev": "node --env-file=.env ../../node_modules/vite/bin/vite.js dev",
     "start": "yarn dev",
     "build": "node --env-file=.env ../../node_modules/vite/bin/vite.js build",
     "lint": "prettier -c src/ index.html vite.config.ts README.md",

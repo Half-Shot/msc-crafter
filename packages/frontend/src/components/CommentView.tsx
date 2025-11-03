@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import type { Comment } from "../models/MSC";
 import Markdown from "./atoms/Markdown";
-import { Author } from "./atoms/Author";
+import { CommentAuthor } from "./atoms/CommentAuthor";
 
 const Container = styled.div`
   padding: 1em;
@@ -23,7 +23,9 @@ export default function CommentView({
 
   return (
     <Container className={kind}>
-      <Author username={comment.author.githubUsername}>closed this MSC</Author>
+      <CommentAuthor username={comment.author.githubUsername}>
+        closed this MSC
+      </CommentAuthor>
       <Markdown>{comment.body.markdown}</Markdown>
     </Container>
   );

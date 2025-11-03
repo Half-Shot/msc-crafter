@@ -165,6 +165,7 @@ export async function resolveMSC(
     },
     author: {
       githubUsername: repository.pullRequest.author.login,
+      avatarUrl: repository.pullRequest.author.avatarUrl,
     },
     requires: [],
     dependents: [],

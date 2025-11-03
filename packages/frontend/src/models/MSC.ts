@@ -51,6 +51,7 @@ interface RootMSC {
   };
   author: {
     githubUsername: string;
+    avatarUrl?: string;
   };
   requires: MSC[];
   dependents: MSC[];

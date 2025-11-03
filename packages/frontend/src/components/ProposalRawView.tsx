@@ -12,7 +12,7 @@ import { toJsxRuntime } from "hast-util-to-jsx-runtime";
 import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 import { ContentBlockWithHeading } from "./atoms/ContentBlock";
 import Markdown from "./atoms/Markdown";
-import { Author } from "./atoms/Author";
+import { CommentAuthor } from "./atoms/CommentAuthor";
 import { GoChevronDown, GoChevronUp } from "react-icons/go";
 
 const Container = styled.article`
@@ -86,13 +86,13 @@ function CommentThread({ thread }: { thread: Thread }) {
       {isOpen &&
         thread.comments.map((c) => (
           <ThreadComment>
-            <Author
+            <CommentAuthor
               username={c.author.githubUsername}
               createdAt={c.created}
               updatedAt={c.updated}
             >
               said
-            </Author>
+            </CommentAuthor>
             <ThreadCommentContent>
               <Markdown>{c.body.markdown}</Markdown>
             </ThreadCommentContent>
