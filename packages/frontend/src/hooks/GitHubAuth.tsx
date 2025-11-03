@@ -12,7 +12,6 @@ import type { GithubViewer } from "../model/viewer";
 import { createContext } from "preact";
 import type { PropsWithChildren } from "preact/compat";
 
-
 interface LoggedIn {
   graphqlWithAuth: ReturnType<typeof graphql.defaults>;
   viewer: GithubViewer;

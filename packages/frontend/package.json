@@ -9,9 +9,9 @@
   "scripts": {
     "dev": "vite dev",
     "start": "yarn dev",
-    "build": "vite build",
-    "lint:prettier": "prettier src -w",
-    "lint": "yarn prettier"
+    "build": "node --env-file=.env ../../node_modules/vite/bin/vite.js build",
+    "lint": "prettier -c src/ index.html vite.config.ts README.md",
+    "lint:apply": "yarn lint -w"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",
