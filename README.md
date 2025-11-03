@@ -12,6 +12,6 @@ having to use GitHub's clunky UI. All data is sourced from GitHub with a 5 minut
 - [x] Syntax highlighting.
 - [x] Table of contents for PRs.
 - [ ] Offline support (Partial: Caches, but does not support offline app APIs yet)
-- [ ] Renders converstaion threads.
-- [ ] Renders FCP status (Partial: badge, but not member votes or timers).
+- [x] Renders converstaion threads.
+- [x] Renders FCP status (including votes)
 - [ ] Editing MSCs in the browser
