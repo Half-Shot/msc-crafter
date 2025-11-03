@@ -1,9 +1,9 @@
 import "node:http";
 import {
-  IncomingMessage,
+  type IncomingMessage,
   type RequestListener,
   Server,
-  ServerResponse,
+  type ServerResponse,
 } from "node:http";
 import {
   exchangeWebFlowCode,
@@ -13,6 +13,7 @@ import {
   refreshToken,
 } from "@octokit/oauth-methods";
 import { randomUUID } from "node:crypto";
+import type { AddressInfo } from "node:net";
 
 class ApiError extends Error {
   public readonly errcode: string;
@@ -34,8 +35,11 @@ class ApiError extends Error {
 
 const GitHubScopes = ["repo", "gist"];
 
-function assertEnv(key: string): string {
-  const v = process.env[key];
+function assertEnv(
+  env: Record<string, string | undefined>,
+  key: string,
+): string {
+  const v = env[key];
   if (typeof v !== "string" || !v) {
     throw Error(`Expected enviroment key is missing ${key}`);
   }
@@ -74,17 +78,34 @@ export class CrafterService {
   private readonly redirectUri?: string;
   private readonly frontendRoot: URL;
 
-  constructor() {
-    this.server = new Server(this.onRequest);
-    this.githubClientId = assertEnv("GITHUB_CLIENT_ID");
-    this.githubClientSecret = assertEnv("GITHUB_CLIENT_SECRET");
-    this.redirectUri = process.env["GITHUB_REDIRECT_URL"];
-    this.frontendRoot = new URL(assertEnv("FRONTEND_URL"));
+  public get listenUrl(): string | null {
+    const addr = this.server.address() as AddressInfo | null;
+    if (addr === null) {
+      return null;
+    }
+    return `http://${addr.address}:${addr.port}`;
   }
 
-  public start() {
-    this.server.listen(8080, "0.0.0.0");
-    console.log("Listening on http://0.0.0.0:8080");
+  constructor(env: Record<string, string | undefined> = process.env) {
+    this.server = new Server(this.onRequest);
+    this.githubClientId = assertEnv(env, "GITHUB_CLIENT_ID");
+    this.githubClientSecret = assertEnv(env, "GITHUB_CLIENT_SECRET");
+    this.redirectUri = env["GITHUB_REDIRECT_URL"];
+    this.frontendRoot = new URL(assertEnv(env, "FRONTEND_URL"));
+  }
+
+  public async start(port = 8080, hostname = "0.0.0.0"): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.server.listen(port, hostname, undefined, () => {
+        resolve();
+        console.log(`Listening on ${this.listenUrl}`);
+      });
+      this.server.once("error", reject);
+    });
+  }
+
+  public stop() {
+    this.server.close();
   }
 
   private readonly onRequest: RequestListener = (req, res) => {
@@ -179,7 +200,7 @@ export class CrafterService {
     } else if (url.pathname === "/health") {
       if (req.method === "GET") {
         res.setHeader("Content-Type", "application/json");
-        res.write(Buffer.from(JSON.stringify({"ok": true})));
+        res.write(Buffer.from(JSON.stringify({ ok: true })));
         res.end();
         return;
       } else {
@@ -284,5 +305,9 @@ export class CrafterService {
 
 if (import.meta.main) {
   const service = new CrafterService();
-  service.start();
+  void service.start();
+  process.on("beforeExit", () => {
+    service.stop();
+    process.exit(0);
+  });
 }

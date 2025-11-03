@@ -6,13 +6,21 @@
   "author": "Half-Shot",
   "license": "Apache-2.0",
   "main": "lib/index.mts",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "start": "node lib/index.mts",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "prettier -c spec/ lib/ README.md",
+    "lint:apply": "yarn lint -w",
+    "test": "node spec/index.spec.ts"
   },
   "devDependencies": {
     "@tsconfig/node24": "^24.0.1",
     "@types/node": "^24.9.1",
+    "prettier": "^3.6.2",
     "typescript": "^5.9.3"
   },
   "workspaces": [
