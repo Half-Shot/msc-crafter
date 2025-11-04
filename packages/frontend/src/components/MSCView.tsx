@@ -12,6 +12,7 @@ import { lazy, Suspense } from "preact/compat";
 import RelativeTime from "./atoms/RelativeTime";
 import { GoCommentDiscussion, GoFileBinary, GoNote } from "react-icons/go";
 import { Author } from "./atoms/Author";
+import { ProposalHistory } from "./ProposalHistory";
 
 const ProposalBody = lazy(() => import("./ProposalBody"));
 const ProposalRawView = lazy(() => import("./ProposalRawView"));
@@ -162,6 +163,7 @@ export default function MSCView() {
           {currentProposalView === ProposalView.Rendered && (
             <TableOfContents element={proposalBodyRef} />
           )}
+          <ProposalHistory />
         </LeftColumn>
         <RightColumn>
           <ContentBlockWithHeading

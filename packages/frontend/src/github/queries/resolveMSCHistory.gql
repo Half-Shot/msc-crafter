@@ -1,0 +1,26 @@
+query resolveHistory($num: Int!, $cursor: String) {
+  repository(owner: "matrix-org", name: "matrix-spec-proposals") {
+    pullRequest(number: $num) {
+      commits(last: 10, before: $cursor) {
+        nodes {
+          commit {
+            authoredDate
+            additions
+            deletions
+            messageHeadline
+            url
+            author {
+              user {
+                login
+              }
+            }
+          }
+        }
+        pageInfo {
+          hasPreviousPage
+          startCursor
+        }
+      }
+    }
+  }
+}
