@@ -5,24 +5,27 @@ import { useCodeAST } from "./useCodeAST";
 import type { Root } from "hast";
 
 type CurrentState = null | {
-  tree: Root|null;
-  renderTree: () => void,
+  tree: Root | null;
+  renderTree: () => void;
 };
-export const CodeASTContext = createContext<CurrentState>({tree: null, renderTree: () => {}});
-export const useCodeASTContext = () => { 
+export const CodeASTContext = createContext<CurrentState>({
+  tree: null,
+  renderTree: () => {},
+});
+export const useCodeASTContext = () => {
   const ctx = useContext(CodeASTContext);
   useEffect(() => {
     if (!ctx?.tree) {
-      ctx?.renderTree()
+      ctx?.renderTree();
     }
   }, []);
   return ctx?.tree ?? null;
-}
+};
 
 export function CodeASTContextProvider({
   body,
   children,
-}: PropsWithChildren<{ body: string|null }>) {
+}: PropsWithChildren<{ body: string | null }>) {
   const [tree, renderTree] = useCodeAST(body);
   return (
     <CodeASTContext.Provider value={{ tree, renderTree }}>

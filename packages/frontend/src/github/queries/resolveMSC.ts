@@ -89,13 +89,13 @@ export interface ResolveMSCReviewThreadsResponse {
       reviewThreads: {
         nodes: {
           line: number;
-          startLine: number|null;
+          startLine: number | null;
           originalLine: number;
           isResolved: boolean;
           isOutdated: boolean;
           id: string;
           comments: {
-            nodes: (ResolveMSCResponseComment&{diffHunk: string})[];
+            nodes: (ResolveMSCResponseComment & { diffHunk: string })[];
           };
         }[];
       };

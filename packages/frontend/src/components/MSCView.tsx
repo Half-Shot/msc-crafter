@@ -193,7 +193,11 @@ export default function MSCView() {
                     [ProposalView.OpenThreads]: (
                       <span>
                         <GoCommentDiscussion />
-                        {msc.threads.filter((t) => !t.resolved && !t.outdated).length} Open
+                        {
+                          msc.threads.filter((t) => !t.resolved && !t.outdated)
+                            .length
+                        }{" "}
+                        Open
                       </span>
                     ),
                     [ProposalView.Threads]: (
@@ -216,10 +220,18 @@ export default function MSCView() {
           >
             <Suspense fallback={false}>
               <CodeASTContextProvider body={msc.body.markdown}>
-                {currentProposalView === ProposalView.Rendered && <ProposalBody ref={proposalBodyRef} />}
-                {currentProposalView === ProposalView.OutdatedThreads && <ThreadSummaryView filter={(t) => t.outdated} />}
-                {currentProposalView === ProposalView.OpenThreads && <ProposalRawView showThreads onlyOpenThreads />}
-                {currentProposalView === ProposalView.Threads && <ProposalRawView showThreads />}
+                {currentProposalView === ProposalView.Rendered && (
+                  <ProposalBody ref={proposalBodyRef} />
+                )}
+                {currentProposalView === ProposalView.OutdatedThreads && (
+                  <ThreadSummaryView filter={(t) => t.outdated} />
+                )}
+                {currentProposalView === ProposalView.OpenThreads && (
+                  <ProposalRawView showThreads onlyOpenThreads />
+                )}
+                {currentProposalView === ProposalView.Threads && (
+                  <ProposalRawView showThreads />
+                )}
               </CodeASTContextProvider>
             </Suspense>
           </ContentBlockWithHeading>

@@ -2,7 +2,6 @@ import { useCallback, useState } from "preact/hooks";
 import type { createStarryNight } from "@wooorm/starry-night";
 import type { Root } from "hast";
 
-
 /**
  * @param {Root} tree
  *   Tree.
@@ -114,29 +113,29 @@ function starryNightGutter(
   tree.children = replacement as any;
 }
 
-export function useCodeAST(body: string|null): [Root|null, () => void] {
-    const [promise, setPromise] = useState<Promise<unknown> | null>(null);
-    const [tree, setTree] = useState<Root| null>(null);
-    const renderTree = useCallback(() => {
-        if (promise || !body) {
-            return;
-        }
-        const p = (async () => {
-            if (!body) {
-                throw Error("No body");
-            }
-            const { common, createStarryNight } = await import(
-            "@wooorm/starry-night"
-            );
-            const sn = await createStarryNight(common);
-            // We know that markdown is available.
-            const tree = sn.highlight(body, sn.flagToScope("markdown")!);
-            starryNightGutter(tree);
-            setTree(tree);
-        })();
-        p.catch(() => setTree(null)).finally(() => setPromise(null));
-        setPromise(p);
-        return p;
-    }, [body]);
-    return [tree, renderTree];
+export function useCodeAST(body: string | null): [Root | null, () => void] {
+  const [promise, setPromise] = useState<Promise<unknown> | null>(null);
+  const [tree, setTree] = useState<Root | null>(null);
+  const renderTree = useCallback(() => {
+    if (promise || !body) {
+      return;
+    }
+    const p = (async () => {
+      if (!body) {
+        throw Error("No body");
+      }
+      const { common, createStarryNight } = await import(
+        "@wooorm/starry-night"
+      );
+      const sn = await createStarryNight(common);
+      // We know that markdown is available.
+      const tree = sn.highlight(body, sn.flagToScope("markdown")!);
+      starryNightGutter(tree);
+      setTree(tree);
+    })();
+    p.catch(() => setTree(null)).finally(() => setPromise(null));
+    setPromise(p);
+    return p;
+  }, [body]);
+  return [tree, renderTree];
 }

@@ -1,3 +1,1 @@
-export function CodeBlock() {
-    
-}
+export function CodeBlock() {}

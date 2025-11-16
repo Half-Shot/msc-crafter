@@ -58,7 +58,10 @@ function determineMSCState(pullRequest: ResolvedPR): MSCState {
   return MSCState.Open;
 }
 
-async function loadProposal(pullRequest: ResolvedPR, filePath: string): Promise<string | null> {
+async function loadProposal(
+  pullRequest: ResolvedPR,
+  filePath: string,
+): Promise<string | null> {
   const branch =
     pullRequest.state === "MERGED" ? "main" : pullRequest.headRef?.name;
   const name =
@@ -126,11 +129,13 @@ export async function resolveMSC(
     num: mscNumber,
   });
 
-  const filePath = repository.pullRequest.files.nodes.find((f) =>
-    f.path.match(/^proposals\/.+\.md$/),
-  )?.path ?? null;
+  const filePath =
+    repository.pullRequest.files.nodes.find((f) =>
+      f.path.match(/^proposals\/.+\.md$/),
+    )?.path ?? null;
 
-  const proposalText = filePath && await loadProposal(repository.pullRequest, filePath);
+  const proposalText =
+    filePath && (await loadProposal(repository.pullRequest, filePath));
 
   // Mentioned MSCs
   const mentionedProposals = new Set(
@@ -199,7 +204,7 @@ export async function resolveMSC(
         outdated: thread.isOutdated,
         line: thread.line ?? thread.originalLine,
         // XXX: I think all these diff hunks are the same.
-        diffHunk: thread.comments.nodes.find(c => c.diffHunk)?.diffHunk,
+        diffHunk: thread.comments.nodes.find((c) => c.diffHunk)?.diffHunk,
         // Fix Type
         comments: thread.comments.nodes.map(
           (c) =>

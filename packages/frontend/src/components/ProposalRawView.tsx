@@ -29,7 +29,6 @@ const LineNumber = styled.span`
   color: var(--mc-color-block-border);
 `;
 
-
 const CodeLineContainer = styled.span`
   font-family: var(--mc-font-monospace);
   display: flex;

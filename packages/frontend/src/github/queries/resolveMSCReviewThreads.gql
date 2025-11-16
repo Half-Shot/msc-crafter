@@ -19,11 +19,11 @@ query lastIssues($num: Int!) {
           startLine
           originalLine
           isResolved
-					isOutdated
+          isOutdated
           comments(first: 20) {
             nodes {
               id
-							diffHunk
+              diffHunk
               author {
                 avatarUrl
                 login

@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
-import {
-  useState,
-} from "preact/compat";
+import { useState } from "preact/compat";
 import type { Thread } from "../../models/MSC";
 import { ContentBlockWithHeading } from "../atoms/ContentBlock";
 import Markdown from "../atoms/Markdown";
@@ -43,11 +41,18 @@ const ThreadCommentContent = styled.div`
   padding-left: 2em;
 `;
 
-export function CommentThread({ thread, withLineNumbers = true }: { thread: Thread, withLineNumbers?: boolean }) {
+export function CommentThread({
+  thread,
+  withLineNumbers = true,
+}: {
+  thread: Thread;
+  withLineNumbers?: boolean;
+}) {
   const preview = thread.comments[0].body.markdown
     .trimStart()
     // Filter out ```suggestion
-    .split("\n").filter(l => !l.startsWith('```'))[0]
+    .split("\n")
+    .filter((l) => !l.startsWith("```"))[0]
     .slice(0, 64);
   const [isOpen, setOpen] = useState(false);
 

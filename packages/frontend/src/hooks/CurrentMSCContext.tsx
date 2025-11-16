@@ -9,7 +9,6 @@ type CurrentState = null | {
 export const CurrentMSCContext = createContext<CurrentState>(null);
 export const useCurrentMSC = () => useContext(CurrentMSCContext)!;
 
-
 export function CurrentMSCContextProvider({
   msc,
   children,
