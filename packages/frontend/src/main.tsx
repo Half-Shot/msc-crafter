@@ -8,6 +8,7 @@ declare global {
   interface Window {
     crafter: {
       currentMSC?: MSC;
+      setGitHubToken?: (token: string) => void,
     };
   }
 }

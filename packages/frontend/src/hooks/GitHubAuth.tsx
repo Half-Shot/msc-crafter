@@ -44,6 +44,9 @@ export function GitHubAuthProvider({ children }: PropsWithChildren) {
     defaultValue: null,
   });
 
+  // Add hook to set token for developers.
+  window.crafter.setGitHubToken = (token) => storeGitHubToken(token);
+
   const onTokenExpired = useCallback(async () => {
     if (!storedAuthData) {
       throw Error("Should have been called on oauth data");

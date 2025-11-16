@@ -13,7 +13,6 @@ const Container = styled.span`
   display: flex;
   flex-direction: row;
   gap: 0.6em;
-  align-items: first baseline;
   align-items: center;
 `;
 
