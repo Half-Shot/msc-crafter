@@ -1,4 +1,5 @@
 import {
+  MSCModelVersion,
   MSCState,
   type Comment,
   type MSC,
@@ -26,6 +27,7 @@ export type CachedMSC = Omit<MSC, "created" | "updated" | "threads"> & {
   updated: string;
   renderState: "full" | "partial";
   threads: CachedThread[];
+  version: typeof MSCModelVersion;
 };
 
 const CACHE_LIVE_FOR_MS = HOUR_S * 500; // MSC that is updated frequently, 30 min cache.
@@ -73,7 +75,7 @@ export function useMSC(
       const cachedItem = localStorage.getItem(`msccrafter.msc.${mscNumber}`);
       if (cachedItem) {
         const parsed = JSON.parse(cachedItem) as CachedMSC;
-        if (!fullRender || !isOnline || parsed.expiresAt > Date.now()) {
+        if ((!fullRender || !isOnline || parsed.expiresAt > Date.now()) && parsed.version === MSCModelVersion) {
           console.log(`Loading ${mscNumber} from cache`);
           // If the render state was partial and we want a full render then we have to go again.
           if (parsed.renderState !== "partial" || !fullRender) {

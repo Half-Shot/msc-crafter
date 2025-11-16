@@ -1,7 +1,4 @@
 query lastIssues($num: Int!) {
-  viewer {
-    login
-  }
   repository(owner: "matrix-org", name: "matrix-spec-proposals") {
     pullRequest(number: $num) {
       latestReviews(first: 20) {
@@ -22,9 +19,11 @@ query lastIssues($num: Int!) {
           startLine
           originalLine
           isResolved
+					isOutdated
           comments(first: 20) {
             nodes {
               id
+							diffHunk
               author {
                 avatarUrl
                 login

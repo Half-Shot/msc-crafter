@@ -13,6 +13,8 @@ import RelativeTime from "./atoms/RelativeTime";
 import { GoCommentDiscussion, GoFileBinary, GoNote } from "react-icons/go";
 import { Author } from "./atoms/Author";
 import { ProposalHistory } from "./ProposalHistory";
+import { ThreadSummaryView } from "./ThreadSummaryView";
+import { CodeASTContextProvider } from "../hooks/CodeASTContext";
 
 const ProposalBody = lazy(() => import("./ProposalBody"));
 const ProposalRawView = lazy(() => import("./ProposalRawView"));
@@ -92,6 +94,7 @@ enum ProposalView {
   Rendered = "Rendered",
   Threads = "All Threads",
   OpenThreads = "Open Threads",
+  OutdatedThreads = "Outdated Threads",
   Plain = "Plain",
 }
 
@@ -190,14 +193,19 @@ export default function MSCView() {
                     [ProposalView.OpenThreads]: (
                       <span>
                         <GoCommentDiscussion />
-                        {msc.threads.filter((t) => !t.resolved).length} Open
-                        Threads
+                        {msc.threads.filter((t) => !t.resolved && !t.outdated).length} Open
                       </span>
                     ),
                     [ProposalView.Threads]: (
                       <span>
                         <GoCommentDiscussion title="Threads" />
-                        {msc.threads.length} Threads
+                        {msc.threads.filter((t) => !t.outdated).length} All
+                      </span>
+                    ),
+                    [ProposalView.OutdatedThreads]: (
+                      <span>
+                        <GoCommentDiscussion />
+                        {msc.threads.filter((t) => t.outdated).length} Outdated
                       </span>
                     ),
                   }}
@@ -207,19 +215,12 @@ export default function MSCView() {
             padding={currentProposalView === ProposalView.Rendered}
           >
             <Suspense fallback={false}>
-              {currentProposalView === ProposalView.Rendered ? (
-                <ProposalBody ref={proposalBodyRef} />
-              ) : (
-                <ProposalRawView
-                  showThreads={
-                    currentProposalView === ProposalView.Threads ||
-                    currentProposalView === ProposalView.OpenThreads
-                  }
-                  onlyOpenThreads={
-                    currentProposalView === ProposalView.OpenThreads
-                  }
-                />
-              )}
+              <CodeASTContextProvider body={msc.body.markdown}>
+                {currentProposalView === ProposalView.Rendered && <ProposalBody ref={proposalBodyRef} />}
+                {currentProposalView === ProposalView.OutdatedThreads && <ThreadSummaryView filter={(t) => t.outdated} />}
+                {currentProposalView === ProposalView.OpenThreads && <ProposalRawView showThreads onlyOpenThreads />}
+                {currentProposalView === ProposalView.Threads && <ProposalRawView showThreads />}
+              </CodeASTContextProvider>
             </Suspense>
           </ContentBlockWithHeading>
         </RightColumn>

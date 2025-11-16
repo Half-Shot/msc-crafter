@@ -28,7 +28,10 @@ export interface Comment {
 
 export interface Thread {
   comments: [Comment] & Comment[];
+  diffHunk?: string;
   line: number;
+  commit?: string;
+  outdated: boolean;
   resolved: boolean;
 }
 
@@ -39,6 +42,7 @@ export interface ProposalState {
 
 interface RootMSC {
   prNumber: number;
+  proposalPath: string;
   created: Date;
   updated: Date;
   state: MSCState;
@@ -79,3 +83,8 @@ export interface ClosedMSC extends RootMSC {
 }
 
 export type MSC = OpenMSC | ClosedMSC;
+
+/**
+ * Increment when the MSC model becomes backwards incompatbile with the cache.
+ */
+export const MSCModelVersion = 2;

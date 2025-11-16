@@ -58,13 +58,7 @@ function determineMSCState(pullRequest: ResolvedPR): MSCState {
   return MSCState.Open;
 }
 
-async function loadProposal(pullRequest: ResolvedPR): Promise<string | null> {
-  const filePath = pullRequest.files.nodes.find((f) =>
-    f.path.match(/^proposals\/.+\.md$/),
-  )?.path;
-  if (!filePath) {
-    return null;
-  }
+async function loadProposal(pullRequest: ResolvedPR, filePath: string): Promise<string | null> {
   const branch =
     pullRequest.state === "MERGED" ? "main" : pullRequest.headRef?.name;
   const name =
@@ -131,7 +125,12 @@ export async function resolveMSC(
   const { repository } = await graphql<ResolveMSCResponse>(resolveMSCQuery, {
     num: mscNumber,
   });
-  const proposalText = await loadProposal(repository.pullRequest);
+
+  const filePath = repository.pullRequest.files.nodes.find((f) =>
+    f.path.match(/^proposals\/.+\.md$/),
+  )?.path ?? null;
+
+  const proposalText = filePath && await loadProposal(repository.pullRequest, filePath);
 
   // Mentioned MSCs
   const mentionedProposals = new Set(
@@ -177,6 +176,7 @@ export async function resolveMSC(
     mentionedMSCs: [...mentionedProposals],
     implementations: [],
     kind,
+    proposalPath: filePath,
   } as MSC;
 
   // Extra requests for fullRender
@@ -196,7 +196,10 @@ export async function resolveMSC(
     msc.threads = reviewThreads.repository.pullRequest.reviewThreads.nodes.map(
       (thread) => ({
         resolved: thread.isResolved,
-        line: thread.line,
+        outdated: thread.isOutdated,
+        line: thread.line ?? thread.originalLine,
+        // XXX: I think all these diff hunks are the same.
+        diffHunk: thread.comments.nodes.find(c => c.diffHunk)?.diffHunk,
         // Fix Type
         comments: thread.comments.nodes.map(
           (c) =>

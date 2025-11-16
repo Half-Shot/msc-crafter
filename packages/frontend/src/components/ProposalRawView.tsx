@@ -7,13 +7,10 @@ import {
   type HTMLAttributes,
   type PropsWithChildren,
 } from "preact/compat";
-import type { Thread } from "../models/MSC";
 import { toJsxRuntime } from "hast-util-to-jsx-runtime";
 import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
-import { ContentBlockWithHeading } from "./atoms/ContentBlock";
-import Markdown from "./atoms/Markdown";
-import { CommentAuthor } from "./atoms/CommentAuthor";
-import { GoChevronDown, GoChevronUp } from "react-icons/go";
+import { CommentThread } from "./proposalviews/commentThread";
+import { useCodeASTContext } from "../hooks/CodeASTContext";
 
 const Container = styled.article`
   display: flex;
@@ -32,75 +29,6 @@ const LineNumber = styled.span`
   color: var(--mc-color-block-border);
 `;
 
-const ThreadContainer = styled(ContentBlockWithHeading)`
-  margin-left: 2em !important;
-  margin-top: 0;
-  width: fit-content;
-  > span {
-    font-size: 0.8em;
-  }
-`;
-
-const ThreadComment = styled.div`
-  border-radius: 0.5em;
-  margin-top: 0.25em;
-  padding: 0 1em;
-`;
-
-const ThreadTitle = styled.span`
-  display: flex;
-  gap: 0.5em;
-`;
-
-const ThreadPreview = styled.span`
-  font-family: var(--mc-font-monospace);
-  background: var(--mc-color-bg);
-  padding-left: 0.2em;
-  border-radius: 0.5em;
-`;
-
-const ThreadCommentContent = styled.div`
-  padding-left: 2em;
-`;
-
-function CommentThread({ thread }: { thread: Thread }) {
-  const preview = thread.comments[0].body.markdown
-    .trimStart()
-    .split("\n")[0]
-    .slice(0, 64);
-  const [isOpen, setOpen] = useState(false);
-
-  return (
-    <ThreadContainer
-      padding={false}
-      heading={
-        <ThreadTitle>
-          <button onClick={() => setOpen((o) => !o)}>
-            {isOpen ? <GoChevronUp width={36} /> : <GoChevronDown width={36} />}
-          </button>
-          <ThreadPreview>{preview}...</ThreadPreview>
-          {thread.resolved && <span>(Resolved)</span>}
-        </ThreadTitle>
-      }
-    >
-      {isOpen &&
-        thread.comments.map((c) => (
-          <ThreadComment>
-            <CommentAuthor
-              username={c.author.githubUsername}
-              createdAt={c.created}
-              updatedAt={c.updated}
-            >
-              said
-            </CommentAuthor>
-            <ThreadCommentContent>
-              <Markdown>{c.body.markdown}</Markdown>
-            </ThreadCommentContent>
-          </ThreadComment>
-        ))}
-    </ThreadContainer>
-  );
-}
 
 const CodeLineContainer = styled.span`
   font-family: var(--mc-font-monospace);
@@ -124,6 +52,7 @@ export function CodeLine({
   const { msc } = useCurrentMSC();
   const threads = showThreads
     ? msc.threads
+        .filter((t) => !t.outdated)
         .filter((t) => t.line === dln && (!onlyOpenThreads || !t.resolved))
         .map((t) => <CommentThread thread={t} />)
     : null;
@@ -143,32 +72,32 @@ const ProposalRawView = ({
   showThreads: boolean;
   onlyOpenThreads?: boolean;
 }) => {
-  const { msc, renderTree } = useCurrentMSC();
+  const tree = useCodeASTContext();
   const [renderedCode, setRenderedCode] = useState();
 
   useEffect(() => {
-    (async () => {
-      const tree = await renderTree();
-      setRenderedCode(
-        toJsxRuntime(tree, {
-          Fragment,
-          jsx,
-          jsxs,
-          elementAttributeNameCase: "html",
-          components: {
-            "line-number": LineNumber,
-            "code-line": (props) => (
-              <CodeLine
-                showThreads={showThreads}
-                onlyOpenThreads={onlyOpenThreads}
-                {...props}
-              />
-            ),
-          },
-        }),
-      );
-    })();
-  }, [msc.body.markdown, showThreads, onlyOpenThreads]);
+    if (!tree) {
+      return;
+    }
+    setRenderedCode(
+      toJsxRuntime(tree, {
+        Fragment,
+        jsx,
+        jsxs,
+        elementAttributeNameCase: "html",
+        components: {
+          "line-number": LineNumber,
+          "code-line": (props) => (
+            <CodeLine
+              showThreads={showThreads}
+              onlyOpenThreads={onlyOpenThreads}
+              {...props}
+            />
+          ),
+        },
+      }),
+    );
+  }, [tree, showThreads, onlyOpenThreads]);
 
   return <Container>{renderedCode}</Container>;
 };
