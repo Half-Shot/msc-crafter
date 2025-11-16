@@ -8,6 +8,7 @@ const StyledButton = styled.button`
   border: 1px solid black;
   height: 100%;
   padding: 0.5em 0.75em;
+  border-radius: var(--mc-border-radius);
 `;
 
 export function Button({

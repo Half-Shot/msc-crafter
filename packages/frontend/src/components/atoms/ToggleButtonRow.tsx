@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Button } from "./Button";
 
 const ToggleButton = styled(Button)`
+  border-radius: 0;
   &:nth-child(1) {
     border-radius: var(--mc-border-radius) 0em 0em var(--mc-border-radius);
     border-right: 0;
