@@ -210,6 +210,11 @@ export class CrafterService {
           405,
         );
       }
+    } else if (url.pathname === '/' && req.method === "GET") {
+      res.setHeader("Location", this.frontendRoot.toString());
+      res.writeHead(301, "Redirecting to app");
+      res.end();
+      return;
     }
     throw new ApiError("MC_NOT_FOUND", "No API implemented on this path", 404);
   }
