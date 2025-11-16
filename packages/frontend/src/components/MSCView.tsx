@@ -83,7 +83,7 @@ const KindBadge = styled(Badge)`
 `;
 
 const BetaBadge = styled(Badge)`
-  border: 1px dotted var(--mc-color-notice);
+  border: 2px dotted var(--mc-color-notice);
   color: var(--mc-color-notice);
   background-color: var(--mc-color-bg-notice);
 `;

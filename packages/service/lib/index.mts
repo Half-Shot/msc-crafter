@@ -210,7 +210,7 @@ export class CrafterService {
           405,
         );
       }
-    } else if (url.pathname === '/' && req.method === "GET") {
+    } else if (url.pathname === "/" && req.method === "GET") {
       res.setHeader("Location", this.frontendRoot.toString());
       res.writeHead(301, "Redirecting to app");
       res.end();
