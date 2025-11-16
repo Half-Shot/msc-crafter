@@ -237,6 +237,9 @@ export default function MSCView() {
                 {currentProposalView === ProposalView.Threads && (
                   <ProposalRawView showThreads />
                 )}
+                {currentProposalView === ProposalView.Plain && (
+                  <ProposalRawView showThreads={false} />
+                )}
               </CodeASTContextProvider>
             </Suspense>
           </ContentBlockWithHeading>
