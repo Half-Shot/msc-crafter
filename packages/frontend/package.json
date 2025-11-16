@@ -22,7 +22,7 @@
     "@wooorm/starry-night": "^3.8.0",
     "classnames": "^2.5.1",
     "hast-util-to-jsx-runtime": "^2.3.6",
-    "highlight.js": "^11.11.1",
+    "highlight.js": "11.11.1",
     "markdown-it": "^14.1.0",
     "markdown-it-footnote": "^4.0.0",
     "markdown-it-highlightjs": "^4.2.0",
@@ -38,5 +38,9 @@
     "typescript": "^5.9.3",
     "vite": "^7.1.10",
     "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/markdown-it-footnote": "^3.0.4"
   }
 }
