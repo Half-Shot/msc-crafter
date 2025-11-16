@@ -1,7 +1,11 @@
 import styled from "styled-components";
 import { useCurrentMSC } from "../hooks/CurrentMSCContext";
 import Markdown from "./atoms/Markdown";
-import { forwardRef, type HTMLAttributes, type PropsWithChildren } from "preact/compat";
+import {
+  forwardRef,
+  type HTMLAttributes,
+  type PropsWithChildren,
+} from "preact/compat";
 import { GoLinkExternal } from "react-icons/go";
 
 const Container = styled.article`
@@ -62,16 +66,25 @@ export function Link({
   children,
   href,
   ...props
-}: PropsWithChildren<HTMLAttributes<HTMLAnchorElement>&HTMLHyperlinkElementUtils>) {
+}: PropsWithChildren<
+  HTMLAttributes<HTMLAnchorElement> & HTMLHyperlinkElementUtils
+>) {
   let suffix = null;
   // Remap URLs to us.
-  const [_url, msc] = href?.split('https://github.com/matrix-org/matrix-spec-proposals/pull/') ?? [];
+  const [, msc] =
+    href?.split("https://github.com/matrix-org/matrix-spec-proposals/pull/") ??
+    [];
   if (msc && Number.parseInt(msc)) {
     href = `#msc/${msc}`;
-  } else if (href?.startsWith('http')) {
+  } else if (href?.startsWith("http")) {
     suffix = <GoLinkExternal />;
   }
-  return <a href={href} {...props}>{children}{suffix}</a>;
+  return (
+    <a href={href} {...props}>
+      {children}
+      {suffix}
+    </a>
+  );
 }
 
 const ProposalBody = forwardRef<HTMLElement>((_props, ref) => {
@@ -89,7 +102,7 @@ const ProposalBody = forwardRef<HTMLElement>((_props, ref) => {
           h1: ({ children }) => <Heading type="h1">{children}</Heading>,
           h2: ({ children }) => <Heading type="h2">{children}</Heading>,
           h3: ({ children }) => <Heading type="h3">{children}</Heading>,
-          a: ({children, ...props}) => <Link {...props}>{children}</Link>
+          a: ({ children, ...props }) => <Link {...props}>{children}</Link>,
         }}
       >
         {msc.body.markdown}

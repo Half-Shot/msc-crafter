@@ -10,7 +10,12 @@ import { ContentBlock, ContentBlockWithHeading } from "./atoms/ContentBlock";
 import { ToggleButtonRow } from "./atoms/ToggleButtonRow";
 import { lazy, Suspense } from "preact/compat";
 import RelativeTime from "./atoms/RelativeTime";
-import { GoCommentDiscussion, GoFileBinary, GoLinkExternal, GoNote } from "react-icons/go";
+import {
+  GoCommentDiscussion,
+  GoFileBinary,
+  GoLinkExternal,
+  GoNote,
+} from "react-icons/go";
 import { Author } from "./atoms/Author";
 import { ProposalHistory } from "./ProposalHistory";
 import { ThreadSummaryView } from "./proposalviews/ThreadSummaryView";
@@ -146,7 +151,7 @@ export default function MSCView() {
         <LeftColumn>
           <ContentBlock>
             <a href={msc.url} target="_blank" rel="noreferrer">
-              <GoLinkExternal /> View on GitHub 
+              <GoLinkExternal /> View on GitHub
             </a>
           </ContentBlock>
           <MentionedMSCs />
