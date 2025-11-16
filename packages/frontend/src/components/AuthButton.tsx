@@ -3,19 +3,15 @@ import { useGitHubAuth } from "../hooks/GitHubAuth";
 import type { MouseEventHandler } from "preact";
 import styled from "styled-components";
 import { Author } from "./atoms/Author";
+import { Button } from "./atoms/Button";
 
 const LoggedInContainer = styled.div`
   display: flex;
+  gap: 1em;
   flex-direction: row;
 `;
 
-const Button = styled.button`
-  margin-left: 1em;
-  width: fit-content;
-`;
-
 export function AuthButton() {
-  const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const githubAuth = useGitHubAuth();
 
@@ -25,7 +21,6 @@ export function AuthButton() {
       if (!githubAuth || "getLoginURL" in githubAuth === false) {
         return;
       }
-      setError(null);
       setBusy(true);
       githubAuth
         .getLoginURL()
@@ -33,7 +28,8 @@ export function AuthButton() {
           window.location.replace(url);
         })
         .catch((ex) => {
-          setError(ex.message);
+          // TODO: Log this to the user somehow.
+          console.error("Failed to login:", ex.message);
         })
         .finally(() => {
           setBusy(false);

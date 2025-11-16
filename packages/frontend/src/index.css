@@ -75,10 +75,13 @@ html {
     --mc-color-text-fg: rgb(218, 218, 218);
     --mc-color-text-secondary: rgb(119, 119, 119);
     --mc-color-heading: rgb(204, 204, 204);
-    --mc-color-error: rgb(243, 17, 17);
-    --mc-color-bg-error: rgb(54, 10, 10);
-    --mc-color-highlight: #0098d4;
-    --mc-color-inactive: #5297b4;
+    --mc-color-error: hsl(0, 90%, 50%);
+    --mc-color-bg-error: hsl(0, 90%, 10%);
+    --mc-color-highlight: hsl(197, 100%, 30%);
+    --mc-color-inactive: hsl(198, 40%, 60%);
+
+    --mc-color-bg-notice: hsl(197, 100%, 10%);
+    --mc-color-notice: hsl(198, 40%, 60%);
 
     --mc-color-block-bg: rgb(48, 48, 48);
     --mc-color-block-border: rgb(63, 63, 63);

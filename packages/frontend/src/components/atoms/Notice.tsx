@@ -7,16 +7,27 @@ const Container = styled.div`
   margin-top: 2em;
   margin-left: auto;
   margin-right: auto;
-  color: var(--mc-color-error);
+  padding: 1em 1.5em;
+  border-radius: var(--mc-border-radius);
+  max-width: 40em;
 
   &.error {
+    color: var(--mc-color-error);
     background-color: var(--mc-color-bg-error);
-    border-radius: var(--mc-border-radius);
-    padding: 1em 1.5em;
+    h3 {
+      color: var(--mc-color-error);
+    }
+  }
+
+  &.notice {
+    color: var(--mc-color-notice);
+    background-color: var(--mc-color-bg-notice);
+    h3 {
+      color: var(--mc-color-notice);
+    }
   }
 
   h3 {
-    color: var(--mc-color-error);
     padding: 0;
     margin: 0;
     margin-bottom: 1em;
@@ -27,7 +38,7 @@ export function Notice({
   heading,
   children,
   kind,
-}: PropsWithChildren<{ heading: string; kind: "error" }>) {
+}: PropsWithChildren<{ heading: string; kind: "error" | "notice" }>) {
   return (
     <Container className={kind}>
       <h3>{heading}</h3>

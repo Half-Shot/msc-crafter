@@ -291,7 +291,12 @@ export function MSCSearch() {
           )}
         </form>
       </SearchContainer>
-      <SearchButton onClick={() => searchDialog.current?.showModal()}>
+      <SearchButton
+        disabled={
+          (!auth || "viewer" in auth === false) && localMSCs.length === 0
+        }
+        onClick={() => searchDialog.current?.showModal()}
+      >
         <GoSearch /> Search MSCs [Ctrl+K]
       </SearchButton>
     </>
