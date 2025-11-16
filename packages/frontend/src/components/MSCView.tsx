@@ -13,11 +13,12 @@ import RelativeTime from "./atoms/RelativeTime";
 import { GoCommentDiscussion, GoFileBinary, GoNote } from "react-icons/go";
 import { Author } from "./atoms/Author";
 import { ProposalHistory } from "./ProposalHistory";
-import { ThreadSummaryView } from "./ThreadSummaryView";
+import { ThreadSummaryView } from "./proposalviews/ThreadSummaryView";
 import { CodeASTContextProvider } from "../hooks/CodeASTContext";
+import { Badge } from "./atoms/Badge";
 
 const ProposalBody = lazy(() => import("./ProposalBody"));
-const ProposalRawView = lazy(() => import("./ProposalRawView"));
+const ProposalRawView = lazy(() => import("./proposalviews/ProposalRawView"));
 const PullRequestBody = lazy(() => import("./PullRequestBody"));
 const CommentView = lazy(() => import("./CommentView"));
 
@@ -70,14 +71,16 @@ const ColumnContainer = styled.div`
   }
 `;
 
-const KindBadge = styled.div`
+const KindBadge = styled(Badge)`
   border: 1px solid rgba(38, 135, 150);
-  border-radius: 2em;
   color: #222222e0;
   background-color: #59cce0cf;
-  padding: 0.25em 1em;
-  font-size: 1rem;
-  font-weight: 600;
+`;
+
+const BetaBadge = styled(Badge)`
+  border: 1px dotted var(--mc-color-notice);
+  color: var(--mc-color-notice);
+  background-color: var(--mc-color-bg-notice);
 `;
 
 const ProposalBlockHeading = styled.div`
@@ -131,7 +134,7 @@ export default function MSCView() {
             Last updated: <RelativeTime>{msc.updated}</RelativeTime>
           </span>
           {msc.kind.map((k) => (
-            <KindBadge>{k}</KindBadge>
+            <KindBadge key={k}>{k}</KindBadge>
           ))}
         </WidgetContainer>
         {closingComment && (
@@ -142,7 +145,7 @@ export default function MSCView() {
       <ColumnContainer>
         <LeftColumn>
           <ContentBlock>
-            <a href={msc.url} target="_blank">
+            <a href={msc.url} target="_blank" rel="noreferrer">
               View on GitHub
             </a>
           </ContentBlock>
@@ -151,7 +154,7 @@ export default function MSCView() {
             <ul>
               {msc.implementations.map((impl) => (
                 <li key={impl.url}>
-                  <a href={impl.url} target="_blank">
+                  <a href={impl.url} target="_blank" rel="noreferrer">
                     {impl.title}
                   </a>
                 </li>
@@ -209,7 +212,9 @@ export default function MSCView() {
                     [ProposalView.OutdatedThreads]: (
                       <span>
                         <GoCommentDiscussion />
-                        {msc.threads.filter((t) => t.outdated).length} Outdated
+                        {
+                          msc.threads.filter((t) => t.outdated).length
+                        } Outdated <BetaBadge>Beta</BetaBadge>
                       </span>
                     ),
                   }}

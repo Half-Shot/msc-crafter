@@ -18,7 +18,11 @@ export function Footer() {
     <Container>
       <ul>
         <li>
-          <a href="https://github.com/Half-Shot/msc-crafter" target="_blank">
+          <a
+            href="https://github.com/Half-Shot/msc-crafter"
+            target="_blank"
+            rel="noreferrer"
+          >
             GitHub
           </a>
         </li>
@@ -26,6 +30,7 @@ export function Footer() {
           <a
             href="https://github.com/Half-Shot/msc-crafter/issues/new"
             target="_blank"
+            rel="noreferrer"
           >
             Report a bug
           </a>
@@ -35,13 +40,18 @@ export function Footer() {
           <a
             href="https://mastodon.half-shot.uk/@delph@mastodon.dictatorshipcake.co.uk/115413468961680908"
             target="_blank"
+            rel="noreferrer"
           >
             Delph 🐰
           </a>
         </li>
         <li>
           Written with ❤️ by{" "}
-          <a href="https://mastodon.half-shot.uk/@halfy" target="_blank">
+          <a
+            href="https://mastodon.half-shot.uk/@halfy"
+            target="_blank"
+            rel="noreferrer"
+          >
             Half-Shot 🐶
           </a>
         </li>

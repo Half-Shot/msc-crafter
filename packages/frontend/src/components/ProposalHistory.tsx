@@ -150,7 +150,7 @@ function CommitItem({
           <ChangesContainer {...commit} />
         </AdditionalDetails>
       </div>
-      <a href={commit.url} target="_blank">
+      <a href={commit.url} target="_blank" rel="noreferrer">
         <GoLinkExternal />
       </a>
     </CommitListItem>
@@ -181,7 +181,7 @@ export function ProposalHistory() {
     }
     let currentItems: CommitHistory[] = [];
     let currentTs = history[0].authoredDate.getTime();
-    let set: {
+    const set: {
       date: Date;
       items: CommitHistory[];
       additions: number;
@@ -242,6 +242,7 @@ export function ProposalHistory() {
           <ol>
             {section.items.map((c) => (
               <CommitItem
+                key={c.url}
                 commit={c}
                 hasBeenRead={
                   !!(readUpTo && c.authoredDate.getTime() <= readUpTo)

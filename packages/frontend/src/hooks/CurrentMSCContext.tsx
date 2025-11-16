@@ -13,6 +13,8 @@ export function CurrentMSCContextProvider({
   msc,
   children,
 }: PropsWithChildren<{ msc: MSC }>) {
+  // For easy debugging.
+  window.crafter.currentMSC = msc;
   return (
     <CurrentMSCContext.Provider value={{ msc }}>
       {children}

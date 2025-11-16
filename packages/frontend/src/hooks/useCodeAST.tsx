@@ -1,6 +1,6 @@
-import { useCallback, useState } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 import type { createStarryNight } from "@wooorm/starry-night";
-import type { Root } from "hast";
+import type { Root, RootContent } from "hast";
 
 /**
  * @param {Root} tree
@@ -24,7 +24,7 @@ function starryNightGutter(
    * @param {number} line
    * @returns {Element}
    */
-  const createLine = (children: any, line: number) => {
+  const createLine = (children: RootContent[], line: number) => {
     return {
       type: "element",
       tagName: "code-line",
@@ -110,7 +110,7 @@ function starryNightGutter(
   }
 
   // Replace children with new array.
-  tree.children = replacement as any;
+  tree.children = replacement as RootContent[];
 }
 
 export function useCodeAST(body: string | null): [Root | null, () => void] {
@@ -138,4 +138,30 @@ export function useCodeAST(body: string | null): [Root | null, () => void] {
     return p;
   }, [body]);
   return [tree, renderTree];
+}
+
+export function useCodeASTImmediate(body: string | null): Root | null {
+  const [promise, setPromise] = useState<Promise<unknown> | null>(null);
+  const [tree, setTree] = useState<Root | null>(null);
+  useEffect(() => {
+    if (promise || !body) {
+      return;
+    }
+    const p = (async () => {
+      if (!body) {
+        throw Error("No body");
+      }
+      const { common, createStarryNight } = await import(
+        "@wooorm/starry-night"
+      );
+      const sn = await createStarryNight(common);
+      // We know that markdown is available.
+      const tree = sn.highlight(body, sn.flagToScope("markdown")!);
+      starryNightGutter(tree);
+      setTree(tree);
+    })();
+    p.catch(() => setTree(null)).finally(() => setPromise(null));
+    setPromise(p);
+  }, [body]);
+  return tree;
 }

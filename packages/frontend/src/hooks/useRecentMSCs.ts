@@ -23,7 +23,7 @@ export function useRecentMSCs(): [
       setLastRecent(msc.hash);
       setRecentMSCs((existingSet) => {
         const cloneSet = [...existingSet];
-        let existing = cloneSet.find((m) => m.hash === msc.hash);
+        const existing = cloneSet.find((m) => m.hash === msc.hash);
         if (!existing) {
           cloneSet.push({
             ...msc,

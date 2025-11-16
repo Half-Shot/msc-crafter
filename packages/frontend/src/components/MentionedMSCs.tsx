@@ -14,12 +14,12 @@ export function MentionedMSCs() {
 
   const content = useMemo(() => {
     return [
-      ...msc.mentionedMSCs?.map((mscNumber) => (
+      ...msc.mentionedMSCs.map((mscNumber) => (
         <li key={mscNumber}>
           <MSCLink kind="mention" mscNumber={mscNumber} />
         </li>
       )),
-      ...mentioningMSCs?.map((msc) => (
+      ...mentioningMSCs.map((msc) => (
         <li key={msc.prNumber}>
           <MSCLink kind="mentioned by" mscNumber={msc.prNumber} />
         </li>

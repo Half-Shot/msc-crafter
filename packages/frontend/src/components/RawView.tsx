@@ -10,7 +10,8 @@ import {
 import { toJsxRuntime } from "hast-util-to-jsx-runtime";
 import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 import { CommentThread } from "./proposalviews/commentThread";
-import { useCodeASTContext } from "../hooks/CodeASTContext";
+import { useCodeASTImmediate } from "../hooks/useCodeAST";
+import type { Root } from "hast";
 
 const Container = styled.article`
   display: flex;
@@ -53,7 +54,10 @@ export function CodeLine({
     ? msc.threads
         .filter((t) => !t.outdated)
         .filter((t) => t.line === dln && (!onlyOpenThreads || !t.resolved))
-        .map((t) => <CommentThread thread={t} />)
+        // TODO: Not a safe key
+        .map((t) => (
+          <CommentThread key={t.comments[0].created.toISOString()} thread={t} />
+        ))
     : null;
 
   return (
@@ -64,14 +68,20 @@ export function CodeLine({
   );
 }
 
-const ProposalRawView = ({
+export const RawViewWithBody = ({ body }: { body: string }) => {
+  const tree = useCodeASTImmediate(body);
+  return <RawView tree={tree} showThreads={false} onlyOpenThreads={false} />;
+};
+
+export const RawView = ({
+  tree,
   showThreads,
   onlyOpenThreads,
 }: {
+  tree: Root | null;
   showThreads: boolean;
-  onlyOpenThreads?: boolean;
+  onlyOpenThreads: boolean;
 }) => {
-  const tree = useCodeASTContext();
   const [renderedCode, setRenderedCode] = useState();
 
   useEffect(() => {
@@ -96,9 +106,9 @@ const ProposalRawView = ({
         },
       }),
     );
-  }, [tree, showThreads, onlyOpenThreads]);
+  }, [tree]);
 
   return <Container>{renderedCode}</Container>;
 };
 
-export default ProposalRawView;
+export default RawView;

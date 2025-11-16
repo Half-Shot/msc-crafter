@@ -73,7 +73,8 @@ export function CommentThread({
     >
       {isOpen &&
         thread.comments.map((c) => (
-          <ThreadComment>
+          // TODO: Not a safe key.
+          <ThreadComment key={c.created.toISOString()}>
             <CommentAuthor
               username={c.author.githubUsername}
               createdAt={c.created}

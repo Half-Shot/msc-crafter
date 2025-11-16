@@ -5,7 +5,7 @@ export function useAppHash(): number | null {
   if (!hash.startsWith("#msc/")) {
     return null;
   }
-  let newNum = parseInt(hash.slice("#msc/".length).split("/", 2)[0]);
+  const newNum = parseInt(hash.slice("#msc/".length).split("/", 2)[0]);
   if (!isNaN(newNum)) {
     return newNum;
   }

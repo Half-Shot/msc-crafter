@@ -5,7 +5,7 @@ export function VoteBlock({ votes }: { votes: Record<string, boolean> }) {
     <ContentBlockWithHeading heading="Votes">
       <h2> Votes </h2>
       {Object.entries(votes).map(([username, vote]) => (
-        <p>
+        <p key={username}>
           <input disabled type="checkbox" checked={vote} />
           <label>{username}</label>
         </p>

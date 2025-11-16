@@ -12,11 +12,11 @@ const MatrixJsSdkUrlRegex =
 const MatrixJsSdkShortRegex = /\/matrix-org\/matrix-js-sdk#(\d+)/g;
 const ComplementRegex =
   /https:\/\/github.com\/matrix-org\/complement\/pull\/(\d+)/g;
-const GitHubLinkedPR = /(\w[^\/\s]+)\/(\w[^\/\d\s]+)#(\d+)/g;
+const GitHubLinkedPR = /(\w[^/\s]+)\/(\w[^/\d\s]+)#(\d+)/g;
 const GenericGitHubProjectRegex =
-  /https:\/\/github.com\/([^\/]+)\/([^\/]+)\/pull\/(\d+)/g;
+  /https:\/\/github.com\/([^/]+)\/([^/]+)\/pull\/(\d+)/g;
 const GenericGitLabProjectRegex =
-  /https:\/\/gitlab.com\/([^\/]+)\/([^\/]+)\/-\/merge_requests\/(\d+)/g;
+  /https:\/\/gitlab.com\/([^/]+)\/([^/]+)\/-\/merge_requests\/(\d+)/g;
 
 export function getImplementationsFromString(
   body: string,

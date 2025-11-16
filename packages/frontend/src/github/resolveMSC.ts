@@ -204,7 +204,13 @@ export async function resolveMSC(
         outdated: thread.isOutdated,
         line: thread.line ?? thread.originalLine,
         // XXX: I think all these diff hunks are the same.
-        diffHunk: thread.comments.nodes.find((c) => c.diffHunk)?.diffHunk,
+        diffHunk: thread.comments.nodes
+          .find((c) => c.diffHunk)
+          ?.diffHunk?.split("\n")
+          .reverse()
+          .slice(0, 5)
+          .reverse()
+          .join("\n"),
         // Fix Type
         comments: thread.comments.nodes.map(
           (c) =>
