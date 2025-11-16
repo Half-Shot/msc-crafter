@@ -38,14 +38,22 @@ export const useGitHubAuth = () => useContext(AuthContext);
 const BackendURL = new URL(import.meta.env.VITE_BACKEND_URL);
 
 export function GitHubAuthProvider({ children }: PropsWithChildren) {
+  const [viewer, setViewer] = useState<GithubViewer>();
   const [storedAuthData, storeGitHubToken] = useLocalStorage<string | null>({
     key: "msccrafter.token",
     getInitialValueInEffect: false, // Ensure we don't flicker. The default value causes the stored auth data to be briefly null.
     defaultValue: null,
   });
 
-  // Add hook to set token for developers.
-  window.crafter.setGitHubToken = (token) => storeGitHubToken(token);
+  useEffect(() => {
+    console.log('GitHubAuthProvider');
+  }, [storedAuthData]);
+
+  useEffect(() => {
+    // Add hook to set token for developers.
+    window.crafter.setGitHubToken = (token) => storeGitHubToken(token);
+  }, []);
+
 
   const onTokenExpired = useCallback(async () => {
     if (!storedAuthData) {
@@ -68,7 +76,6 @@ export function GitHubAuthProvider({ children }: PropsWithChildren) {
     setTimeout(() => onTokenExpired, Date.now() - response.expires_at);
   }, []);
 
-  const [viewer, setViewer] = useState<GithubViewer>();
   const graphqlWithAuth = useMemo(() => {
     let token;
     if (!storedAuthData) {
@@ -143,22 +150,24 @@ export function GitHubAuthProvider({ children }: PropsWithChildren) {
     })();
   }, [storedAuthData]);
 
-  let value: CurrentState;
-  if (graphqlWithAuth && viewer) {
-    value = {
-      graphqlWithAuth,
-      viewer,
-      logout: () => {
-        // TODO: Logout token
-        storeGitHubToken(null);
-      },
-    };
-  } else if (storedAuthData) {
-    // Loading..
-    value = null;
-  } else {
-    value = { getLoginURL };
-  }
+  // Note: Wrapped in a memo to prevent re-renders
+  const value = useMemo(() => {
+    if (graphqlWithAuth && viewer) {
+      return {
+        graphqlWithAuth,
+        viewer,
+        logout: () => {
+          // TODO: Logout token
+          storeGitHubToken(null);
+        },
+      };
+    } else if (storedAuthData) {
+      // Loading..
+      return null;
+    } else {
+      return { getLoginURL };
+    }
+  }, [getLoginURL, graphqlWithAuth, viewer, storedAuthData]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
