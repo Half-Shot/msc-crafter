@@ -6,7 +6,7 @@ import Logo from "./logo.png";
 const Container = styled.header`
   font-size: 24pt;
   width: 100%;
-  max-width: 66vw;
+  max-width: 1600px;
   margin: 0 auto;
   display: flex;
   flex-direction: row;
@@ -14,12 +14,14 @@ const Container = styled.header`
   gap: 1em;
   justify-content: space-between;
   @media screen and (max-width: 1366px) {
+    font-size: 20pt;
     max-width: none;
   }
   @media screen and (max-width: 800px) {
     flex-direction: column;
     text-align: center;
-    gap: 0.1em;
+    align-items: center;
+    gap: 0.35em;
   }
 `;
 
