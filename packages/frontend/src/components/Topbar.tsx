@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { MSCSearch } from "./MSCSearch";
-import { AuthButton } from "./AuthButton";
+import { AuthMenu } from "./AuthMenu";
 import Logo from "./logo.png";
 
 const Container = styled.header`
@@ -65,7 +65,7 @@ export function TopBar() {
         <MSCSearch />
       </Left>
       <Right>
-        <AuthButton />
+        <AuthMenu />
       </Right>
     </Container>
   );

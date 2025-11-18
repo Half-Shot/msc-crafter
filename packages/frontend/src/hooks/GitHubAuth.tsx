@@ -13,6 +13,7 @@ import { createContext } from "preact";
 import type { PropsWithChildren } from "preact/compat";
 
 interface LoggedIn {
+  state: AuthState.LoggedIn;
   graphqlWithAuth: ReturnType<typeof graphql.defaults>;
   viewer: GithubViewer;
   logout: () => void;
@@ -20,6 +21,7 @@ interface LoggedIn {
 
 interface LoggedOut {
   getLoginURL: () => Promise<string>;
+  state: AuthState.LoggedOut;
 }
 
 interface OAuth {
@@ -31,8 +33,16 @@ interface OAuth {
   scope: string;
 }
 
-type CurrentState = null | LoggedOut | LoggedIn;
-export const AuthContext = createContext<CurrentState>(null);
+export enum AuthState {
+  Loading,
+  LoggedOut,
+  LoggedIn,
+}
+
+type CurrentState = { state: AuthState.Loading } | LoggedOut | LoggedIn;
+export const AuthContext = createContext<CurrentState>({
+  state: AuthState.Loading,
+});
 export const useGitHubAuth = () => useContext(AuthContext);
 
 const BackendURL = new URL(import.meta.env.VITE_BACKEND_URL);
@@ -46,14 +56,9 @@ export function GitHubAuthProvider({ children }: PropsWithChildren) {
   });
 
   useEffect(() => {
-    console.log('GitHubAuthProvider');
-  }, [storedAuthData]);
-
-  useEffect(() => {
     // Add hook to set token for developers.
     window.crafter.setGitHubToken = (token) => storeGitHubToken(token);
   }, []);
-
 
   const onTokenExpired = useCallback(async () => {
     if (!storedAuthData) {
@@ -151,11 +156,12 @@ export function GitHubAuthProvider({ children }: PropsWithChildren) {
   }, [storedAuthData]);
 
   // Note: Wrapped in a memo to prevent re-renders
-  const value = useMemo(() => {
+  const value = useMemo<CurrentState>(() => {
     if (graphqlWithAuth && viewer) {
       return {
         graphqlWithAuth,
         viewer,
+        state: AuthState.LoggedIn,
         logout: () => {
           // TODO: Logout token
           storeGitHubToken(null);
@@ -163,9 +169,9 @@ export function GitHubAuthProvider({ children }: PropsWithChildren) {
       };
     } else if (storedAuthData) {
       // Loading..
-      return null;
+      return { state: AuthState.Loading };
     } else {
-      return { getLoginURL };
+      return { getLoginURL, state: AuthState.LoggedOut };
     }
   }, [getLoginURL, graphqlWithAuth, viewer, storedAuthData]);
 
