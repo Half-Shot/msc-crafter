@@ -72,7 +72,8 @@ const ColumnContainer = styled.div`
   flex-direction: row;
 
   @media screen and (max-width: 800px) {
-    flex-direction: column;
+    /* Reverse for readability on small devices */
+    flex-direction: column-reverse;
   }
 `;
 
